@@ -1,0 +1,8 @@
+*.pyc
+*.swp
+*.log
+*.pickle
+logs/*
+log/*
+*.xls
+*.xlsx
