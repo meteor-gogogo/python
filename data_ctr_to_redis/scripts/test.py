@@ -1,21 +1,11 @@
-from datetime import datetime, date, timedelta
+import geoip2.database
+import redis
 import time
 
 
-if __name__ == '__main__':
-    date_time = datetime.strptime('2019-07-16 00:15:00', '%Y-%m-%d %H:%M:%S')
-    print(date_time.timestamp())
-    hour = (date_time - timedelta(hours=1)).hour
-    print((date_time - timedelta(hours=1)).hour)
-    begin_time = int(time.mktime((date.today() + timedelta(days=-1)).timetuple()) + 3600 * hour)
-    print(begin_time)
-    print(datetime.strptime('2019-07-16 00:15:00', '%Y-%m-%d %H:%M:%S'))
-    hour = (datetime.now() - timedelta(hours=+1)).hour
-    begin_time = int(time.mktime(date.today().timetuple()) + 3600 * (hour - 1))
-    end_time = int(time.mktime(date.today().timetuple()) + 3600 * hour)
-    print(hour)
-    print(begin_time)
-    print(end_time)
-    print(date.today().timetuple())
-    print(datetime.today())
-    print(datetime.timestamp(datetime.today()))
+if __name__ == "__main__":
+    tic = lambda: 'at %1.1f seconds' % (time.time() - start)
+    r = redis.Redis(host='dev02.aplum-inc.com', port='6379', password='', db=2, decode_responses=True, charset='utf-8')
+    start = time.time()
+    print(r.get("gbdt:1:2842391:pv"))
+    print(tic())

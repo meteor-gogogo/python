@@ -32,6 +32,40 @@ starttime = time.time()
 tic = lambda: 'at %1.1f seconds' % (time.time() - starttime)
 
 
+def getTableName(pystr):
+    if 'ctr_tomysql_new' in pystr:
+        tablename = 'type_ctr_total_daily'
+    elif 'spid_tomysql' in pystr:
+        tablename = 'spid_ctr_daily'
+    elif 'piddetail_tomysql' in pystr:
+        tablename = 'product_ctr_daily'
+    elif 'type_tomysql' in pystr:
+        tablename = 'type_ctr_daily'
+    return tablename
+
+def checkData(datestr, pystr):
+    t_name = getTableName(pystr)
+    datanum = getDataNum(datestr, t_name)
+    print('当前重复数据: {}'.format(datanum))
+    if datanum > 0:
+        deleteData(datestr, t_name)
+    else:
+        return
+
+def getDataNum(datestr, t_name):
+    sql = "SELECT count(1) as num FROM `{0}` WHERE stat_date = '{1}'".format(t_name, datestr)
+    cursor_stat.execute(sql)
+    results = cursor_stat.fetchall()
+    for k in results:
+        num = int(k['num'])
+    return num
+
+def deleteData(datestr, t_name):
+    sql = "DELETE  FROM `{0}` WHERE stat_date = '{1}'".format(t_name, datestr)
+    print(sql)
+    cursor_stat.execute(sql)
+    db_stat.commit()
+
 def alarm(userlist, msg):
     url = 'http://47.93.240.37:8083/ps'
     users = ','.join(userlist)
@@ -136,7 +170,7 @@ def getPidShowPvAndDict(date):
     }
     searched = getEsResult(date, esdoc)
     totalnum = searched['aggregations']['idcount']['value']
-    size = 500
+    size = 2000
     if totalnum <= size:
         pagesize = 1
     else:
@@ -182,7 +216,7 @@ def getPidShowPvAndDict(date):
 
 
 def getPidShowUv(date, totalnum, piddict):
-    size = 500
+    size = 2000
     if totalnum <= size:
         pagesize = 1
     else:
@@ -404,7 +438,8 @@ if __name__ == '__main__':
     try:
         db = MySQLdb.connect(mysqlhost, mysqlusername, mysqlpasswd, db, charset='utf8')
         cursor = db.cursor(cursorclass=MySQLdb.cursors.DictCursor)
-
+        db_stat = MySQLdb.connect(statmysqlhost, statmysqlusername, statmysqlpasswd, statdb, charset='utf8')
+        cursor_stat = db_stat.cursor(cursorclass=MySQLdb.cursors.DictCursor)
         if len(sys.argv) == 1:
             today = date.today()
             date = today + timedelta(days=-1)
@@ -412,7 +447,10 @@ if __name__ == '__main__':
             datestr = sys.argv[1]
             date = datetime.strptime(datestr, '%Y-%m-%d').date()
             today = date + timedelta(days=1)
+        datestr = date.strftime("%Y-%m-%d")
         print(date, today)
+        pystr = str(sys.argv[0])
+        checkData(datestr, pystr)
         piddict = getPidShowPvAndDict(date)
         totalnum = len(piddict)
         piddict = getPidShowUv(date, totalnum, piddict)
@@ -437,7 +475,7 @@ if __name__ == '__main__':
             pidStr = []
             start = t * EachInsert
             end = (t + 1) * EachInsert
-            # print(start, end)
+            print(start, end)
             dfa[start:end].to_sql(name='product_ctr_daily', con=con, if_exists='append', index=False)
 
         print('数据写入成功')
@@ -449,6 +487,8 @@ if __name__ == '__main__':
                             'avg_sale_price', 'avg_discount_price', 'onsale_time', 'pv_show', 'pv_detail', 'pv_wish',
                             'pv_cart', 'uv_show', 'uv_detail', 'uv_cart', 'uv_wish'],
                    index=False, sep=',')
+        cursor_stat.close()
+        db_stat.close()
         cursor.close()  # 断开游标
         db.close()  # 断开数据库
         con.close()

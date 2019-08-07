@@ -28,6 +28,43 @@ statmysqlusername = 'plumdb'
 statmysqlpasswd = 'plumdb@2019'
 statdb = 'aplum_stat'
 
+def getTableName(pystr):
+    if 'ctr_tomysql_new' in pystr:
+        tablename = 'type_ctr_total_daily'
+    elif 'spid_tomysql' in pystr:
+        tablename = 'spid_ctr_daily'
+    elif 'piddetail_tomysql' in pystr:
+        tablename = 'product_ctr_daily'
+    elif 'type_tomysql' in pystr:
+        tablename = 'type_ctr_daily'
+    return tablename
+
+
+def checkData(datestr, pystr):
+    t_name = getTableName(pystr)
+    datanum = getDataNum(datestr, t_name)
+    print('当前重复数据: {}'.format(datanum))
+    if datanum > 0:
+        deleteData(datestr, t_name)
+    else:
+        return
+
+
+def getDataNum(datestr, t_name):
+    sql = "SELECT count(1) as num FROM `{0}` WHERE stat_date = '{1}'".format(t_name, datestr)
+    cursor_stat.execute(sql)
+    results = cursor_stat.fetchall()
+    for k in results:
+        num = int(k['num'])
+    return num
+
+
+def deleteData(datestr, t_name):
+    sql = "DELETE  FROM `{0}` WHERE stat_date = '{1}'".format(t_name, datestr)
+    print(sql)
+    cursor_stat.execute(sql)
+    db_stat.commit()
+
 
 def alarm(userlist, msg):
     url = 'http://47.93.240.37:8083/ps'
@@ -156,7 +193,9 @@ if __name__ == '__main__':
             datestr = sys.argv[1]
             date = datetime.strptime(datestr, '%Y-%m-%d').date()
         datestr = date.strftime("%Y-%m-%d")
-        print(date)
+        print(datestr)
+        pystr = str(sys.argv[0])
+        checkData(datestr, pystr)
         autoActidList = getAutoActivityIdList()
         results_activity_auto = getAutoActidData(date,autoActidList)
         results_activity_manual = getManualActidData(date,autoActidList)

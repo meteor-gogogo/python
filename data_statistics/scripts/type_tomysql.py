@@ -43,6 +43,43 @@ typedict = {'category': "分类页", 'activity': "活动页", 'search': "搜索�
 
 platformlist = ['IOS客户端', 'Android客户端', '微信小程序', '普通网页', '微信内网页', '百度小程序']
 
+def getTableName(pystr):
+    if 'ctr_tomysql_new' in pystr:
+        tablename = 'type_ctr_total_daily'
+    elif 'spid_tomysql' in pystr:
+        tablename = 'spid_ctr_daily'
+    elif 'piddetail_tomysql' in pystr:
+        tablename = 'product_ctr_daily'
+    elif 'type_tomysql' in pystr:
+        tablename = 'type_ctr_daily'
+    return tablename
+
+
+def checkData(datestr, pystr):
+    t_name = getTableName(pystr)
+    datanum = getDataNum(datestr, t_name)
+    print('当前重复数据: {}'.format(datanum))
+    if datanum > 0:
+        deleteData(datestr, t_name)
+    else:
+        return
+
+
+def getDataNum(datestr, t_name):
+    sql = "SELECT count(1) as num FROM `{0}` WHERE stat_date = '{1}'".format(t_name, datestr)
+    cursor_stat.execute(sql)
+    results = cursor_stat.fetchall()
+    for k in results:
+        num = int(k['num'])
+    return num
+
+
+def deleteData(datestr, t_name):
+    sql = "DELETE  FROM `{0}` WHERE stat_date = '{1}'".format(t_name, datestr)
+    print(sql)
+    cursor_stat.execute(sql)
+    db_stat.commit()
+
 
 def alarm(userlist, msg):
     url = 'http://47.93.240.37:8083/ps'
@@ -163,7 +200,7 @@ def getPidStr(pidList):
 def getSptypeList(sptype):
     pidlist = []
     if sptype == 'all':
-        pidlist = ['category', 'activity', 'search', 'brand', 'index', 'other', 'recommend']
+        pidlist = ['category', 'activity', 'search', 'brand', 'index', 'other', 'recommend','live','live_video']
     else:
         pidlist.append(sptype)
     return pidlist
@@ -639,6 +676,8 @@ def getDataDict(pf, sptype, lastdate, date, datadict):
 
 if __name__ == '__main__':
     try:
+        db_stat = MySQLdb.connect(statmysqlhost, statmysqlusername, statmysqlpasswd, statdb, charset='utf8')
+        cursor_stat = db_stat.cursor(cursorclass=MySQLdb.cursors.DictCursor)
         engine = create_engine(
             "mysql+pymysql://{0}:{1}@{2}/{3}?charset={4}".format(statmysqlusername, statmysqlpasswd, statmysqlhost,
                                                                  statdb,
@@ -654,6 +693,8 @@ if __name__ == '__main__':
         lastdate = date + timedelta(days=-7)
         datestr = date.strftime("%Y-%m-%d")
         print(date, today)
+        pystr = str(sys.argv[0])
+        checkData(datestr, pystr)
         typelist = ['detail', 'all']
         datadict_total = dict()
         for pf in platformlist:
@@ -682,8 +723,10 @@ if __name__ == '__main__':
             pidStr = []
             start = t * EachInsert
             end = (t + 1) * EachInsert
-            # print(start, end)
+            print(start, end)
             dfa[start:end].to_sql(name='type_ctr_daily', con=con, if_exists='append', index=False)
+        cursor_stat.close()
+        db_stat.close()
         con.close()
         print('数据写入成功')
         filename = './' + "typectr_{}.csv".format(datestr)

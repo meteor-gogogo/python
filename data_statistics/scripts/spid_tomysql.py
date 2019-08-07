@@ -39,9 +39,47 @@ namedict = {'stat_date': "日期", 'type': "类型", 'pv_show': "列表总曝光
             'totalorderpp': "单日订单商品实付总价"}
 
 typedict = {'category': "分类页", 'activity': "活动页", 'search': "搜索页", 'brand': "品牌页", 'index': "首页",
-            'other': '其他页', 'recommend': "推荐页", 'all': "总数"}
+            'other': '其他页', 'recommend': "推荐页", 'live': "直播中", 'live_video': "回放", 'all': "总数"}
 
 platformlist = ['IOS客户端', 'Android客户端', '微信小程序', '普通网页', '微信内网页', '百度小程序']
+
+
+def getTableName(pystr):
+    if 'ctr_tomysql_new' in pystr:
+        tablename = 'type_ctr_total_daily'
+    elif 'spid_tomysql' in pystr:
+        tablename = 'spid_ctr_daily'
+    elif 'piddetail_tomysql' in pystr:
+        tablename = 'product_ctr_daily'
+    elif 'type_tomysql' in pystr:
+        tablename = 'type_ctr_daily'
+    return tablename
+
+
+def checkData(datestr, pystr):
+    t_name = getTableName(pystr)
+    datanum = getDataNum(datestr, t_name)
+    print('当前重复数据: {}'.format(datanum))
+    if datanum > 0:
+        deleteData(datestr, t_name)
+    else:
+        return
+
+
+def getDataNum(datestr, t_name):
+    sql = "SELECT count(1) as num FROM `{0}` WHERE stat_date = '{1}'".format(t_name, datestr)
+    cursor_stat.execute(sql)
+    results = cursor_stat.fetchall()
+    for k in results:
+        num = int(k['num'])
+    return num
+
+
+def deleteData(datestr, t_name):
+    sql = "DELETE  FROM `{0}` WHERE stat_date = '{1}'".format(t_name, datestr)
+    print(sql)
+    cursor_stat.execute(sql)
+    db_stat.commit()
 
 
 def alarm(userlist, msg):
@@ -53,6 +91,7 @@ def alarm(userlist, msg):
         return True
     else:
         return False
+
 
 def sendMain(addressList, attachmentName):
     sender = 'aplumctr@aplum-inc.com'  # 发送邮件的邮箱地址
@@ -158,7 +197,7 @@ def getPfShowList(pf):
     elif pf == 'Android客户端':
         pflist = ["android_app", "android_app_native"]
     elif pf == '微信小程序':
-        pflist = ["ios_wechat", "android_wechat", "ipad_wechat","wechat_native"]
+        pflist = ["ios_wechat", "android_wechat", "ipad_wechat", "wechat_native"]
     elif pf == '普通网页':
         pflist = ["m_wechat", "web_wechat"]
     return pflist
@@ -369,6 +408,7 @@ def getDetailDistinctAndSidInfo(sptype, date, datadict):
             pidinfo['detail_distinct_total_discountprice'] = totalcp
     return datadict
 
+
 # 获取单日各详细分类的收藏信息,含uv,pv,在售总价及折扣总价等
 def getWIshInfo(sptype, date, datadict):
     sql = "SELECT  src_page_id as spid, plumfrontend as pf,COUNT(*) AS pv_wish, COUNT( DISTINCT ( distinct_ID ) ) AS uv_wish, SUM(productsale_price) AS totalsp,SUM(productdiscount_price) AS totalcp FROM EVENTS WHERE EVENT = 'AddWish' AND date = '{0}' AND sid != '' AND src_page_type = '{1}'  GROUP BY spid,pf".format(
@@ -400,6 +440,7 @@ def getWIshInfo(sptype, date, datadict):
             pidinfo['wish_total_saleprice'] = totalsp
             pidinfo['wish_total_discountprice'] = totalcp
     return datadict
+
 
 # 获取单日各详细分类的列表加购信息,含uv,pv,在售总价及折扣总价等
 def getListAddCartInfo(sptype, date, datadict):
@@ -536,7 +577,7 @@ def getDataDict(pf, sptype, lastdate, date, datadict):
         datadict = getListInfo(sptype, date, datadict)
         datadict = getDetailInfo(sptype, date, datadict)
         datadict = getDetailDistinctAndSidInfo(sptype, date, datadict)
-        datadict = getWIshInfo(sptype,date,datadict)
+        datadict = getWIshInfo(sptype, date, datadict)
         datadict = getAddCartInfo(sptype, date, datadict)
         datadict = getListAddCartInfo(sptype, date, datadict)
         datadict = getOrderProductInfo(sptype, lastdate, date, datadict)
@@ -546,7 +587,8 @@ def getDataDict(pf, sptype, lastdate, date, datadict):
 
 if __name__ == '__main__':
     try:
-
+        db_stat = MySQLdb.connect(statmysqlhost, statmysqlusername, statmysqlpasswd, statdb, charset='utf8')
+        cursor_stat = db_stat.cursor(cursorclass=MySQLdb.cursors.DictCursor)
         if len(sys.argv) == 1:
             today = date.today()
             date = today + timedelta(days=-1)
@@ -557,6 +599,8 @@ if __name__ == '__main__':
         lastdate = date + timedelta(days=-7)
         datestr = date.strftime("%Y-%m-%d")
         print(date, today)
+        pystr = str(sys.argv[0])
+        checkData(datestr, pystr)
         typelist = typedict.keys()
         datadict_total = dict()
         for pf in platformlist:
@@ -592,8 +636,10 @@ if __name__ == '__main__':
             pidStr = []
             start = t * EachInsert
             end = (t + 1) * EachInsert
-            # print(start, end)
+            print(start, end)
             dfa[start:end].to_sql(name='spid_ctr_daily', con=con, if_exists='append', index=False)
+        cursor_stat.close()
+        db_stat.close()
         con.close()
         print('数据写入成功')
         filename = './' + "spidctr_{}.csv".format(datestr)

@@ -6,6 +6,7 @@ import requests
 import time
 import redis
 import json
+import MySQLdb
 import pandas as pd
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -19,6 +20,11 @@ es = Elasticsearch(["es-cn-0pp0vm2ju000a003g.elasticsearch.aliyuncs.com"], http_
                    port=9200)
 url = "http://websa.aplum-inc.com/api/sql/query?token=15ba27be5b7895379a0574993db783281988c16f95969fe423847d31ed95728d"
 
+mysqlhost = 'rr-2ze7824567d8dgu1y.mysql.rds.aliyuncs.com'
+mysqlusername = 'plumdb'
+mysqlpasswd = 'plumdb@2018'
+db = 'aplum'
+
 statmysqlhost = 'pc-2ze47js669jk7k187.rwlb.rds.aliyuncs.com'
 statmysqlusername = 'plumdb'
 statmysqlpasswd = 'plumdb@2019'
@@ -27,10 +33,6 @@ statdb = 'aplum_stat'
 start = time.time()
 tic = lambda: 'at %1.1f seconds' % (time.time() - start)
 
-# statmysqlhost = '127.0.0.1'
-# statmysqlusername = 'root'
-# statmysqlpasswd = '12345'
-# statdb = 'aplum_stat'
 
 def alarm(userlist, msg):
     url = 'http://47.93.240.37:8083/ps'
@@ -86,6 +88,14 @@ def getKeywordList(sptype):
             keywordlist.append(key)
     elif sptype == 'activity':
         keywordlist = ['250', '253', '552', '2244', '2245', '2343', '2344']
+        sql = "SELECT id FROM t_activity t WHERE t.refresh_order_interval=1 and t.activity_type='normal' and  UNIX_TIMESTAMP(CAST(SYSDATE()AS DATE) - INTERVAL 1 DAY)  < t.end_time"
+        cursor.execute(sql)
+        results = cursor.fetchall()
+        for p in results:
+            pid = str(p['id'])
+            keywordlist.append(pid)
+    elif sptype == 'recommend':
+        keywordlist = ['index']
     return keywordlist
 
 
@@ -98,7 +108,7 @@ def getPidStr(pidList):
 
 
 def getTypeStr(sptype):
-    if sptype == 'activity':
+    if sptype == 'activity' or sptype == 'recommend':
         typestr = 'src_page_id'
     elif sptype == 'search':
         typestr = 'lower(src_page_id)'
@@ -299,6 +309,8 @@ def getDataDict(date, sptype, spidlist):
         grouplist = ['search_A', 'search_B']
     elif sptype == 'activity':
         grouplist = ['activity-auto_A', 'activity-auto_B']
+    elif sptype == 'recommend':
+        grouplist = ['recommend-index_A', 'recommend-index_B']
 
     for gp in grouplist:
         ctrinfo = dict()
@@ -315,6 +327,8 @@ def getDataDict(date, sptype, spidlist):
                 group = 'productSearchIndex.groupA'
             elif sptype == 'activity':
                 group = 'productActidIndex.groupA'
+            elif sptype == 'recommend':
+                group = 'recommendIndex.groupA'
 
         ctrinfo['list_uv'], ctrinfo['list_pv'] = getGroupTestListPvAndUv(sptype, spidlist, group, date)
         ctrinfo['detail_uv'], ctrinfo['detail_pv'], ctrinfo['detail_total_saleprice'], ctrinfo[
@@ -331,6 +345,8 @@ def getDataDict(date, sptype, spidlist):
 
 if __name__ == '__main__':
     try:
+        db = MySQLdb.connect(mysqlhost, mysqlusername, mysqlpasswd, db, charset='utf8')
+        cursor = db.cursor(cursorclass=MySQLdb.cursors.DictCursor)
         engine = create_engine(
             "mysql+pymysql://{0}:{1}@{2}/{3}?charset={4}".format(statmysqlusername, statmysqlpasswd, statmysqlhost,
                                                                  statdb,
@@ -354,6 +370,7 @@ if __name__ == '__main__':
         print('======{}分组测试用户CTR数据 ======'.format(type))
 
         spidlist = getKeywordList(type)
+        spidlist = list(set(spidlist))
         datadict = getDataDict(date, type, spidlist)
         dfa = pd.DataFrame(list(datadict.values()),
                            columns=['stat_date', 'groupname', 'show_uv', 'show_pv', 'list_uv', 'list_pv', 'detail_uv',

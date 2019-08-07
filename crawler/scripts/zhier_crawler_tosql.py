@@ -19,7 +19,7 @@ if __name__ == '__main__':
     result_list = list()
     today = date.today()
     result_dict = dict()
-    file_path = '/home/aplum/tmp/zhierdata/{0}/'.format(today)
+    file_path = '/home/aplum/work_lh/zhierdata/{0}/'.format(today)
     path_dir = os.listdir(file_path)
     for all_dir in path_dir:
         child = os.path.join('%s%s' % (file_path, all_dir))

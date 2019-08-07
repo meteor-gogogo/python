@@ -8,15 +8,15 @@ import json
 import MySQLdb
 import os
 from elasticsearch import helpers
-import traceback
 import redis
 from IpCity import IpCity
 
 
 from collections import ChainMap
 
+
 #redis测试库
-r = redis.Redis(host='dev02.aplum-inc.com', port='6379', password='', db=2, decode_responses=True, charset='utf-8')
+r = redis.Redis(host='r-2zec5074fca1ade4.redis.rds.aliyuncs.com', port='6379', password='dL5pr5RkJBQEuqj', db=2, decode_responses=True, charset='utf-8')
 
 statmysqlhost = 'pc-2ze47js669jk7k187.rwlb.rds.aliyuncs.com'
 statmysqlusername = 'plumdb'
@@ -54,7 +54,7 @@ def get_bid_sale_price_dict(es_data, sensors_data, product_dict, ctr_dict):
         bid = str(product_dict[pid]['brand_id'])
         sale_price = str(product_dict[pid]['sale_price'])
         key = bid + '-' + sale_price
-        bid_sale_price_pv_key = 'gbdt:17:' + key + ':pv'
+        bid_sale_price_pv_key = 'gbdt:16:' + key + ':pv'
         bid_sale_price_pv_value_current = ctr_dict.get(bid_sale_price_pv_key, 0)
         bid_sale_price_pv_value = 1 + bid_sale_price_pv_value_current
         ctr_dict.update({bid_sale_price_pv_key: bid_sale_price_pv_value})
@@ -65,7 +65,7 @@ def get_bid_sale_price_dict(es_data, sensors_data, product_dict, ctr_dict):
         bid = str(product_dict[pid]['brand_id'])
         sale_price = str(product_dict[pid]['sale_price'])
         key = bid + '-' + sale_price
-        bid_sale_price_click_key = 'gbdt:17:' + key + ':click'
+        bid_sale_price_click_key = 'gbdt:16:' + key + ':click'
         bid_sale_price_click_value_current = ctr_dict.get(bid_sale_price_click_key, 0)
         bid_sale_price_click_value = 1 + bid_sale_price_click_value_current
         ctr_dict.update({bid_sale_price_click_key: bid_sale_price_click_value})
@@ -88,7 +88,7 @@ def get_bid_discount_rate_dict(es_data, sensors_data, product_dict, ctr_dict):
         bid = str(product_dict[pid]['brand_id'])
         discount_rate = str(product_dict[pid]['discount_rate'])
         key = bid + '-' + discount_rate
-        bid_discount_rate_pv_key = 'gbdt:16:' + key + ':pv'
+        bid_discount_rate_pv_key = 'gbdt:15:' + key + ':pv'
         bid_discount_rate_pv_value_current = ctr_dict.get(bid_discount_rate_pv_key, 0)
         bid_discount_rate_pv_value = 1 + bid_discount_rate_pv_value_current
         ctr_dict.update({bid_discount_rate_pv_key: bid_discount_rate_pv_value})
@@ -99,7 +99,7 @@ def get_bid_discount_rate_dict(es_data, sensors_data, product_dict, ctr_dict):
         bid = str(product_dict[pid]['brand_id'])
         discount_rate = str(product_dict[pid]['discount_rate'])
         key = bid + '-' + discount_rate
-        bid_discount_rate_click_key = 'gbdt:16:' + key + ':click'
+        bid_discount_rate_click_key = 'gbdt:15:' + key + ':click'
         bid_discount_rate_click_value_current = ctr_dict.get(bid_discount_rate_click_key, 0)
         bid_discount_rate_click_value = 1 + bid_discount_rate_click_value_current
         ctr_dict.update({bid_discount_rate_click_key: bid_discount_rate_click_value})
@@ -122,7 +122,7 @@ def get_bid_discount_price_dict(es_data, sensors_data, product_dict, ctr_dict):
         bid = str(product_dict[pid]['brand_id'])
         discount_price = str(product_dict[pid]['discount_price'])
         key = bid + '-' + discount_price
-        bid_discount_price_pv_key = 'gbdt:15:' + key + ':pv'
+        bid_discount_price_pv_key = 'gbdt:14:' + key + ':pv'
         bid_discount_price_pv_value_current = ctr_dict.get(bid_discount_price_pv_key, 0)
         bid_discount_price_pv_value = 1 + bid_discount_price_pv_value_current
         ctr_dict.update({bid_discount_price_pv_key: bid_discount_price_pv_value})
@@ -133,7 +133,7 @@ def get_bid_discount_price_dict(es_data, sensors_data, product_dict, ctr_dict):
         bid = str(product_dict[pid]['brand_id'])
         discount_price = str(product_dict[pid]['discount_price'])
         key = bid + '-' + discount_price
-        bid_discount_price_click_key = 'gbdt:15:' + key + ':click'
+        bid_discount_price_click_key = 'gbdt:14:' + key + ':click'
         bid_discount_price_click_value_current = ctr_dict.get(bid_discount_price_click_key, 0)
         bid_discount_price_click_value = 1 + bid_discount_price_click_value_current
         ctr_dict.update({bid_discount_price_click_key: bid_discount_price_click_value})
@@ -156,7 +156,7 @@ def get_bid_original_price_dict(es_data, sensors_data, product_dict, ctr_dict):
         bid = str(product_dict[pid]['brand_id'])
         original_price = str(product_dict[pid]['original_price'])
         key = bid + '-' + original_price
-        bid_original_price_pv_key = 'gbdt:14:' + key + ':pv'
+        bid_original_price_pv_key = 'gbdt:13:' + key + ':pv'
         bid_original_price_pv_value_current = ctr_dict.get(bid_original_price_pv_key, 0)
         bid_original_price_pv_value = 1 + bid_original_price_pv_value_current
         ctr_dict.update({bid_original_price_pv_key: bid_original_price_pv_value})
@@ -167,68 +167,74 @@ def get_bid_original_price_dict(es_data, sensors_data, product_dict, ctr_dict):
         bid = str(product_dict[pid]['brand_id'])
         original_price = str(product_dict[pid]['original_price'])
         key = bid + '-' + original_price
-        bid_original_price_click_key = 'gbdt:14:' + key + ':click'
+        bid_original_price_click_key = 'gbdt:13:' + key + ':click'
         bid_original_price_click_value_current = ctr_dict.get(bid_original_price_click_key, 0)
         bid_original_price_click_value = 1 + bid_original_price_click_value_current
         ctr_dict.update({bid_original_price_click_key: bid_original_price_click_value})
     return ctr_dict
 
 
-def get_status_dict(es_data, sensors_data, product_dict, ctr_dict):
-    # onsale_num_pv = 0
-    # onsale_num_click = 0
-    # sold_num_pv = 0
-    # sold_num_click = 0
-    # for row in click_list:
-    #     row_arr = row.split(':')
-    #     is_click = int(row_arr[0])
-    #     status = int(row_arr[3])
-    #     if status:
-    #         onsale_num_pv += 1
-    #         if is_click:
-    #             onsale_num_click += 1
-    #         else:
-    #             pass
-    #     else:
-    #         sold_num_pv += 1
-    #         if is_click:
-    #             sold_num_click += 1
-    #         else:
-    #             pass
-    #     if status not in ['onsale', 'sold']:
-    #         continue
-    #     if status == 'onsale':
-    #         onsale_num_pv += 1
-    #     else:
-    #         sold_num_pv += 1
-    # status_onsale_pv_key = 'gbdt:13:onsale:pv'
-    # status_sold_pv_key = 'gbdt:13:sold:pv'
-    # ctr_dict.update({status_onsale_pv_key: onsale_num_pv})
-    # ctr_dict.update({status_sold_pv_key: sold_num_pv})
-    #
-    # status_onsale_click_key = 'gbdt:13:onsale:click'
-    # status_sold_click_key = 'gbdt:13:sold:click'
-    # ctr_dict.update({status_onsale_click_key: onsale_num_click})
-    # ctr_dict.update({status_sold_click_key: sold_num_click})
-    for row in es_data:
-        pid = str(row.split(':')[0])
-        if pid not in product_dict.keys():
-            continue
-        status = str(product_dict[pid]['status'])
-        status_pv_key = 'gbdt:13:' + status + ':pv'
-        status_pv_value_current = ctr_dict.get(status_pv_key, 0)
-        status_pv_value = 1 + status_pv_value_current
-        ctr_dict.update({status_pv_key: status_pv_value})
-    for row in sensors_data:
-        pid = str(row.split(':')[1])
-        if pid not in product_dict.keys():
-            continue
-        status = str(product_dict[pid]['status'])
-        status_click_key = 'gbdt:13:' + status + ':click'
-        status_click_value_current = ctr_dict.get(status_click_key, 0)
-        status_click_value = 1 + status_click_value_current
-        ctr_dict.update({status_click_key: status_click_value})
-    return ctr_dict
+# def get_status_dict(es_data, sensors_data, product_dict, ctr_dict):
+#     # onsale_num_pv = 0
+#     # onsale_num_click = 0
+#     # sold_num_pv = 0
+#     # sold_num_click = 0
+#     # for row in click_list:
+#     #     row_arr = row.split(':')
+#     #     is_click = int(row_arr[0])
+#     #     status = int(row_arr[3])
+#     #     if status:
+#     #         onsale_num_pv += 1
+#     #         if is_click:
+#     #             onsale_num_click += 1
+#     #         else:
+#     #             pass
+#     #     else:
+#     #         sold_num_pv += 1
+#     #         if is_click:
+#     #             sold_num_click += 1
+#     #         else:
+#     #             pass
+#     #     if status not in ['onsale', 'sold']:
+#     #         continue
+#     #     if status == 'onsale':
+#     #         onsale_num_pv += 1
+#     #     else:
+#     #         sold_num_pv += 1
+#     # status_onsale_pv_key = 'gbdt:13:onsale:pv'
+#     # status_sold_pv_key = 'gbdt:13:sold:pv'
+#     # ctr_dict.update({status_onsale_pv_key: onsale_num_pv})
+#     # ctr_dict.update({status_sold_pv_key: sold_num_pv})
+#     #
+#     # status_onsale_click_key = 'gbdt:13:onsale:click'
+#     # status_sold_click_key = 'gbdt:13:sold:click'
+#     # ctr_dict.update({status_onsale_click_key: onsale_num_click})
+#     # ctr_dict.update({status_sold_click_key: sold_num_click})
+#     for row in es_data:
+#         pid = str(row.split(':')[0])
+#         status = str(row.split(':')[3])
+#         if status == 'onsale':
+#             status_key = 1
+#         else:
+#             status_key = 0
+#         status_pv_key = 'gbdt:13:' + str(status_key) + ':pv'
+#         status_pv_value_current = ctr_dict.get(status_pv_key, 0)
+#         status_pv_value = 1 + status_pv_value_current
+#         ctr_dict.update({status_pv_key: status_pv_value})
+#     for row in sensors_data:
+#         pid = str(row.split(':')[1])
+#         if pid not in product_dict.keys():
+#             continue
+#         status = str(product_dict[pid]['status'])
+#         if status == 'onsale':
+#             status_key = 1
+#         else:
+#             status_key = 0
+#         status_click_key = 'gbdt:13:' + str(status_key) + ':click'
+#         status_click_value_current = ctr_dict.get(status_click_key, 0)
+#         status_click_value = 1 + status_click_value_current
+#         ctr_dict.update({status_click_key: status_click_value})
+#     return ctr_dict
 
 
 def get_discount_rate_dict(es_data, sensors_data, product_dict, ctr_dict):
@@ -574,13 +580,13 @@ def get_pid_dict(es_data, sensors_data, ctr_dict):
 def get_position_dict(es_data, sensors_data, search, ctr_dict):
     position_dict = dict()
     for row in es_data:
-        ip = str(row.split(':')[4])
+        position = str(row.split(':')[6])
         es_sid = str(row.split(':')[5])
         es_uid = str(row.split(':')[1])
         position_dict_key = es_sid + '-' + es_uid
-        city_name = str(search.binarySearch(ip))
-        position_dict.update({position_dict_key: city_name})
-        position_pv_key = 'gbdt:7:' + city_name + ':pv'
+        # city_name = str(search.binarySearch(ip))
+        position_dict.update({position_dict_key: position})
+        position_pv_key = 'gbdt:7:' + position + ':pv'
         position_pv_value_current = ctr_dict.get(position_pv_key, 0)
         position_pv_value = 1 + position_pv_value_current
         ctr_dict.update({position_pv_key: position_pv_value})
@@ -589,8 +595,8 @@ def get_position_dict(es_data, sensors_data, search, ctr_dict):
         uid = str(row.split(':')[2])
         str_sid_uid = sid + '-' + uid
         if str_sid_uid in position_dict.keys():
-            city_name = position_dict[str_sid_uid]
-            position_click_key = 'gbdt:7:' + city_name + ':click'
+            position = position_dict[str_sid_uid]
+            position_click_key = 'gbdt:7:' + position + ':click'
             position_click_value_current = ctr_dict.get(position_click_key, 0)
             position_click_value = 1 + position_click_value_current
             ctr_dict.update({position_click_key: position_click_value})
@@ -639,7 +645,7 @@ def GetESData(begin_time, end_time):
             }
         },
         # 对于命中的目标手动指定返回哪些字段
-        "_source": ["X-Pd-Identify", "ItemActions", "ClientIP", "Createtime", "Status", "Sid"]
+        "_source": ["X-Pd-Identify", "ItemActions", "ClientIP", "Createtime", "Status", "Sid", "Position"]
     }
     _searched = helpers.scan(
         client=EsCTR,
@@ -669,7 +675,8 @@ def GetESData(begin_time, end_time):
         # if ip == '':
         #     continue
         sid = str(source['Sid'])
-        data_tmp = pid + ':' + uid + ':' + timestamp + ':' + status + ':' + ip + ':' + sid
+        position = str(source['Position'])
+        data_tmp = pid + ':' + uid + ':' + timestamp + ':' + status + ':' + ip + ':' + sid + ':' + position
         data.append(data_tmp)
     return data
 
@@ -768,6 +775,7 @@ def merge_redis(redis_result_dict):
             if count % 5000 == 0:
                 print("数据条数：" + str(count))
                 tmp_list = p.execute()
+                # 两个list合并, 把后边的加到前边的list中
                 redis_tmp_list_value += tmp_list
                 print("合并" + str((count//5000)+1) + "批次结果")
         print("数据条数：" + str(count))
@@ -800,6 +808,7 @@ def execute_redis(redis_result_dict):
         print("数据条数：" + str(count))
         p.execute()
         print("放入" + str((count//5000)+1) + "批次结果")
+        print("数据条数：" + str(count))
 
 
 def get_es_data_dict(es_data):
@@ -811,124 +820,129 @@ def get_es_data_dict(es_data):
 
 
 if __name__ == '__main__':
+    try:
+        # click_file_path = '/data/aplum/ctr_data/product_click/'
+        # # 历史数据目录
+        # history_agg_file_path = '/data/aplum/ctr_data/product_view_click_full/'
+        # today = date.today()
+        # lastdate = today + timedelta(days=-7)
+        # print(lastdate)
+        # yestoday = today + timedelta(days=-1)
+        # print(yestoday)
 
-    # click_file_path = '/data/aplum/ctr_data/product_click/'
-    # # 历史数据目录
-    # history_agg_file_path = '/data/aplum/ctr_data/product_view_click_full/'
-    # today = date.today()
-    # lastdate = today + timedelta(days=-7)
-    # print(lastdate)
-    # yestoday = today + timedelta(days=-1)
-    # print(yestoday)
-
-    hour = int((datetime.now() - timedelta(hours=+1)).hour)
-    if hour == 23:
-        begin_time = int(time.mktime((date.today() + timedelta(days=-1)).timetuple()) + 3600 * hour)
-        end_time = int(time.mktime((date.today() + timedelta(days=-1)).timetuple()) + 3600 * (hour + 1))
-    else:
-        begin_time = int(time.mktime(date.today().timetuple()) + 3600 * hour)
-        end_time = int(time.mktime(date.today().timetuple()) + 3600 * (hour + 1))
-
-    db_stat = MySQLdb.connect(statmysqlhost, statmysqlusername, statmysqlpasswd, statdb, charset='utf8')
-    db_product = MySQLdb.connect(mysqlhost, mysqlusername, mysqlpasswd, mysqldb, charset='utf8')
-    # ctr_data = get_ctr_data_from_sql(db_stat, lastdate, yestoday)
-    # print('ctr_data: ' + str(len(ctr_data)))
-    product_dict = get_data_from_sql(db_product)
-    print('product_dict: ' + str(len(product_dict)))
-
-    es_data = GetESData(begin_time, end_time)
-    print('es_data: ' + str(len(es_data)))
-
-    es_data_dict = get_es_data_dict(es_data)
-
-    sensors_data = get_data_from_sensors(begin_time, end_time, es_data_dict)
-    print('sensors_data: ' + str(len(sensors_data)))
-
-    user_dict = getUserDict(db_product)
-
-    click_list = list()
-    ctr_dict = dict()
-    ctr_dict = get_pid_dict(es_data, sensors_data, ctr_dict)
-    print('pid_dict: ' + str(len(ctr_dict)))
-
-    ctr_dict = get_cid_dict(es_data, sensors_data, product_dict, ctr_dict)
-    print('cid_dict: ' + str(len(ctr_dict)))
-
-    ctr_dict = get_bid_dict(es_data, sensors_data, product_dict, ctr_dict)
-    print('bid_dict: ' + str(len(ctr_dict)))
-
-    ctr_dict = get_source_of_supply_dict(es_data, sensors_data, product_dict, ctr_dict)
-    print('source_of_supply_dict: ' + str(len(ctr_dict)))
-
-    ctr_dict = get_is_blackcard_member_dict(es_data, sensors_data, user_dict, ctr_dict)
-    print('is_blackcard_member_dict: ' + str(len(ctr_dict)))
-
-    ctr_dict = get_degree_dict(es_data, sensors_data, product_dict, ctr_dict)
-    print('degree_dict: ' + str(len(ctr_dict)))
-
-    search = IpCity()
-    ctr_dict = get_position_dict(es_data, sensors_data, search, ctr_dict)
-    print('get_position_dict:' + str(len(ctr_dict)))
-
-    ctr_dict = get_is_promotion_dict(es_data, sensors_data, product_dict, ctr_dict)
-    print('is_promotion_dict: ' + str(len(ctr_dict)))
-
-    ctr_dict = get_original_price_dict(es_data, sensors_data, product_dict, ctr_dict)
-    print('original_price_dict: ' + str(len(ctr_dict)))
-
-    ctr_dict = get_sale_price_dict(es_data, sensors_data, product_dict, ctr_dict)
-    print('sale_price_dict: ' + str(len(ctr_dict)))
-
-    ctr_dict = get_discount_price_dict(es_data, sensors_data, product_dict, ctr_dict)
-    print('discount_price_dict: ' + str(len(ctr_dict)))
-
-    ctr_dict = get_discount_rate_dict(es_data, sensors_data, product_dict, ctr_dict)
-    print('discount_rate_dict: ' + str(len(ctr_dict)))
-
-    ctr_dict = get_status_dict(es_data, sensors_data, product_dict, ctr_dict)
-    print('status_dict: ' + str(len(ctr_dict)))
-
-    ctr_dict = get_bid_original_price_dict(es_data, sensors_data, product_dict, ctr_dict)
-    print('bid_original_price_dict: ' + str(len(ctr_dict)))
-
-    ctr_dict = get_bid_discount_price_dict(es_data, sensors_data, product_dict, ctr_dict)
-    print('bid_discount_price_dict: ' + str(len(ctr_dict)))
-
-    ctr_dict = get_bid_discount_rate_dict(es_data, sensors_data, product_dict, ctr_dict)
-    print('bid_discount_rate_dict: ' + str(len(ctr_dict)))
-
-    ctr_dict = get_bid_sale_price_dict(es_data, sensors_data, product_dict, ctr_dict)
-    print('ctr_dict: ' + str(len(ctr_dict)))
-
-    ctr_dict = merge_redis(ctr_dict)
-
-    for k in list(ctr_dict.keys()):
-        if k.endswith('click'):
-            v = ctr_dict[k]
-            pv_k = k[: -5] + 'pv'
-            if pv_k not in ctr_dict.keys():
-                ctr_dict.pop(k)
-                continue
-            pv_value = ctr_dict[pv_k]
-            # 如果点击数大于曝光数,点击率设置为0.99
-            # 此情况是由于同一界面在未刷新的前提下,多次点击同一商品造成的
-            if pv_value == 0:
-                ctr_dict.pop(k)
-                ctr_dict.pop(pv_k)
-            # 如果曝光数为0,删除对应的曝光和点击键值对
-            # 此情况是有可能为卖家点击造成的,卖家不记录曝光量
-            elif v > pv_value:
-                rate_key = k[: -5] + 'rate'
-                ctr_dict[rate_key] = 0.99
-            else:
-                rate = round((v / pv_value), 2)
-                rate_key = k[: -5] + 'rate'
-                ctr_dict[rate_key] = rate
+        hour = int((datetime.now() - timedelta(hours=+1)).hour)
+        if hour == 23:
+            begin_time = int(time.mktime((date.today() + timedelta(days=-1)).timetuple()) + 3600 * hour)
+            end_time = int(time.mktime((date.today() + timedelta(days=-1)).timetuple()) + 3600 * (hour + 1))
         else:
-            continue
+            begin_time = int(time.mktime(date.today().timetuple()) + 3600 * hour)
+            end_time = int(time.mktime(date.today().timetuple()) + 3600 * (hour + 1))
 
-    print('ctr_dict: ' + str(len(ctr_dict)))
-    save_dict_to_csv(ctr_dict, hour)
-    # save_dict_to_csv(tmp_dict)
-    execute_redis(ctr_dict)
+        db_stat = MySQLdb.connect(statmysqlhost, statmysqlusername, statmysqlpasswd, statdb, charset='utf8')
+        db_product = MySQLdb.connect(mysqlhost, mysqlusername, mysqlpasswd, mysqldb, charset='utf8')
+        # ctr_data = get_ctr_data_from_sql(db_stat, lastdate, yestoday)
+        # print('ctr_data: ' + str(len(ctr_data)))
+        product_dict = get_data_from_sql(db_product)
+        print('product_dict: ' + str(len(product_dict)))
+
+        es_data = GetESData(begin_time, end_time)
+        print('es_data: ' + str(len(es_data)))
+
+        es_data_dict = get_es_data_dict(es_data)
+
+        sensors_data = get_data_from_sensors(begin_time, end_time, es_data_dict)
+        print('sensors_data: ' + str(len(sensors_data)))
+
+        user_dict = getUserDict(db_product)
+
+        click_list = list()
+        ctr_dict = dict()
+        ctr_dict = get_pid_dict(es_data, sensors_data, ctr_dict)
+        print('pid_dict: ' + str(len(ctr_dict)))
+
+        ctr_dict = get_cid_dict(es_data, sensors_data, product_dict, ctr_dict)
+        print('cid_dict: ' + str(len(ctr_dict)))
+
+        ctr_dict = get_bid_dict(es_data, sensors_data, product_dict, ctr_dict)
+        print('bid_dict: ' + str(len(ctr_dict)))
+
+        ctr_dict = get_source_of_supply_dict(es_data, sensors_data, product_dict, ctr_dict)
+        print('source_of_supply_dict: ' + str(len(ctr_dict)))
+
+        ctr_dict = get_is_blackcard_member_dict(es_data, sensors_data, user_dict, ctr_dict)
+        print('is_blackcard_member_dict: ' + str(len(ctr_dict)))
+
+        ctr_dict = get_degree_dict(es_data, sensors_data, product_dict, ctr_dict)
+        print('degree_dict: ' + str(len(ctr_dict)))
+
+        search = IpCity()
+        ctr_dict = get_position_dict(es_data, sensors_data, search, ctr_dict)
+        print('get_position_dict:' + str(len(ctr_dict)))
+
+        ctr_dict = get_is_promotion_dict(es_data, sensors_data, product_dict, ctr_dict)
+        print('is_promotion_dict: ' + str(len(ctr_dict)))
+
+        ctr_dict = get_original_price_dict(es_data, sensors_data, product_dict, ctr_dict)
+        print('original_price_dict: ' + str(len(ctr_dict)))
+
+        ctr_dict = get_sale_price_dict(es_data, sensors_data, product_dict, ctr_dict)
+        print('sale_price_dict: ' + str(len(ctr_dict)))
+
+        ctr_dict = get_discount_price_dict(es_data, sensors_data, product_dict, ctr_dict)
+        print('discount_price_dict: ' + str(len(ctr_dict)))
+
+        ctr_dict = get_discount_rate_dict(es_data, sensors_data, product_dict, ctr_dict)
+        print('discount_rate_dict: ' + str(len(ctr_dict)))
+
+        # ctr_dict = get_status_dict(es_data, sensors_data, product_dict, ctr_dict)
+        # print('status_dict: ' + str(len(ctr_dict)))
+
+        ctr_dict = get_bid_original_price_dict(es_data, sensors_data, product_dict, ctr_dict)
+        print('bid_original_price_dict: ' + str(len(ctr_dict)))
+
+        ctr_dict = get_bid_discount_price_dict(es_data, sensors_data, product_dict, ctr_dict)
+        print('bid_discount_price_dict: ' + str(len(ctr_dict)))
+
+        ctr_dict = get_bid_discount_rate_dict(es_data, sensors_data, product_dict, ctr_dict)
+        print('bid_discount_rate_dict: ' + str(len(ctr_dict)))
+
+        ctr_dict = get_bid_sale_price_dict(es_data, sensors_data, product_dict, ctr_dict)
+        print('ctr_dict: ' + str(len(ctr_dict)))
+
+        ctr_dict = merge_redis(ctr_dict)
+
+        for k in list(ctr_dict.keys()):
+            if k.endswith('click'):
+                v = ctr_dict[k]
+                pv_k = k[: -5] + 'pv'
+                if pv_k not in ctr_dict.keys():
+                    ctr_dict[pv_k] = 0
+                    rate_key = k[: -5] + 'rate'
+                    ctr_dict[rate_key] = 0.00
+                    continue
+                pv_value = ctr_dict[pv_k]
+                # 如果点击数大于曝光数,点击率设置为0.99
+                # 此情况是由于同一界面在未刷新的前提下,多次点击同一商品造成的
+                if pv_value == 0:
+                    ctr_dict[k] = 0
+                    rate_key = k[: -5] + 'rate'
+                    ctr_dict[rate_key] = 0.00
+                # 如果曝光数为0,点击数和点击率都设置为0
+                # 此情况是有可能为卖家点击造成的,卖家不记录曝光量
+                elif v > pv_value:
+                    rate_key = k[: -5] + 'rate'
+                    ctr_dict[rate_key] = 0.99
+                else:
+                    rate = round((v / pv_value), 2)
+                    rate_key = k[: -5] + 'rate'
+                    ctr_dict[rate_key] = rate
+            else:
+                continue
+
+        print('ctr_dict: ' + str(len(ctr_dict)))
+        # save_dict_to_csv(ctr_dict, hour)
+        # save_dict_to_csv(tmp_dict)
+        execute_redis(ctr_dict)
+    except Exception as e:
+        print(str(e))
 

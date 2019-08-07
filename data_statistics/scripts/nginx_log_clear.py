@@ -54,7 +54,7 @@ def getEarlistIndex(leasttimestamp, indexlist):
 
 # 如果磁盘占用超过一定阈值,删除历史索引
 def deleteIndex(disk_used_rate, leasttimestamp, indexlist):
-    if disk_used_rate >= 0.60:
+    if disk_used_rate >= 0.20:
         earlistindex = getEarlistIndex(leasttimestamp, indexlist)
         datestr = earlistindex[15:]
         for i in range(0, 7):
