@@ -35,6 +35,7 @@ tic = lambda: 'at %1.1f seconds' % (time.time() - start)
 
 
 def get_month_seller_income(source, db_aplum, source_by, url, start_timestamp, end_timestamp, start_date_tmp, end_date_tmp):
+    sql = ''
     register_seller_list = list()
     month_seller_income = 0.00
     if source == 'CPA':
@@ -87,7 +88,7 @@ def get_month_seller_income(source, db_aplum, source_by, url, start_timestamp, e
             sql = "select sum(a.sum_income) as count_source from (select tp.user_id, sum(tdi.settle_price) as " \
                   "sum_income FROM t_order td LEFT JOIN t_order_item tdi on tdi.order_id=td.id left join t_product tp " \
                   "on tdi.product_id=tp.id where td.status not in ('new','topay','cancel') and td.splitted='0' and " \
-                  "td.order_time>={0} and td.order_time<{1} and tp.user_id in ({2}) " \
+                  "td.order_time >= {0} and td.order_time < {1} and tp.user_id in ({2}) " \
                   "group by tp.user_id)a".format(start_timestamp_tmp, end_timestamp_tmp, register_seller_list_tmp)
             # print(sql)
             cursor.execute(sql)
@@ -104,69 +105,8 @@ def get_month_seller_income(source, db_aplum, source_by, url, start_timestamp, e
                 else:
                     month_seller_income = round(float(row['count_source']), 2)
         return month_seller_income
-    elif source == 'nature_Android':
-        sql = "select c.second_id from (select a.second_id, a.source, b.distinct_id from " \
-              "(select tmp.second_id, tmp.source from (select * from( select u.first_id, u.source, u.second_id from " \
-              "(select first_id, source, second_id from users where createtime >= {0} and createtime < {1} and source " \
-              "not in({2}) union select first_id, source, second_id from users where createtime >= {3} and " \
-              "createtime < {4} and source is null)u  group by u.first_id,u.second_id,u.source) m left join (select " \
-              "e.distinct_id, case when e.plumfrontend='IOS客户端' then 'IOS' when e.plumfrontend='Android客户端' " \
-              "then 'Android' when e.plumfrontend='百度小程序' then '百度小程序' else  '微信小程序' end khd from " \
-              "events e where e.event='GeneralOpenApp' and date between '{5}' and '{6}' group by e.distinct_id,khd)n " \
-              "on m.first_id=n.distinct_id)tmp where tmp.khd = 'Android')a left join " \
-              "(select distinct distinct_id from events where event = 'SellerJoin' and date between '{7}' " \
-              "and '{8}') b on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
-            .format(start_timestamp, end_timestamp, source_by, start_timestamp, end_timestamp, start_date_tmp,
-                    end_date_tmp, start_date_tmp, end_date_tmp)
-    elif source == 'nature_IOS':
-        sql = "select c.second_id from (select a.second_id, a.source, b.distinct_id from " \
-              "(select tmp.second_id, tmp.source from (select * from( select u.first_id, u.source, u.second_id from " \
-              "(select first_id, source, second_id from users where createtime >= {0} and createtime < {1} and source " \
-              "not in({2}) union select first_id, source, second_id from users where createtime >= {3} and " \
-              "createtime < {4} and source is null)u  group by u.first_id,u.second_id,u.source) m left join (select " \
-              "e.distinct_id, case when e.plumfrontend='IOS客户端' then 'IOS' when e.plumfrontend='Android客户端' " \
-              "then 'Android' when e.plumfrontend='百度小程序' then '百度小程序' else  '微信小程序' end khd from " \
-              "events e where e.event='GeneralOpenApp' and date between '{5}' and '{6}' group by e.distinct_id,khd)n " \
-              "on m.first_id=n.distinct_id)tmp where tmp.khd = 'IOS')a left join " \
-              "(select distinct distinct_id from events where event = 'SellerJoin' and date between '{7}' " \
-              "and '{8}') b on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
-            .format(start_timestamp, end_timestamp, source_by, start_timestamp, end_timestamp, start_date_tmp,
-                    end_date_tmp, start_date_tmp, end_date_tmp)
-    elif source == 'nature_wechat':
-        sql = "select c.second_id from (select a.second_id, a.source, b.distinct_id from " \
-              "(select tmp.second_id, tmp.source from (select * from( select u.first_id, u.source, u.second_id from " \
-              "(select first_id, source, second_id from users where createtime >= {0} and createtime < {1} and source " \
-              "not in({2}) union select first_id, source, second_id from users where createtime >= {3} and " \
-              "createtime < {4} and source is null)u  group by u.first_id,u.second_id,u.source) m left join (select " \
-              "e.distinct_id, case when e.plumfrontend='IOS客户端' then 'IOS' when e.plumfrontend='Android客户端' " \
-              "then 'Android' when e.plumfrontend='百度小程序' then '百度小程序' else  '微信小程序' end khd from " \
-              "events e where e.event='GeneralOpenApp' and date between '{5}' and '{6}' group by e.distinct_id,khd)n " \
-              "on m.first_id=n.distinct_id)tmp where tmp.khd = '微信小程序')a left join " \
-              "(select distinct distinct_id from events where event = 'SellerJoin' and date between '{7}' " \
-              "and '{8}') b on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
-            .format(start_timestamp, end_timestamp, source_by, start_timestamp, end_timestamp, start_date_tmp,
-                    end_date_tmp, start_date_tmp, end_date_tmp)
-    elif source == 'nature_baidu':
-        sql = "select c.second_id from (select a.second_id, a.source, b.distinct_id from " \
-              "(select tmp.second_id, tmp.source from (select * from( select u.first_id, u.source, u.second_id from " \
-              "(select first_id, source, second_id from users where createtime >= {0} and createtime < {1} and source " \
-              "not in({2}) union select first_id, source, second_id from users where createtime >= {3} and " \
-              "createtime < {4} and source is null)u  group by u.first_id,u.second_id,u.source) m left join (select " \
-              "e.distinct_id, case when e.plumfrontend='IOS客户端' then 'IOS' when e.plumfrontend='Android客户端' " \
-              "then 'Android' when e.plumfrontend='百度小程序' then '百度小程序' else  '微信小程序' end khd from " \
-              "events e where e.event='GeneralOpenApp' and date between '{5}' and '{6}' group by e.distinct_id,khd)n " \
-              "on m.first_id=n.distinct_id)tmp where tmp.khd = '百度小程序')a left join " \
-              "(select distinct distinct_id from events where event = 'SellerJoin' and date between '{7}' " \
-              "and '{8}') b on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
-            .format(start_timestamp, end_timestamp, source_by, start_timestamp, end_timestamp, start_date_tmp,
-                    end_date_tmp, start_date_tmp, end_date_tmp)
     else:
-        sql = "select c.second_id from (select a.second_id, a.source, a.createtime, b.distinct_id from " \
-              "(select distinct second_id, source, createtime from users where source in ({0}) and " \
-              "createtime >= {1} and createtime < {2})a left join " \
-              "(select distinct distinct_id from events where event = 'SellerJoin' and date between '{3}' " \
-              "and '{4}') b on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
-            .format(source_by, start_timestamp, end_timestamp, start_date_tmp, end_date_tmp)
+        pass
     payload = {'q': sql, 'format': 'json'}
     r = requests.post(url, data=payload)
     if r.status_code == 200:
@@ -189,12 +129,14 @@ def get_month_seller_income(source, db_aplum, source_by, url, start_timestamp, e
         month_seller_income = 0.00
     else:
         cursor = db_aplum.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+        start_timestamp_tmp = int(start_timestamp / 1000)
+        end_timestamp_tmp = int(end_timestamp / 1000)
         register_seller_list_tmp = "'" + "','".join(str(i) for i in register_seller_list) + "'"
         sql = "select sum(a.sum_income) as count_source from (select tp.user_id, sum(tdi.settle_price) as " \
               "sum_income FROM t_order td LEFT JOIN t_order_item tdi on tdi.order_id=td.id left join t_product tp " \
               "on tdi.product_id=tp.id where td.status not in ('new','topay','cancel') and td.splitted='0' and " \
-              "td.order_time>=UNIX_TIMESTAMP('{0}') and td.order_time<UNIX_TIMESTAMP('{1}') and tp.user_id in ({2}) " \
-              "group by tp.user_id)a".format(start_date_tmp, end_date_tmp, register_seller_list_tmp)
+              "td.order_time >= {0} and td.order_time < {1} and tp.user_id in ({2}) " \
+              "group by tp.user_id)a".format(start_timestamp_tmp, end_timestamp_tmp, register_seller_list_tmp)
         # print(sql)
         cursor.execute(sql)
         source_data = cursor.fetchall()
@@ -204,7 +146,7 @@ def get_month_seller_income(source, db_aplum, source_by, url, start_timestamp, e
             # row = process_price(row)
             # if
             # print(row)
-            if row['count_source'] == None:
+            if row['count_source'] is None:
                 month_seller_income = 0.00
                 continue
             else:
