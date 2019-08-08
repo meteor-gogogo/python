@@ -1,14 +1,9 @@
 #!/usr/bin/env python
 # coding=utf-8
 import pandas as pd
-import requests
 from datetime import date, timedelta, datetime
 import time
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-import MySQLdb
-import json
-import os
 
 mysql_host = 'rm-2zeixwnpc34127h5f191-vpc-rw.mysql.rds.aliyuncs.com'
 mysql_user = 'plumdb'
@@ -21,13 +16,13 @@ mysql_db = 'aplum_mis'
 # mysql_db = 'aplum_mis'
 
 
-def write_dict_to_mysql(result_dict):
+def write_dict_to_mysql(result_dict_va):
     fields = ['type', 'second_name', 'exe_date', 'costs', 'today_actived_num', 'new_actived_user', 'avg_actived_costs',
               'new_registered_user', 'avg_registered_costs', 'avg_registered_rate', 'new_ordered_user',
               'avg_ordered_user_costs', 'avg_ordered_rate', 'new_ordered_num', 'avg_ordered_costs', 'kdj_costs',
               'order_costs', 'roi', 'new_seller', 'avg_seller_costs', 'new_jcmjs', 'avg_jcmjs_costs', 'avg_jcmjs_rate',
               'dyscje', 'seller_roi', 'ddyj_mjjc', 'mmjpjcb', 'create_time']
-    df = pd.DataFrame(list(result_dict.values()), columns=fields)
+    df = pd.DataFrame(list(result_dict_va.values()), columns=fields)
     # print(df)
     # writer = pd.ExcelWriter('/home/aplum/work_lh/data_dict_to_csv/2019-08-02-seller.xlsx')
     # df.to_excel(excel_writer=writer, index=False, sheet_name='月表', encoding='utf-8')
@@ -46,10 +41,6 @@ def write_dict_to_mysql(result_dict):
 
 
 if __name__ == '__main__':
-    # 最终结果列表
-    # result_list = list()
-    # timestamp = int(time.time())
-    # print(timestamp)
     today = date.today()
     file_path = '/home/aplum/work_lh/data_dict_to_csv/2019-08-07-special-dict.csv'
     # file_path = '/home/liuhang/2019-08-07-dict.csv'
@@ -67,29 +58,29 @@ if __name__ == '__main__':
                     continue
                 result_dict[key] = list()
                 if source == 'all':
-                    type = 0
+                    source_type = 0
                 elif source == 'nature':
-                    type = 1
+                    source_type = 1
                 elif source == 'channel_all':
-                    type = 2
+                    source_type = 2
                 elif source == 'channel_flow':
-                    type = 3
+                    source_type = 3
                 elif source == 'channel_kol':
-                    type = 4
+                    source_type = 4
                 elif source == 'nature_Android':
-                    type = 6
+                    source_type = 6
                 elif source == 'nature_IOS':
-                    type = 7
+                    source_type = 7
                 elif source == 'nature_wechat':
-                    type = 8
+                    source_type = 8
                 elif source == 'nature_baidu':
-                    type = 9
+                    source_type = 9
                 else:
-                    type = 5
-                # if type in (6, 7, 8, 9):
+                    source_type = 5
+                # if source_type in (6, 7, 8, 9):
                 #     continue
-                result_dict[key].append(int(type))
-                if type == 5:
+                result_dict[key].append(int(source_type))
+                if source_type == 5:
                     source_tmp = str(line_dict[key]['source'])
                 else:
                     source_tmp = ''

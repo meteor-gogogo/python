@@ -1,14 +1,9 @@
 #!/usr/bin/env python
 # coding=utf-8
 import pandas as pd
-import requests
 from datetime import date, timedelta, datetime
 import time
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-import MySQLdb
-import json
-import os
 
 mysql_host = 'rm-2zeixwnpc34127h5f191-vpc-rw.mysql.rds.aliyuncs.com'
 mysql_user = 'plumdb'
@@ -57,37 +52,40 @@ if __name__ == '__main__':
         for line in lines:
             # print(line)
             line_dict = eval(line)
+            # 数据存在一个字典中,key的形式为source&month,value是完整的数据,也是字典
+            # 每一行的数据只有一个key,例如: all&2018-11-01
             for key in line_dict.keys():
                 # print(key)
+                # 市场推广人员source录入错误,对这两个source过来的数据进行过滤,扔掉
                 source = str(line_dict[key]['source'])
                 if source in ('头条信息流', '微博信息流'):
                     continue
                 result_dict[key] = list()
 
                 if source == 'all':
-                    type = 0
+                    source_type = 0
                 elif source == 'nature':
-                    type = 1
+                    source_type = 1
                 elif source == 'channel_all':
-                    type = 2
+                    source_type = 2
                 elif source == 'channel_flow':
-                    type = 3
+                    source_type = 3
                 elif source == 'channel_kol':
-                    type = 4
+                    source_type = 4
                 elif source == 'nature_Android':
-                    type = 6
+                    source_type = 6
                 elif source == 'nature_IOS':
-                    type = 7
+                    source_type = 7
                 elif source == 'nature_wechat':
-                    type = 8
+                    source_type = 8
                 elif source == 'nature_baidu':
-                    type = 9
+                    source_type = 9
                 else:
-                    type = 5
-                # if type in (6, 7, 8, 9):
+                    source_type = 5
+                # if source_type in (6, 7, 8, 9):
                 #     continue
-                result_dict[key].append(int(type))
-                if type == 5:
+                result_dict[key].append(int(source_type))
+                if source_type == 5:
                     source_tmp = str(line_dict[key]['source'])
                 else:
                     source_tmp = ''
@@ -125,7 +123,6 @@ if __name__ == '__main__':
                     key_tmp = 'nature&' + str(line_dict[key]['month'])
                     result_dict[key_tmp][4] = int(line_dict[key]['today_actived_num']) + int(result_dict[key_tmp][4])
                     result_dict[key_tmp][5] = int(line_dict[key]['new_actived_user']) + int(result_dict[key_tmp][5])
-                    # result_dict[key_tmp][6] = round(float(float(result_dict[key_tmp][3]) / result_dict[key_tmp][5]), 2)
                     result_dict[key_tmp][7] = int(line_dict[key]['new_registered_user']) + int(result_dict[key_tmp][7])
                     # result_dict[key_tmp][8] = int(line_dict[key]['today_actived_num']) + int(result_dict[key_tmp][4])
                     result_dict[key_tmp][9] = int(int(result_dict[key_tmp][7]) / int(result_dict[key_tmp][5]) * 10000)
