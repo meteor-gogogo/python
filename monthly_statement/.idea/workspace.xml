@@ -2,20 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="58f59d37-b1f4-4626-8dfe-2f38c2216b8b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/scripts/history/data_to_mysql_history_buyer_special.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/history/data_to_mysql_history_seller_special.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../pandas_exercise/pandas_exercise.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data_statistics/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../data_statistics/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/order_detail/order_detail.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../flink-training-exercises" beforeDir="false" afterPath="$PROJECT_DIR$/../flink-training-exercises" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/by_day/data_to_mysql_day_buyer.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/by_day/data_to_mysql_day_buyer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/by_day/data_to_mysql_day_seller.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/by_day/data_to_mysql_day_seller.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/by_day/source_info_day.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/by_day/source_info_day.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/history/data_to_mysql_history_buyer.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/history/data_to_mysql_history_buyer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/history/data_to_mysql_history_seller.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/history/data_to_mysql_history_seller.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/history/source_info_history.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/history/source_info_history.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/history/source_info_history_special.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/history/source_info_history_special.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/month_visit_remain/month_visit_remain.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/month_visit_remain/month_visit_remain.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -28,8 +18,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scripts/month_visit_remain/month_visit_remain.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-190">
-              <caret line="658" column="68" lean-forward="true" selection-start-line="658" selection-start-column="68" selection-end-line="658" selection-end-column="68" />
+            <state relative-caret-position="411">
+              <caret line="417" column="19" lean-forward="true" selection-start-line="406" selection-start-column="4" selection-end-line="417" selection-end-column="19" />
               <folding>
                 <element signature="e#37#83#0" expanded="true" />
               </folding>
@@ -37,11 +27,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scripts/by_day/source_info_day.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="168">
-              <caret line="1483" column="27" selection-start-line="1483" selection-start-column="27" selection-end-line="1484" selection-end-column="24" />
+            <state relative-caret-position="-1317">
+              <caret line="1281" column="4" selection-start-line="1281" selection-start-column="4" selection-end-line="1281" selection-end-column="4" />
               <folding>
                 <element signature="e#37#83#0" expanded="true" />
               </folding>
@@ -70,20 +60,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scripts/history/source_info_history.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="635" column="45" lean-forward="true" selection-start-line="635" selection-start-column="45" selection-end-line="635" selection-end-column="45" />
+            <state relative-caret-position="248">
+              <caret line="672" column="27" lean-forward="true" selection-end-line="718" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/scripts/history/data_to_mysql_history_seller.py">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/scripts/order_detail/order_detail.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3078">
-              <caret line="118" selection-start-line="114" selection-start-column="16" selection-end-line="118" />
-              <folding>
-                <element signature="e#37#56#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="-480">
+              <caret line="624" column="85" selection-start-line="624" selection-start-column="85" selection-end-line="627" selection-end-column="93" />
             </state>
           </provider>
         </entry>
@@ -100,8 +87,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scripts/by_day/data_to_mysql_day_buyer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="86" column="32" lean-forward="true" selection-start-line="86" selection-start-column="32" selection-end-line="86" selection-end-column="32" />
+            <state relative-caret-position="4212">
+              <caret line="164" lean-forward="true" selection-start-line="164" selection-end-line="164" />
             </state>
           </provider>
         </entry>
@@ -154,12 +141,13 @@
         <option value="$PROJECT_DIR$/scripts/history/data_to_mysql_history_seller_special.py" />
         <option value="$PROJECT_DIR$/scripts/history/data_to_mysql_history_buyer_special.py" />
         <option value="$PROJECT_DIR$/scripts/month_visit_remain/month_visit_remain.py" />
-        <option value="$PROJECT_DIR$/scripts/by_day/data_to_mysql_day_buyer.py" />
         <option value="$PROJECT_DIR$/scripts/by_day/source_info_day.py" />
+        <option value="$PROJECT_DIR$/scripts/by_day/data_to_mysql_day_buyer.py" />
+        <option value="$PROJECT_DIR$/scripts/order_detail/order_detail.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="565" />
     <option name="y" value="15" />
     <option name="width" value="1225" />
@@ -195,25 +183,13 @@
               <item name="monthly_statement" type="b2602c69:ProjectViewProjectNode" />
               <item name="monthly_statement" type="462c0819:PsiDirectoryNode" />
               <item name="scripts" type="462c0819:PsiDirectoryNode" />
-              <item name="history" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="monthly_statement" type="b2602c69:ProjectViewProjectNode" />
-              <item name="monthly_statement" type="462c0819:PsiDirectoryNode" />
-              <item name="scripts" type="462c0819:PsiDirectoryNode" />
-              <item name="month_cost" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="monthly_statement" type="b2602c69:ProjectViewProjectNode" />
-              <item name="monthly_statement" type="462c0819:PsiDirectoryNode" />
-              <item name="scripts" type="462c0819:PsiDirectoryNode" />
-              <item name="month_roi_order_cost" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="monthly_statement" type="b2602c69:ProjectViewProjectNode" />
-              <item name="monthly_statement" type="462c0819:PsiDirectoryNode" />
-              <item name="scripts" type="462c0819:PsiDirectoryNode" />
               <item name="month_visit_remain" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="monthly_statement" type="b2602c69:ProjectViewProjectNode" />
+              <item name="monthly_statement" type="462c0819:PsiDirectoryNode" />
+              <item name="scripts" type="462c0819:PsiDirectoryNode" />
+              <item name="order_detail" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -290,7 +266,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23438549" />
@@ -387,10 +363,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/month_visit_remain/month_visit_remain.py">
+    <entry file="file://$PROJECT_DIR$/scripts/by_day/data_to_mysql_day_seller.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-190">
-          <caret line="658" column="68" lean-forward="true" selection-start-line="658" selection-start-column="68" selection-end-line="658" selection-end-column="68" />
+        <state relative-caret-position="2727">
+          <caret line="161" column="33" selection-start-line="161" selection-start-column="33" selection-end-line="161" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/by_day/source_info_day.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1317">
+          <caret line="1281" column="4" selection-start-line="1281" selection-start-column="4" selection-end-line="1281" selection-end-column="4" />
           <folding>
             <element signature="e#37#83#0" expanded="true" />
           </folding>
@@ -399,32 +382,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/scripts/history/source_info_history.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="635" column="45" lean-forward="true" selection-start-line="635" selection-start-column="45" selection-end-line="635" selection-end-column="45" />
+        <state relative-caret-position="248">
+          <caret line="672" column="27" lean-forward="true" selection-end-line="718" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/by_day/data_to_mysql_day_seller.py">
+    <entry file="file://$PROJECT_DIR$/scripts/month_visit_remain/month_visit_remain.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2727">
-          <caret line="161" column="33" selection-start-line="161" selection-start-column="33" selection-end-line="161" selection-end-column="33" />
+        <state relative-caret-position="411">
+          <caret line="417" column="19" lean-forward="true" selection-start-line="406" selection-start-column="4" selection-end-line="417" selection-end-column="19" />
+          <folding>
+            <element signature="e#37#83#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/scripts/by_day/data_to_mysql_day_buyer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="86" column="32" lean-forward="true" selection-start-line="86" selection-start-column="32" selection-end-line="86" selection-end-column="32" />
+        <state relative-caret-position="4212">
+          <caret line="164" lean-forward="true" selection-start-line="164" selection-end-line="164" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/by_day/source_info_day.py">
+    <entry file="file://$PROJECT_DIR$/scripts/order_detail/order_detail.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="1483" column="27" selection-start-line="1483" selection-start-column="27" selection-end-line="1484" selection-end-column="24" />
-          <folding>
-            <element signature="e#37#83#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="-480">
+          <caret line="624" column="85" selection-start-line="624" selection-start-column="85" selection-end-line="627" selection-end-column="93" />
         </state>
       </provider>
     </entry>

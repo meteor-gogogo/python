@@ -10,15 +10,15 @@ import MySQLdb
 import json
 import os
 
-# mysql_host = 'rm-2zeixwnpc34127h5f191-vpc-rw.mysql.rds.aliyuncs.com'
-# mysql_user = 'plumdb'
-# mysql_passwd = 'plumdb@2018'
-# mysql_db = 'aplum_mis'
-
-mysql_host = '127.0.0.1'
-mysql_user = 'aplum'
-mysql_passwd = 'plum2016'
+mysql_host = 'rm-2zeixwnpc34127h5f191-vpc-rw.mysql.rds.aliyuncs.com'
+mysql_user = 'plumdb'
+mysql_passwd = 'plumdb@2018'
 mysql_db = 'aplum_mis'
+
+# mysql_host = '127.0.0.1'
+# mysql_user = 'aplum'
+# mysql_passwd = 'plum2016'
+# mysql_db = 'aplum_mis'
 
 
 def checkData(datestr):
@@ -56,7 +56,7 @@ def write_dict_to_mysql(result_dict):
               'avg_ordered_user_costs', 'avg_ordered_rate', 'new_ordered_num', 'avg_ordered_costs', 'kdj_costs',
               'order_costs', 'roi', 'ddyj_mjjc', 'mmjpjcb', 'create_time']
     df = pd.DataFrame(list(result_dict.values()), columns=fields)
-    print(df)
+    # print(df)
     # writer = pd.ExcelWriter('/home/liuhang/2019-08-02.xlsx')
     # df.to_excel(excel_writer=writer, index=False, sheet_name='月表', encoding='utf-8')
     # writer.save()
@@ -80,8 +80,8 @@ if __name__ == '__main__':
     # timestamp = int(time.time())
     # print(timestamp)
     today = date.today()
-    # file_path = '/home/aplum/work_lh/data_dict_to_csv/{0}-day-dict.csv'.format(today)
-    file_path = '/home/liuhang/data_dict_to_csv/2019-08-09-day-dict.csv'
+    file_path = '/home/aplum/work_lh/data_dict_to_csv/{0}-day-dict.csv'.format(today)
+    # file_path = '/home/liuhang/data_dict_to_csv/2019-08-09-day-dict.csv'
     result_dict = dict()
     with open(file_path, 'r', encoding='utf-8') as file:
         lines = file.readlines()
@@ -149,7 +149,7 @@ if __name__ == '__main__':
             for key in line_dict.keys():
                 if str(line_dict[key]['source']).endswith('KOL') or str(line_dict[key]['source']).endswith('kol'):
                     key_tmp = 'nature&' + str(line_dict[key]['month'])
-                    print(key_tmp)
+                    # print(key_tmp)
                     result_dict[key_tmp][4] = int(line_dict[key]['today_actived_num']) + int(result_dict[key_tmp][4])
                     result_dict[key_tmp][5] = int(line_dict[key]['new_actived_user']) + int(result_dict[key_tmp][5])
                     result_dict[key_tmp][7] = int(line_dict[key]['new_registered_user']) + int(result_dict[key_tmp][7])
