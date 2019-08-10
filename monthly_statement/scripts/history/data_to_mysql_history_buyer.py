@@ -4,6 +4,7 @@ import pandas as pd
 from datetime import date, timedelta, datetime
 import time
 from sqlalchemy import create_engine
+import MySQLdb
 
 mysql_host = 'rm-2zeixwnpc34127h5f191-vpc-rw.mysql.rds.aliyuncs.com'
 mysql_user = 'plumdb'
@@ -37,13 +38,38 @@ def write_dict_to_excel(result_dict):
     print("写入数据成功")
 
 
+def get_costs_by_source_date(cursor, source, start_date_tmp):
+    costs = 0.0
+    if source in ('all', 'channel_all'):
+        sql = "select sum(costs) as sum_costs from t_market_cost where costs_date = '{0}'".format(start_date_tmp)
+    elif source == 'channel_flow':
+        sql = "select sum(costs) as sum_costs from t_market_cost where source in (select source from t_market_source" \
+              " where name = '信息流') and costs_date = '{0}'".format(start_date_tmp)
+    elif source == 'channel_kol':
+        sql = "select sum(costs) as sum_costs from t_market_cost where source in (select source from t_market_source" \
+              " where name = '博主kol') and costs_date = '{0}'".format(start_date_tmp)
+    else:
+        sql = "select sum(costs) as sum_costs from t_market_cost where source in (select source from t_market_source" \
+              " where second_name = '{0}') and costs_date = '{1}'".format(source, start_date_tmp)
+    cursor.execute(sql)
+    source_data = cursor.fetchall()
+    for row in source_data:
+        if row['sum_costs'] is None:
+            costs = 0.0
+        else:
+            costs = round(float(row['sum_costs']), 2)
+    return costs
+
+
 if __name__ == '__main__':
     # 最终结果列表
     # result_list = list()
     # timestamp = int(time.time())
     # print(timestamp)
     today = date.today()
-    file_path = '/home/aplum/work_lh/data_dict_to_csv/2019-08-07-special-dict.csv'
+    db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
+    cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+    file_path = '/home/aplum/work_lh/data_dict_to_csv/2019-08-09-dict.csv'
     # file_path = '/home/liuhang/2019-08-06-dict.csv'
     result_dict = dict()
     with open(file_path, 'r', encoding='utf-8') as file:
@@ -91,7 +117,10 @@ if __name__ == '__main__':
                     source_tmp = ''
                 result_dict[key].append(source_tmp)
                 result_dict[key].append(str(line_dict[key]['month']))
-                result_dict[key].append(float(line_dict[key]['costs']))
+                if source_type in (1, 6, 7, 8, 9):
+                    result_dict[key].append(0.0)
+                else:
+                    result_dict[key].append(get_costs_by_source_date(cursor, source, str(line_dict[key]['month'])))
                 result_dict[key].append(int(line_dict[key]['today_actived_num']))
                 result_dict[key].append(int(line_dict[key]['new_actived_user']))
                 result_dict[key].append(float(line_dict[key]['avg_actived_costs']))
@@ -133,6 +162,11 @@ if __name__ == '__main__':
                     result_dict[key][7] = 0
                     result_dict[key][8] = 0.0
                     result_dict[key][9] = 0
+
+                    key_all = 'channel_all&' + str(line_dict[key]['month'])
+                    key_flow = 'channel_flow&' + str(line_dict[key]['month'])
+                    for i in range(4, 10):
+                        result_dict[key_all][i] = result_dict[key_flow][i]
                 else:
                     continue
     write_dict_to_excel(result_dict)

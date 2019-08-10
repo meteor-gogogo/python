@@ -114,6 +114,59 @@ def get_month_seller_income(source, db_aplum, source_by, url, start_timestamp, e
               "and '{8}') b on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
             .format(start_timestamp, end_timestamp, source_by, start_timestamp, end_timestamp, start_date_tmp,
                     end_date_tmp, start_date_tmp, end_date_tmp)
+    elif source == '抖音kol':
+        sql = "select c.distinct_id from (select a.distinct_id from " \
+              "(select distinct distinct_id from events where event = 'registerSuccessAct' and PartnerOldUser " \
+              "is null and regexp_like(distinct_id, '^[0-9]+$') and date between '{0}' and '{1}')" \
+              "a left join " \
+              "(select distinct distinct_id from events where event = 'SellerJoin' and date between '{2}' " \
+              "and '{3}') b on a.distinct_id = b.distinct_id where b.distinct_id is not null)c" \
+            .format(start_date_tmp, end_date_tmp, start_date_tmp, end_date_tmp)
+        payload = {'q': sql, 'format': 'json'}
+        r = requests.post(url, data=payload)
+        if r.status_code == 200:
+            datastr = r.text
+            if len(datastr) == 0:
+                month_seller_income = 0.00
+            else:
+                dataarr = datastr.split('\n')
+                for data in dataarr:
+                    try:
+                        datajson = json.loads(data)
+                        if str(datajson) == '{}':
+                            continue
+                        register_seller_list.append(int(datajson['distinct_id']))
+                    except json.decoder.JSONDecodeError as identifier:
+                        pass
+        else:
+            print("sa hive sql accur error, sql为%s" % sql)
+        if len(register_seller_list) == 0:
+            month_seller_income = 0.00
+        else:
+            cursor = db_aplum.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+            start_timestamp_tmp = int(start_timestamp / 1000)
+            end_timestamp_tmp = int(end_timestamp / 1000)
+            register_seller_list_tmp = "'" + "','".join(str(i) for i in register_seller_list) + "'"
+            sql = "select sum(a.sum_income) as count_source from (select tp.user_id, sum(tdi.settle_price) as " \
+                  "sum_income FROM t_order td LEFT JOIN t_order_item tdi on tdi.order_id=td.id left join t_product tp " \
+                  "on tdi.product_id=tp.id where td.status not in ('new','topay','cancel') and td.splitted='0' and " \
+                  "td.order_time >= {0} and td.order_time < {1} and tp.user_id in ({2}) " \
+                  "group by tp.user_id)a".format(start_timestamp_tmp, end_timestamp_tmp, register_seller_list_tmp)
+            # print(sql)
+            cursor.execute(sql)
+            source_data = cursor.fetchall()
+            cursor.close()
+            register_seller_list.clear()
+            for row in source_data:
+                # row = process_price(row)
+                # if
+                # print(row)
+                if row['count_source'] == None:
+                    month_seller_income = 0.00
+                    continue
+                else:
+                    month_seller_income = round(float(row['count_source']), 2)
+        return month_seller_income
     else:
         sql = "select c.second_id from (select a.second_id, a.source, a.createtime, b.distinct_id from " \
               "(select distinct second_id, source, createtime from users where source in ({0}) and " \
@@ -143,12 +196,14 @@ def get_month_seller_income(source, db_aplum, source_by, url, start_timestamp, e
         month_seller_income = 0.00
     else:
         cursor = db_aplum.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+        start_timestamp_tmp = int(start_timestamp / 1000)
+        end_timestamp_tmp = int(end_timestamp / 1000)
         register_seller_list_tmp = "'" + "','".join(str(i) for i in register_seller_list) + "'"
         sql = "select sum(a.sum_income) as count_source from (select tp.user_id, sum(tdi.settle_price) as " \
               "sum_income FROM t_order td LEFT JOIN t_order_item tdi on tdi.order_id=td.id left join t_product tp " \
               "on tdi.product_id=tp.id where td.status not in ('new','topay','cancel') and td.splitted='0' and " \
-              "td.order_time>=UNIX_TIMESTAMP('{0}') and td.order_time<UNIX_TIMESTAMP('{1}') and tp.user_id in ({2}) " \
-              "group by tp.user_id)a".format(start_date_tmp, end_date_tmp, register_seller_list_tmp)
+              "td.order_time >= {0} and td.order_time < {1} and tp.user_id in ({2}) " \
+              "group by tp.user_id)a".format(start_timestamp_tmp, end_timestamp_tmp, register_seller_list_tmp)
         # print(sql)
         cursor.execute(sql)
         source_data = cursor.fetchall()
@@ -158,7 +213,7 @@ def get_month_seller_income(source, db_aplum, source_by, url, start_timestamp, e
             # row = process_price(row)
             # if
             # print(row)
-            if row['count_source'] == None:
+            if row['count_source'] is None:
                 month_seller_income = 0.00
                 continue
             else:
@@ -246,6 +301,51 @@ def get_post_seller_num(source, db_aplum, source_by, url, start_timestamp, end_t
               "and '{8}') b on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
             .format(start_timestamp, end_timestamp, source_by, start_timestamp, end_timestamp, start_date_tmp,
                     end_date_tmp, start_date_tmp, end_date_tmp)
+    elif source == '抖音kol':
+        sql = "select c.distinct_id from (select a.distinct_id from " \
+              "(select distinct distinct_id from events where event = 'registerSuccessAct' and PartnerOldUser is null " \
+              "and regexp_like(distinct_id, '^[0-9]+$') and date between '{0}' and '{1}')a left join " \
+              "(select distinct distinct_id from events where event = 'SellerJoin' and date between '{2}' " \
+              "and '{3}') b on a.distinct_id = b.distinct_id where b.distinct_id is not null)c" \
+            .format(start_date_tmp, end_date_tmp, start_date_tmp, end_date_tmp)
+        payload = {'q': sql, 'format': 'json'}
+        r = requests.post(url, data=payload)
+        if r.status_code == 200:
+            datastr = r.text
+            if len(datastr) == 0:
+                post_seller_num = 0
+            else:
+                dataarr = datastr.split('\n')
+                for data in dataarr:
+                    try:
+                        datajson = json.loads(data)
+                        if str(datajson) == '{}':
+                            continue
+                        register_seller_list.append(int(datajson['distinct_id']))
+                    except json.decoder.JSONDecodeError as identifier:
+                        pass
+        else:
+            print("sa hive sql accur error, sql为%s" % sql)
+        if len(register_seller_list) == 0:
+            post_seller_num = 0
+        else:
+            cursor = db_aplum.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+            start_timestamp_tmp = int(start_timestamp / 1000)
+            end_timestamp_tmp = int(end_timestamp / 1000)
+            register_seller_list_tmp = "'" + "','".join(str(i) for i in register_seller_list) + "'"
+            sql = "select count(distinct user_id) as count_source from t_seller_express where user_id in ({0}) and " \
+                  "create_time >= {1} and create_time < {2} and express_no is not null".format(
+                register_seller_list_tmp, start_timestamp_tmp, end_timestamp_tmp)
+            # print(sql)
+            cursor.execute(sql)
+            source_data = cursor.fetchall()
+            cursor.close()
+            register_seller_list.clear()
+            for row in source_data:
+                # row = process_price(row)
+                # print(row)
+                post_seller_num = int(row['count_source'])
+        return post_seller_num
     else:
         sql = "select c.second_id from (select a.second_id, a.source, a.createtime, b.distinct_id from " \
               "(select distinct second_id, source, createtime from users where source in ({0}) and " \
@@ -372,6 +472,14 @@ def get_register_seller_num(source, source_by, url, start_timestamp, end_timesta
               "and '{8}') b on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
             .format(start_timestamp, end_timestamp, source_by, start_timestamp, end_timestamp, start_date_tmp,
                     end_date_tmp, start_date_tmp, end_date_tmp)
+    elif source == '抖音kol':
+        sql = "select count(*) as count_source from (select distinct a.distinct_id from " \
+              "(select distinct distinct_id from events where event = 'registerSuccessAct' and PartnerOldUser " \
+              "is null and regexp_like(distinct_id, '^[0-9]+$') and date between '{0}' and '{1}')" \
+              "a left join " \
+              "(select distinct distinct_id from events where event = 'SellerJoin' and date between '{2}' " \
+              "and '{3}') b on a.distinct_id = b.distinct_id where b.distinct_id is not null)c" \
+            .format(start_date_tmp, end_date_tmp, start_date_tmp, end_date_tmp)
     else:
         sql = "select count(*) as count_source from (select distinct a.second_id, a.source, a.createtime, b.distinct_id from " \
               "(select distinct second_id, source, createtime from users where source in ({0}) and " \
@@ -479,6 +587,46 @@ def get_order_sum_realpayprice(source, source_by, url, start_timestamp, end_time
               "on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
             .format(start_timestamp, end_timestamp, source_by, start_timestamp, end_timestamp, start_date_tmp,
                     end_date_tmp, start_date_tmp, end_date_tmp)
+    elif source == '抖音kol':
+        register_seller_list = list()
+        sql = "select distinct distinct_id from events where event = 'registerSuccessAct' " \
+              "and PartnerOldUser is null and regexp_like(distinct_id, '^[0-9]+$') and date between '{0}' " \
+              "and '{1}'".format(start_date_tmp, end_date_tmp)
+        payload = {'q': sql, 'format': 'json'}
+        r = requests.post(url, data=payload)
+        if r.status_code == 200:
+            datastr = r.text
+            if len(datastr) == 0:
+                order_user_num = 0
+            else:
+                dataarr = datastr.split('\n')
+                for data in dataarr:
+                    try:
+                        datajson = json.loads(data)
+                        if str(datajson) == '{}':
+                            continue
+                        register_seller_list.append(datajson['distinct_id'])
+                    except json.decoder.JSONDecodeError as identifier:
+                        pass
+        else:
+            print("sa hive sql accur error, sql为%s" % sql)
+        cursor = db_aplum.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+        start_timestamp_tmp = int(start_timestamp / 1000)
+        end_timestamp_tmp = int(end_timestamp / 1000)
+        register_seller_list_tmp = "'" + "','".join(str(i) for i in register_seller_list) + "'"
+        sql = "SELECT sum(td.realpay_price) as count_source FROM t_order td where td.status not in " \
+              "('new','topay','cancel') AND td.parent_id='0' and td.order_time>={0} and " \
+              "td.order_time<{1} and user_id in ({2})".format(start_timestamp_tmp, end_timestamp_tmp, register_seller_list_tmp)
+        # print(sql)
+        cursor.execute(sql)
+        source_data = cursor.fetchall()
+        cursor.close()
+        register_seller_list.clear()
+        for row in source_data:
+            # row = process_price(row)
+            # print(row)
+            order_sum_realpayprice = round(float(row['count_source']), 2)
+        return order_sum_realpayprice
     else:
         sql = "select sum(c.orderitem_realpayprice) sum_realpay from (select a.second_id, a.source, a.createtime, " \
               "b.orderitem_realpayprice from (select distinct second_id, source, createtime from users where " \
@@ -588,6 +736,47 @@ def get_order_num(source, source_by, url, start_timestamp, end_timestamp, start_
               "date between '{7}' and '{8}') b on a.second_id = b.distinct_id where " \
               "b.distinct_id is not null)c".format(start_timestamp, end_timestamp, source_by, start_timestamp, end_timestamp, start_date_tmp,
                                                    end_date_tmp, start_date_tmp, end_date_tmp)
+    elif source == '抖音kol':
+        register_seller_list = list()
+        sql = "select distinct distinct_id from events where event = 'registerSuccessAct' " \
+              "and PartnerOldUser is null and regexp_like(distinct_id, '^[0-9]+$') and date between '{0}' " \
+              "and '{1}'".format(start_date_tmp, end_date_tmp)
+        payload = {'q': sql, 'format': 'json'}
+        r = requests.post(url, data=payload)
+        if r.status_code == 200:
+            datastr = r.text
+            if len(datastr) == 0:
+                order_user_num = 0
+            else:
+                dataarr = datastr.split('\n')
+                for data in dataarr:
+                    try:
+                        datajson = json.loads(data)
+                        if str(datajson) == '{}':
+                            continue
+                        register_seller_list.append(datajson['distinct_id'])
+                    except json.decoder.JSONDecodeError as identifier:
+                        pass
+        else:
+            print("sa hive sql accur error, sql为%s" % sql)
+        cursor = db_aplum.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+        start_timestamp_tmp = int(start_timestamp / 1000)
+        end_timestamp_tmp = int(end_timestamp / 1000)
+        register_seller_list_tmp = "'" + "','".join(str(i) for i in register_seller_list) + "'"
+        sql = "SELECT count(td.id) as count_source FROM t_order td where td.status not in ('new','topay','cancel')" \
+              " AND td.parent_id='0' and td.order_time>={0} and td.order_time<{1} and user_id in ({2})".format(
+            start_timestamp_tmp, end_timestamp_tmp, register_seller_list_tmp
+        )
+        # print(sql)
+        cursor.execute(sql)
+        source_data = cursor.fetchall()
+        cursor.close()
+        register_seller_list.clear()
+        for row in source_data:
+            # row = process_price(row)
+            # print(row)
+            order_num = int(row['count_source'])
+        return order_num
     else:
         sql = "select count(distinct c.orderid) as count_source from (select a.second_id, a.source, a.createtime, b.orderid from " \
               "(select distinct second_id, source, createtime from users where source in ({0}) and " \
@@ -695,6 +884,47 @@ def get_order_user_num(source, source_by, url, start_timestamp, end_timestamp, s
               "on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
             .format(start_timestamp, end_timestamp, source_by, start_timestamp, end_timestamp, start_date_tmp,
                     end_date_tmp, start_date_tmp, end_date_tmp)
+    elif source == '抖音kol':
+        register_seller_list = list()
+        sql = "select distinct distinct_id from events where event = 'registerSuccessAct' " \
+              "and PartnerOldUser is null and regexp_like(distinct_id, '^[0-9]+$') and date between '{0}' " \
+              "and '{1}'".format(start_date_tmp, end_date_tmp)
+        payload = {'q': sql, 'format': 'json'}
+        r = requests.post(url, data=payload)
+        if r.status_code == 200:
+            datastr = r.text
+            if len(datastr) == 0:
+                order_user_num = 0
+            else:
+                dataarr = datastr.split('\n')
+                for data in dataarr:
+                    try:
+                        datajson = json.loads(data)
+                        if str(datajson) == '{}':
+                            continue
+                        register_seller_list.append(datajson['distinct_id'])
+                    except json.decoder.JSONDecodeError as identifier:
+                        pass
+        else:
+            print("sa hive sql accur error, sql为%s" % sql)
+        cursor = db_aplum.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+        start_timestamp_tmp = int(start_timestamp / 1000)
+        end_timestamp_tmp = int(end_timestamp / 1000)
+        register_seller_list_tmp = "'" + "','".join(str(i) for i in register_seller_list) + "'"
+        sql = "select count(distinct user_id) as count_source from t_order where status not in ('new','topay','cancel')" \
+              " AND parent_id='0'and user_id in ({0}) and " \
+              "order_time >= {1} and order_time < {2}".format(
+            register_seller_list_tmp, start_timestamp_tmp, end_timestamp_tmp)
+        # print(sql)
+        cursor.execute(sql)
+        source_data = cursor.fetchall()
+        cursor.close()
+        register_seller_list.clear()
+        for row in source_data:
+            # row = process_price(row)
+            # print(row)
+            order_user_num = int(row['count_source'])
+        return order_user_num
     else:
         sql = "select count(*) as count_source from (select distinct a.second_id, a.source, a.createtime from " \
               "(select distinct second_id, source, createtime from users where source in ({0}) and " \
@@ -807,6 +1037,10 @@ def get_register_num(source, source_by, url, start_timestamp, end_timestamp, sta
               "on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
             .format(start_timestamp, end_timestamp, source_by, start_timestamp, end_timestamp, start_date_tmp,
                     end_date_tmp, start_date_tmp, end_date_tmp)
+    elif source == '抖音kol':
+        sql = "select count(distinct distinct_id) as count_source from events where event = 'registerSuccessAct' " \
+              "and PartnerOldUser is null and regexp_like(distinct_id, '^[0-9]+$') and date between '{0}' " \
+              "and '{1}'".format(start_date_tmp, end_date_tmp)
     else:
         sql = "select count(*) as count_source from (select distinct a.second_id, a.source, a.createtime from " \
               "(select distinct second_id, source, createtime from users where source in ({0}) and createtime >= {1} " \
@@ -897,6 +1131,9 @@ def get_day_add_activate(source, source_by, url, start_timestamp, end_timestamp)
               "e.distinct_id,khd)n on m.first_id=n.distinct_id)tmp where " \
               "tmp.khd = '百度小程序'".format(start_timestamp_tmp, end_timestamp, source_by, start_timestamp_tmp, end_timestamp,
                                          start_date_tmp, end_date_tmp)
+    elif source == '抖音kol':
+        sql = "select count(distinct distinct_id) as count_source from events where event = 'registerSuccessAct' " \
+              "and PartnerOldUser is null and regexp_like(distinct_id, '^[0-9]+$') and date = '{0}'".format(end_date_tmp)
     else:
         sql = "select count(*) as count_source from users where source in ({0}) and " \
               "createtime >= {1} and createtime < {2}".format(source_by, start_timestamp_tmp, end_timestamp)
@@ -977,6 +1214,10 @@ def get_add_activate(source, source_by, url, start_timestamp, end_timestamp):
               "'微信小程序' end khd from events e where e.event='GeneralOpenApp' and date between '{5}' and '{6}' group by " \
               "e.distinct_id,khd)n on m.first_id=n.distinct_id)tmp where " \
               "tmp.khd = '百度小程序'".format(start_timestamp, end_timestamp, source_by, start_timestamp, end_timestamp, start_date_tmp, end_date_tmp)
+    elif source == '抖音kol':
+        sql = "select count(distinct distinct_id) as count_source from events where event = 'registerSuccessAct' " \
+              "and PartnerOldUser is null and regexp_like(distinct_id, '^[0-9]+$') and date between '{0}' " \
+              "and '{1}'".format(start_date_tmp, end_date_tmp)
     else:
         sql = "select count(*) as count_source from users where source in ({0}) and " \
             "createtime >= {1} and createtime < {2}".format(source_by, start_timestamp, end_timestamp)
@@ -1008,7 +1249,9 @@ def get_costs_by_sql(db_market, sql_costs):
     source_data = cursor.fetchall()
     cursor.close()
     for row in source_data:
-        if not row:
+        if row['sum_costs'] is None:
+            costs = 0.0
+        else:
             costs = float(row['sum_costs'])
     return costs
 
@@ -1091,10 +1334,10 @@ def write_data_dict_to_xlsx(db_aplum, source, costs, source_by, start_date_tmp, 
         else:
             register_post_trans_rate = int(post_seller_num / register_seller_num * 10000)
 
-    key = str(source) + '&' + str(month)
+    key = str(source) + '&' + str(date.today() + timedelta(days=-1))
     result_dict[key] = dict()
     result_dict[key]['source'] = source
-    result_dict[key]['month'] = month
+    result_dict[key]['month'] = str(date.today() + timedelta(days=-1))
     result_dict[key]['costs'] = costs
     result_dict[key]['today_actived_num'] = current_day_activate
     result_dict[key]['new_actived_user'] = add_activate
@@ -1129,12 +1372,17 @@ def write_data_dict_to_xlsx(db_aplum, source, costs, source_by, start_date_tmp, 
 
 
 def get_source_by_by_sql(db_market, sql):
+    source_list_tmp = list()
     cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
     cursor.execute(sql)
     source_data = cursor.fetchall()
     cursor.close()
     for row in source_data:
+        if row['source'] is None:
+            continue
         source_list_tmp.append(str(row['source']))
+    if len(source_list_tmp) == 0:
+        return ''
 
     if len(source_list_tmp) == 1:
         source_by = "'" + str(source_list_tmp[0]) + "'"
@@ -1151,7 +1399,7 @@ if __name__ == '__main__':
     source_dict = get_source(db_market, source_dict)
     source_list = ['all', 'nature', 'nature_IOS', 'nature_Android', 'nature_wechat', 'nature_baidu', 'channel_all',
                    'channel_flow', 'channel_kol']
-    # source_list = ['all', 'nature']
+    # source_list = ['channel_all', 'channel_flow', 'channel_kol']
     for k in source_dict.keys():
         # 来源
         source = str(source_dict[k]['second_name'])
@@ -1171,65 +1419,87 @@ if __name__ == '__main__':
 
     for source in source_list:
         # date_tmp = date_tmp + '-01'
-        if source in ('CPA', '抖音kol', '微信公众号', '微信朋友圈'):
-            continue
-            print(source)
-        else:
-            print(source)
-            costs = 0.00
-            source_list_tmp = list()
-            sid_list = list()
-            if source == 'all':
-                # all统计不需要过滤source字段, source_by给空是为了调用该方法
-                source_by = ''
-                sql_costs = "select sum(costs) as sum_costs from t_market_cost where costs_date = '{0}'"\
+        print(source)
+        costs = 0.00
+        source_list_tmp = list()
+        sid_list = list()
+        if source == 'all':
+            # all统计不需要过滤source字段, source_by给空是为了调用该方法
+            source_by = ''
+            sql_costs = "select sum(costs) as sum_costs from t_market_cost where costs_date = '{0}'"\
+                .format(start_date_tmp)
+            costs = get_costs_by_sql(db_market, sql_costs)
+            write_data_dict_to_xlsx(db_aplum, source, costs, source_by,
+                                    start_date_tmp,
+                                    end_date_tmp,
+                                    start_timestamp, end_timestamp)
+        elif source in ('channel_all', 'nature', 'nature_IOS', 'nature_Android',
+                        'nature_wechat', 'nature_baidu'):
+            # sql_source = "select source from t_market_source "
+            # source_by = get_source_by_by_sql(db_market, sql_source)
+            sql_source = "select source from t_market_cost where source in (select source from t_market_source " \
+                         "where name = '信息流') union (select source from t_market_cost where source in (select source " \
+                         "from t_market_source where name = '博主kol') and costs_date = '{0}')".format(start_date_tmp)
+            source_by = get_source_by_by_sql(db_market, sql_source)
+            if source == 'channel_all':
+                sql_costs = "select sum(costs) as sum_costs from t_market_cost where costs_date = '{0}'" \
                     .format(start_date_tmp)
                 costs = get_costs_by_sql(db_market, sql_costs)
-                write_data_dict_to_xlsx(db_aplum, source, costs, source_by,
-                                        start_date_tmp,
-                                        end_date_tmp,
-                                        start_timestamp, end_timestamp)
-            elif source in ('channel_all', 'nature', 'nature_IOS', 'nature_Android',
-                            'nature_wechat', 'nature_baidu'):
-                sql_source = "select source from t_market_source"
+            else:
+                costs = 0.0
+            write_data_dict_to_xlsx(db_aplum, source, costs, source_by,
+                                    start_date_tmp,
+                                    end_date_tmp,
+                                    start_timestamp, end_timestamp)
+        elif source == 'channel_kol':
+            sql_source = "select source from t_market_cost where source in (select source from t_market_source " \
+                         "where name = '博主kol') and costs_date = '{0}'".format(start_date_tmp)
+            # print(sql_source)
+            source_by = get_source_by_by_sql(db_market, sql_source)
+            if source_by == '':
+                continue
+            sql_costs = "select sum(costs) as sum_costs from t_market_cost where costs_date = '{0}' " \
+                        "and source in ({1})" \
+                .format(start_date_tmp, source_by)
+            costs = get_costs_by_sql(db_market, sql_costs)
+            write_data_dict_to_xlsx(db_aplum, source, costs, source_by,
+                                    start_date_tmp, end_date_tmp,
+                                    start_timestamp, end_timestamp)
+        elif source == 'channel_flow':
+            sql_source = "select source from t_market_source where name = '信息流'"
+            source_by = get_source_by_by_sql(db_market, sql_source)
+            sql_costs = "select sum(costs) as sum_costs from t_market_cost where costs_date = '{0}' " \
+                        "and source in ({1})" \
+                .format(start_date_tmp, source_by)
+            costs = get_costs_by_sql(db_market, sql_costs)
+            write_data_dict_to_xlsx(db_aplum, source, costs, source_by,
+                                    start_date_tmp, end_date_tmp,
+                                    start_timestamp, end_timestamp)
+        elif source == '抖音kol':
+            sql_costs = "select sum(costs) as sum_costs from t_market_cost where source in(select source from " \
+                        "t_market_source where second_name = '抖音kol') and " \
+                        "costs_date = '{0}'" \
+                .format(start_date_tmp)
+            costs = get_costs_by_sql(db_market, sql_costs)
+            if costs == 0.0:
+                continue
+            source_by = ''
+            write_data_dict_to_xlsx(db_aplum, source, costs, source_by, start_date_tmp, end_date_tmp,
+                                    start_timestamp, end_timestamp)
+        else:
+            if str(source).endswith('KOL'):
+                sql_source = "select source from t_market_cost where source in (select source from t_market_source " \
+                             "where second_name = '{0}') and costs_date = '{1}'".format(source, start_date_tmp)
                 source_by = get_source_by_by_sql(db_market, sql_source)
-                if source == 'channel_all':
-                    sql_costs = "select sum(costs) as sum_costs from t_market_cost where costs_date = '{0}'" \
-                        .format(start_date_tmp)
-                    costs = get_costs_by_sql(db_market, sql_costs)
-                else:
-                    costs = 0.0
-                write_data_dict_to_xlsx(db_aplum, source, costs, source_by,
-                                        start_date_tmp,
-                                        end_date_tmp,
-                                        start_timestamp, end_timestamp)
-            elif source == 'channel_kol':
-                sql_source = "select source from t_market_source where name = '博主kol'"
-                source_by = get_source_by_by_sql(db_market, sql_source)
-                sql_costs = "select sum(costs) as sum_costs from t_market_cost where costs_date = '{0}' " \
-                            "and source in ({1})" \
-                    .format(start_date_tmp, source_by)
-                costs = get_costs_by_sql(db_market, sql_costs)
-                write_data_dict_to_xlsx(db_aplum, source, costs, source_by,
-                                        start_date_tmp, end_date_tmp,
-                                        start_timestamp, end_timestamp)
-            elif source == 'channel_flow':
-                sql_source = "select source from t_market_source where name = '信息流'"
-                source_by = get_source_by_by_sql(db_market, sql_source)
-                sql_costs = "select sum(costs) as sum_costs from t_market_cost where costs_date = '{0}' " \
-                            "and source in ({1})" \
-                    .format(start_date_tmp, source_by)
-                costs = get_costs_by_sql(db_market, sql_costs)
-                write_data_dict_to_xlsx(db_aplum, source, costs, source_by,
-                                        start_date_tmp, end_date_tmp,
-                                        start_timestamp, end_timestamp)
+                if source_by == '':
+                    continue
             else:
                 sql_source = "select source from t_market_source where second_name = '{0}'".format(source)
                 source_by = get_source_by_by_sql(db_market, sql_source)
-                sql_costs = "select sum(costs) as sum_costs from t_market_cost where costs_date = '{0}' " \
-                            "and source in ({1})" \
-                    .format(start_date_tmp, source_by)
-                costs = get_costs_by_sql(db_market, sql_costs)
-                write_data_dict_to_xlsx(db_aplum, source, costs, source_by,
-                                        start_date_tmp, end_date_tmp,
-                                        start_timestamp, end_timestamp)
+            sql_costs = "select sum(costs) as sum_costs from t_market_cost where costs_date = '{0}' " \
+                        "and source in ({1})" \
+                .format(start_date_tmp, source_by)
+            costs = get_costs_by_sql(db_market, sql_costs)
+            write_data_dict_to_xlsx(db_aplum, source, costs, source_by,
+                                    start_date_tmp, end_date_tmp,
+                                    start_timestamp, end_timestamp)

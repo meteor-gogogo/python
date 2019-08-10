@@ -17,27 +17,24 @@ mysql_db = 'aplum_mis'
 # mysql_db = 'aplum_mis'
 
 
-def write_dict_to_mysql(result_dict_va):
+def write_dict_to_excel(result_dict):
     fields = ['type', 'second_name', 'exe_date', 'costs', 'today_actived_num', 'new_actived_user', 'avg_actived_costs',
               'new_registered_user', 'avg_registered_costs', 'avg_registered_rate', 'new_ordered_user',
               'avg_ordered_user_costs', 'avg_ordered_rate', 'new_ordered_num', 'avg_ordered_costs', 'kdj_costs',
-              'order_costs', 'roi', 'new_seller', 'avg_seller_costs', 'new_jcmjs', 'avg_jcmjs_costs', 'avg_jcmjs_rate',
-              'dyscje', 'seller_roi', 'ddyj_mjjc', 'mmjpjcb', 'create_time']
-    df = pd.DataFrame(list(result_dict_va.values()), columns=fields)
-    # print(df)
-    # writer = pd.ExcelWriter('/home/aplum/work_lh/data_dict_to_csv/2019-08-02-seller.xlsx')
+              'order_costs', 'roi', 'ddyj_mjjc', 'mmjpjcb', 'create_time']
+    df = pd.DataFrame(list(result_dict.values()), columns=fields)
+    print(df)
+    # writer = pd.ExcelWriter('/home/liuhang/2019-08-02.xlsx')
     # df.to_excel(excel_writer=writer, index=False, sheet_name='月表', encoding='utf-8')
     # writer.save()
     # writer.close()
-    # yesterday_month = str((date.today() + timedelta(days=-1)).replace(day=1))
-    # checkData(yesterday_month)
     engine = create_engine(
         "mysql+pymysql://{0}:{1}@{2}/{3}?charset={4}".format(mysql_user, mysql_passwd, mysql_host,
                                                              mysql_db,
                                                              'utf8'))
     # 创建连接
     con = engine.connect()
-    df.to_sql(name='t_market_month_seller', con=con, if_exists='append', index=False, chunksize=10000)
+    df.to_sql(name='t_market_month_buyer', con=con, if_exists='append', index=False, chunksize=10000)
     print("写入数据成功")
 
 
@@ -65,11 +62,15 @@ def get_costs_by_source_date(cursor, source, start_date_tmp):
 
 
 if __name__ == '__main__':
+    # 最终结果列表
+    # result_list = list()
+    # timestamp = int(time.time())
+    # print(timestamp)
     today = date.today()
     db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
     cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
-    file_path = '/home/aplum/work_lh/data_dict_to_csv/2019-08-09-dict.csv'
-    # file_path = '/home/liuhang/2019-08-07-dict.csv'
+    file_path = '/home/aplum/work_lh/data_dict_to_csv/2019-08-09-special-dict.csv'
+    # file_path = '/home/liuhang/2019-08-06-dict.csv'
     result_dict = dict()
     with open(file_path, 'r', encoding='utf-8') as file:
         lines = file.readlines()
@@ -77,12 +78,16 @@ if __name__ == '__main__':
         for line in lines:
             # print(line)
             line_dict = eval(line)
+            # 数据存在一个字典中,key的形式为source&month,value是完整的数据,也是字典
+            # 每一行的数据只有一个key,例如: all&2018-11-01
             for key in line_dict.keys():
                 # print(key)
+                # 市场推广人员source录入错误,对这两个source过来的数据进行过滤,扔掉
                 source = str(line_dict[key]['source'])
                 if source in ('头条信息流', '微博信息流'):
                     continue
                 result_dict[key] = list()
+
                 if source == 'all':
                     source_type = 0
                 elif source == 'nature':
@@ -112,6 +117,7 @@ if __name__ == '__main__':
                     source_tmp = ''
                 result_dict[key].append(source_tmp)
                 result_dict[key].append(str(line_dict[key]['month']))
+                # result_dict[key].append(round(float(line_dict[key]['costs']), 2))
                 if source_type in (1, 6, 7, 8, 9):
                     result_dict[key].append(0.0)
                 else:
@@ -130,15 +136,6 @@ if __name__ == '__main__':
                 result_dict[key].append(float(line_dict[key]['kdj_costs']))
                 result_dict[key].append(float(line_dict[key]['order_costs']))
                 result_dict[key].append(float(line_dict[key]['roi']))
-
-                result_dict[key].append(int(line_dict[key]['new_seller']))
-                result_dict[key].append(float(line_dict[key]['avg_seller_costs']))
-                result_dict[key].append(int(line_dict[key]['new_jcmjs']))
-                result_dict[key].append(float(line_dict[key]['avg_jcmjs_costs']))
-                result_dict[key].append(int(line_dict[key]['avg_jcmjs_rate']))
-                result_dict[key].append(float(line_dict[key]['dyscje']))
-                result_dict[key].append(float(line_dict[key]['seller_roi']))
-
                 result_dict[key].append(int(line_dict[key]['ddyj_mjjc']))
                 result_dict[key].append(float(line_dict[key]['mmjpjcb']))
                 timestamp = int(time.time())
@@ -173,5 +170,4 @@ if __name__ == '__main__':
                         result_dict[key_all][i] = result_dict[key_flow][i]
                 else:
                     continue
-    write_dict_to_mysql(result_dict)
-
+    write_dict_to_excel(result_dict)

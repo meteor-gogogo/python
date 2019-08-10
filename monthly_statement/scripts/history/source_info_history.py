@@ -327,6 +327,7 @@ def get_order_user_num(nature_dict, source, source_by, url, start_timestamp, end
               "(select distinct distinct_id from events where event = 'PayOrderDetail' and date between '{3}' and '{4}') b " \
               "on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
             .format(source_by, start_timestamp, end_timestamp, start_date_tmp, end_date_tmp)
+    # print(sql)
     order_user_num = get_count_source_by_sql(sql, url)
     return order_user_num
 
@@ -547,7 +548,12 @@ def get_source_by_by_sql(db_market, sql):
     source_data = cursor.fetchall()
     cursor.close()
     for row in source_data:
+        if row['source'] is None:
+            continue
         source_list_tmp.append(str(row['source']))
+
+    if len(source_list_tmp) == 0:
+        return ''
 
     if len(source_list_tmp) == 1:
         source_by = "'" + str(source_list_tmp[0]) + "'"
@@ -584,6 +590,7 @@ def get_timestamp(start_date_tmp, end_date_tmp):
 
 
 if __name__ == '__main__':
+    result_dict_list = list()
     # 定义source字典
     source_dict = dict()
     # 用来连接市场aplum_mis库,获得source,costs
@@ -607,7 +614,8 @@ if __name__ == '__main__':
                    }
     source_list = ['all', 'nature', 'nature_IOS', 'nature_Android', 'nature_wechat', 'nature_baidu', 'channel_all',
                    'channel_flow', 'channel_kol']
-    # source_list = ['all', 'nature']
+    # source_list = ['channel_all',
+    #                    'channel_flow', 'channel_kol']
     # 遍历所有的source,拿到所有的second_name,展示层面为second_name,查询层面为second_name对应的所有source
     for k in source_dict.keys():
         # 来源
@@ -652,19 +660,28 @@ if __name__ == '__main__':
                                                 start_timestamp, end_timestamp)
                     elif source in ('channel_all', 'nature', 'nature_IOS', 'nature_Android',
                                     'nature_wechat', 'nature_baidu'):
-                        sql_source = "select source from t_market_source"
+                        sql_source = "select source from t_market_source " \
+                                     "where name = '信息流' union (select source from t_market_cost where source in (select source " \
+                                     "from t_market_source where name = '博主kol') and costs_date = '{0}')".format(
+                            start_date_tmp)
                         source_by = get_source_by_by_sql(db_market, sql_source)
                         if source == 'channel_all':
                             sql_costs = "select sum(costs) as sum_costs from t_market_cost where costs_date = '{0}'" \
                                 .format(start_date_tmp)
                             costs = get_costs_by_sql(db_market, sql_costs)
+
                         else:
                             costs = 0.0
+                            # sql_source = "select source from t_market_source"
+                            # source_by = get_source_by_by_sql(db_market, sql_source)
                         get_all_data(nature_dict, db_aplum, source, costs, source_by, start_date_tmp, end_date_tmp,
                                                 start_timestamp, end_timestamp)
                     elif source == 'channel_kol':
-                        sql_source = "select source from t_market_source where name = '博主kol'"
+                        sql_source = "select source from t_market_cost where source in (select source from t_market_source " \
+                                     "where name = '博主kol') and costs_date = '{0}'".format(start_date_tmp)
                         source_by = get_source_by_by_sql(db_market, sql_source)
+                        if source_by == '':
+                            continue
                         sql_costs = "select sum(costs) as sum_costs from t_market_cost where costs_date = '{0}' " \
                                     "and source in ({1})" \
                             .format(start_date_tmp, source_by)
@@ -681,8 +698,18 @@ if __name__ == '__main__':
                         get_all_data(nature_dict, db_aplum, source, costs, source_by, start_date_tmp, end_date_tmp,
                                                 start_timestamp, end_timestamp)
                     else:
-                        sql_source = "select source from t_market_source where second_name = '{0}'".format(source)
-                        source_by = get_source_by_by_sql(db_market, sql_source)
+                        if str(source).endswith('KOL'):
+                            sql_source = "select source from t_market_cost where source in (select source from t_market_source " \
+                                         "where second_name = '{0}') and costs_date = '{1}'".format(source,
+                                                                                                    start_date_tmp)
+                            source_by = get_source_by_by_sql(db_market, sql_source)
+                            if source_by == '':
+                                continue
+                        else:
+                            sql_source = "select source from t_market_source where second_name = '{0}'".format(source)
+                            source_by = get_source_by_by_sql(db_market, sql_source)
+                            if source_by == '':
+                                continue
                         sql_costs = "select sum(costs) as sum_costs from t_market_cost where costs_date = '{0}' " \
                                     "and source in ({1})" \
                             .format(start_date_tmp, source_by)

@@ -70,7 +70,7 @@ def write_dict_to_excel(result_dict):
                                                              'utf8'))
     # 创建连接
     con = engine.connect()
-    df.to_sql(name='t_market_month_seller', con=con, if_exists='append', index=False, chunksize=10000)
+    df.to_sql(name='t_market_day_seller', con=con, if_exists='append', index=False, chunksize=10000)
     print("写入数据成功")
 
 
@@ -157,8 +157,9 @@ if __name__ == '__main__':
         for line in lines:
             line_dict = eval(line)
             for key in line_dict.keys():
-                if str(line_dict[key]['source']).endswith('KOL'):
+                if str(line_dict[key]['source']).endswith('KOL') or str(line_dict[key]['source']).endswith('kol'):
                     key_tmp = 'nature&' + str(line_dict[key]['month'])
+                    print(key_tmp)
                     result_dict[key_tmp][4] = int(line_dict[key]['today_actived_num']) + int(result_dict[key_tmp][4])
                     result_dict[key_tmp][5] = int(line_dict[key]['new_actived_user']) + int(result_dict[key_tmp][5])
                     # result_dict[key_tmp][6] = round(float(float(result_dict[key_tmp][3]) / result_dict[key_tmp][5]), 2)
@@ -172,6 +173,11 @@ if __name__ == '__main__':
                     result_dict[key][7] = 0
                     result_dict[key][8] = 0.0
                     result_dict[key][9] = 0
+
+                    key_all = 'channel_all&' + str(line_dict[key]['month'])
+                    key_flow = 'channel_flow&' + str(line_dict[key]['month'])
+                    for i in range(4, 10):
+                        result_dict[key_all][i] = result_dict[key_flow][i]
                 else:
                     continue
     write_dict_to_excel(result_dict)

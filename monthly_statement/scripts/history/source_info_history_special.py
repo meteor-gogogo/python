@@ -712,7 +712,8 @@ def get_order_user_num(source, source_by, url, start_timestamp, end_timestamp, s
         start_timestamp_tmp = int(start_timestamp / 1000)
         end_timestamp_tmp = int(end_timestamp / 1000)
         register_seller_list_tmp = "'" + "','".join(str(i) for i in register_seller_list) + "'"
-        sql = "select count(distinct user_id) as count_source from t_order where user_id in ({0}) and " \
+        sql = "select count(distinct user_id) as count_source from t_order where status not in ('new','topay','cancel')" \
+              " AND parent_id='0'and user_id in ({0}) and " \
               "order_time >= {1} and order_time < {2}".format(
             register_seller_list_tmp, start_timestamp_tmp, end_timestamp_tmp)
         # print(sql)
