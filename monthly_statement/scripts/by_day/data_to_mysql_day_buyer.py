@@ -61,8 +61,8 @@ def write_dict_to_mysql(result_dict):
     # df.to_excel(excel_writer=writer, index=False, sheet_name='月表', encoding='utf-8')
     # writer.save()
     # writer.close()
-    yesterday_month = str((date.today() + timedelta(days=-1)).replace(day=1))
-    checkData(yesterday_month)
+    yesterday_month = str(date.today() + timedelta(days=-1))
+    # checkData(yesterday_month)
     engine = create_engine(
         "mysql+pymysql://{0}:{1}@{2}/{3}?charset={4}".format(mysql_user, mysql_passwd, mysql_host,
                                                              mysql_db,

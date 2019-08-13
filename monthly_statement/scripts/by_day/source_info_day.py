@@ -167,6 +167,20 @@ def get_month_seller_income(source, db_aplum, source_by, url, start_timestamp, e
                 else:
                     month_seller_income = round(float(row['count_source']), 2)
         return month_seller_income
+    elif source == '微信朋友圈':
+        sql = "select c.second_id from (select a.second_id, a.source, a.createtime, b.distinct_id from " \
+              "(select distinct second_id, source, createtime from users where source = 'weixin' and adaccount = 'weixin-rd' and " \
+              "createtime >= {0} and createtime < {1})a left join " \
+              "(select distinct distinct_id from events where event = 'SellerJoin' and date between '{2}' " \
+              "and '{3}') b on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
+            .format(start_timestamp, end_timestamp, start_date_tmp, end_date_tmp)
+    elif source == '微信公众号':
+        sql = "select c.second_id from (select a.second_id, a.source, a.createtime, b.distinct_id from " \
+              "(select distinct second_id, source, createtime from users where source = 'weixin' and adaccount = 'weixin-ios-rdpyq' and " \
+              "createtime >= {0} and createtime < {1})a left join " \
+              "(select distinct distinct_id from events where event = 'SellerJoin' and date between '{2}' " \
+              "and '{3}') b on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
+            .format(start_timestamp, end_timestamp, start_date_tmp, end_date_tmp)
     else:
         sql = "select c.second_id from (select a.second_id, a.source, a.createtime, b.distinct_id from " \
               "(select distinct second_id, source, createtime from users where source in ({0}) and " \
@@ -346,6 +360,20 @@ def get_post_seller_num(source, db_aplum, source_by, url, start_timestamp, end_t
                 # print(row)
                 post_seller_num = int(row['count_source'])
         return post_seller_num
+    elif source == '微信朋友圈':
+        sql = "select c.second_id from (select a.second_id, a.source, a.createtime, b.distinct_id from " \
+              "(select distinct second_id, source, createtime from users where source = 'weixin' and adaccount = 'weixin-rd' and " \
+              "createtime >= {0} and createtime < {1})a left join " \
+              "(select distinct distinct_id from events where event = 'SellerJoin' and date between '{2}' " \
+              "and '{3}') b on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
+            .format(start_timestamp, end_timestamp, start_date_tmp, end_date_tmp)
+    elif source == '微信公众号':
+        sql = "select c.second_id from (select a.second_id, a.source, a.createtime, b.distinct_id from " \
+              "(select distinct second_id, source, createtime from users where source = 'weixin' and adaccount = 'weixin-ios-rdpyq' and " \
+              "createtime >= {0} and createtime < {1})a left join " \
+              "(select distinct distinct_id from events where event = 'SellerJoin' and date between '{2}' " \
+              "and '{3}') b on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
+            .format(start_timestamp, end_timestamp, start_date_tmp, end_date_tmp)
     else:
         sql = "select c.second_id from (select a.second_id, a.source, a.createtime, b.distinct_id from " \
               "(select distinct second_id, source, createtime from users where source in ({0}) and " \
@@ -480,6 +508,20 @@ def get_register_seller_num(source, source_by, url, start_timestamp, end_timesta
               "(select distinct distinct_id from events where event = 'SellerJoin' and date between '{2}' " \
               "and '{3}') b on a.distinct_id = b.distinct_id where b.distinct_id is not null)c" \
             .format(start_date_tmp, end_date_tmp, start_date_tmp, end_date_tmp)
+    elif source == '微信朋友圈':
+        sql = "select count(*) as count_source from (select distinct a.second_id, a.source, a.createtime, b.distinct_id from " \
+              "(select distinct second_id, source, createtime from users where source = 'weixin' and adaccount = 'weixin-rd' and " \
+              "createtime >= {0} and createtime < {1})a left join " \
+              "(select distinct distinct_id from events where event = 'SellerJoin' and date between '{2}' " \
+              "and '{3}') b on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
+            .format(start_timestamp, end_timestamp, start_date_tmp, end_date_tmp)
+    elif source == '微信公众号':
+        sql = "select count(*) as count_source from (select distinct a.second_id, a.source, a.createtime, b.distinct_id from " \
+              "(select distinct second_id, source, createtime from users where source = 'weixin' and adaccount = 'weixin-ios-rdpyq' and " \
+              "createtime >= {0} and createtime < {1})a left join " \
+              "(select distinct distinct_id from events where event = 'SellerJoin' and date between '{2}' " \
+              "and '{3}') b on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
+            .format(start_timestamp, end_timestamp, start_date_tmp, end_date_tmp)
     else:
         sql = "select count(*) as count_source from (select distinct a.second_id, a.source, a.createtime, b.distinct_id from " \
               "(select distinct second_id, source, createtime from users where source in ({0}) and " \
@@ -587,6 +629,12 @@ def get_order_sum_realpayprice(source, source_by, url, start_timestamp, end_time
               "on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
             .format(start_timestamp, end_timestamp, source_by, start_timestamp, end_timestamp, start_date_tmp,
                     end_date_tmp, start_date_tmp, end_date_tmp)
+    elif str(source).endswith('KOL') or source in ('小红书', 'channel_kol'):
+        sql = "select sum(b.orderitem_realpayprice) as sum_realpay from (select second_id from users where " \
+              "firstordertime >= {0} and firstordertime < {1} and source in ({2}))a left join (select " \
+              "distinct_id, orderitem_realpayprice from events where event = 'PayOrderDetail' and date " \
+              "between '{3}' and '{4}')b on a.second_id = b.distinct_id where b.distinct_id is not null"\
+            .format(start_timestamp, end_timestamp, source_by, start_date_tmp, end_date_tmp)
     elif source == '抖音kol':
         register_seller_list = list()
         sql = "select distinct distinct_id from events where event = 'registerSuccessAct' " \
@@ -627,6 +675,20 @@ def get_order_sum_realpayprice(source, source_by, url, start_timestamp, end_time
             # print(row)
             order_sum_realpayprice = round(float(row['count_source']), 2)
         return order_sum_realpayprice
+    elif source == '微信朋友圈':
+        sql = "select sum(c.orderitem_realpayprice) sum_realpay from (select a.second_id, a.source, a.createtime, " \
+              "b.orderitem_realpayprice from (select distinct second_id, source, createtime from users where " \
+              "source = 'weixin' and adaccount = 'weixin-rd' and createtime >= {0} and createtime < {1})a left join " \
+              "(select * from events where event = 'PayOrderDetail' and date between '{2}' and '{3}') b " \
+              "on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
+            .format(start_timestamp, end_timestamp, start_date_tmp, end_date_tmp)
+    elif source == '微信公众号':
+        sql = "select sum(c.orderitem_realpayprice) sum_realpay from (select a.second_id, a.source, a.createtime, " \
+              "b.orderitem_realpayprice from (select distinct second_id, source, createtime from users where " \
+              "source = 'weixin' and adaccount = 'weixin-ios-rdpyq' and createtime >= {0} and createtime < {1})a left join " \
+              "(select * from events where event = 'PayOrderDetail' and date between '{2}' and '{3}') b " \
+              "on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
+            .format(start_timestamp, end_timestamp, start_date_tmp, end_date_tmp)
     else:
         sql = "select sum(c.orderitem_realpayprice) sum_realpay from (select a.second_id, a.source, a.createtime, " \
               "b.orderitem_realpayprice from (select distinct second_id, source, createtime from users where " \
@@ -736,6 +798,12 @@ def get_order_num(source, source_by, url, start_timestamp, end_timestamp, start_
               "date between '{7}' and '{8}') b on a.second_id = b.distinct_id where " \
               "b.distinct_id is not null)c".format(start_timestamp, end_timestamp, source_by, start_timestamp, end_timestamp, start_date_tmp,
                                                    end_date_tmp, start_date_tmp, end_date_tmp)
+    elif str(source).endswith('KOL') or source in ('小红书', 'channel_kol'):
+        sql = "select count(distinct b.orderid) as count_source from (select second_id from users where " \
+              "firstordertime >= {0} and firstordertime < {1} and source in ({2}))a left join (select distinct_id, " \
+              "orderid from events where event = 'PayOrderDetail' and date between '{3}' and '{4}')b on a.second_id " \
+              "= b.distinct_id where b.distinct_id is not null"\
+            .format(start_timestamp, end_timestamp, source_by, start_date_tmp, end_date_tmp)
     elif source == '抖音kol':
         register_seller_list = list()
         sql = "select distinct distinct_id from events where event = 'registerSuccessAct' " \
@@ -777,6 +845,22 @@ def get_order_num(source, source_by, url, start_timestamp, end_timestamp, start_
             # print(row)
             order_num = int(row['count_source'])
         return order_num
+    elif source == '微信朋友圈':
+        sql = "select count(distinct c.orderid) as count_source from (select a.second_id, a.source, a.createtime, b.orderid from " \
+              "(select distinct second_id, source, createtime from users where source = 'weixin' and adaccount = 'weixin-rd' and " \
+              "createtime >= {0} and createtime < {1})a left join " \
+              "(select distinct orderid, distinct_id from events where event = 'PayOrderDetail' and " \
+              "date between '{2}' and '{3}') b on a.second_id = b.distinct_id where " \
+              "b.distinct_id is not null)c".format(start_timestamp, end_timestamp, start_date_tmp,
+                                                   end_date_tmp)
+    elif source == '微信公众号':
+        sql = "select count(distinct c.orderid) as count_source from (select a.second_id, a.source, a.createtime, b.orderid from " \
+              "(select distinct second_id, source, createtime from users where source = 'weixin' and adaccount = 'weixin-ios-rdpyq' and " \
+              "createtime >= {0} and createtime < {1})a left join " \
+              "(select distinct orderid, distinct_id from events where event = 'PayOrderDetail' and " \
+              "date between '{2}' and '{3}') b on a.second_id = b.distinct_id where " \
+              "b.distinct_id is not null)c".format(start_timestamp, end_timestamp, start_date_tmp,
+                                                   end_date_tmp)
     else:
         sql = "select count(distinct c.orderid) as count_source from (select a.second_id, a.source, a.createtime, b.orderid from " \
               "(select distinct second_id, source, createtime from users where source in ({0}) and " \
@@ -884,6 +968,12 @@ def get_order_user_num(source, source_by, url, start_timestamp, end_timestamp, s
               "on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
             .format(start_timestamp, end_timestamp, source_by, start_timestamp, end_timestamp, start_date_tmp,
                     end_date_tmp, start_date_tmp, end_date_tmp)
+    elif str(source).endswith('KOL') or source in ('小红书', 'channel_kol'):
+        sql = "select count(b.distinct_id) as count_source from (select second_id from users where " \
+              "firstordertime >= {0} and firstordertime < {1} and source in ({2}))a left join (select " \
+              "distinct_id from events where event = 'PayOrderDetail' and date between '{3}' and '{4}')b " \
+              "on a.second_id = b.distinct_id where b.distinct_id is not null"\
+            .format(start_timestamp, end_timestamp, source_by, start_date_tmp, end_date_tmp)
     elif source == '抖音kol':
         register_seller_list = list()
         sql = "select distinct distinct_id from events where event = 'registerSuccessAct' " \
@@ -925,6 +1015,20 @@ def get_order_user_num(source, source_by, url, start_timestamp, end_timestamp, s
             # print(row)
             order_user_num = int(row['count_source'])
         return order_user_num
+    elif source == '微信朋友圈':
+        sql = "select count(*) as count_source from (select distinct a.second_id, a.source, a.createtime from " \
+              "(select distinct second_id, source, createtime from users where source = 'weixin' and adaccount = 'weixin-rd' and " \
+              "createtime >= {0} and createtime < {1})a left join " \
+              "(select distinct distinct_id from events where event = 'PayOrderDetail' and date between '{2}' and '{3}') b " \
+              "on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
+            .format(start_timestamp, end_timestamp, start_date_tmp, end_date_tmp)
+    elif source == '微信公众号':
+        sql = "select count(*) as count_source from (select distinct a.second_id, a.source, a.createtime from " \
+              "(select distinct second_id, source, createtime from users where source = 'weixin' and adaccount = 'weixin-ios-rdpyq' and " \
+              "createtime >= {0} and createtime < {1})a left join " \
+              "(select distinct distinct_id from events where event = 'PayOrderDetail' and date between '{2}' and '{3}') b " \
+              "on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
+            .format(start_timestamp, end_timestamp, start_date_tmp, end_date_tmp)
     else:
         sql = "select count(*) as count_source from (select distinct a.second_id, a.source, a.createtime from " \
               "(select distinct second_id, source, createtime from users where source in ({0}) and " \
@@ -1037,6 +1141,20 @@ def get_register_num(source, source_by, url, start_timestamp, end_timestamp, sta
               "on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
             .format(start_timestamp, end_timestamp, source_by, start_timestamp, end_timestamp, start_date_tmp,
                     end_date_tmp, start_date_tmp, end_date_tmp)
+    elif source == '微信朋友圈':
+        sql = "select count(*) as count_source from (select distinct a.second_id, a.source, a.createtime from " \
+              "(select distinct second_id, source, createtime from users where source = 'weixin' and adaccount = 'weixin-rd' and createtime >= {0} " \
+              "and createtime < {1})a  left join (select * from events where event = '$SignUp' and date between '{2}' " \
+              "and '{3}') b " \
+              "on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
+            .format(start_timestamp, end_timestamp, start_date_tmp, end_date_tmp)
+    elif source == '微信公众号':
+        sql = "select count(*) as count_source from (select distinct a.second_id, a.source, a.createtime from " \
+              "(select distinct second_id, source, createtime from users where source = 'weixin' and adaccount = 'weixin-ios-rdpyq' and createtime >= {0} " \
+              "and createtime < {1})a  left join (select * from events where event = '$SignUp' and date between '{2}' " \
+              "and '{3}') b " \
+              "on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
+            .format(start_timestamp, end_timestamp, start_date_tmp, end_date_tmp)
     elif source == '抖音kol':
         sql = "select count(distinct distinct_id) as count_source from events where event = 'registerSuccessAct' " \
               "and PartnerOldUser is null and regexp_like(distinct_id, '^[0-9]+$') and date between '{0}' " \
@@ -1131,6 +1249,12 @@ def get_day_add_activate(source, source_by, url, start_timestamp, end_timestamp)
               "e.distinct_id,khd)n on m.first_id=n.distinct_id)tmp where " \
               "tmp.khd = '百度小程序'".format(start_timestamp_tmp, end_timestamp, source_by, start_timestamp_tmp, end_timestamp,
                                          start_date_tmp, end_date_tmp)
+    elif source == '微信朋友圈':
+        sql = "select count(*) as count_source from users where createtime >= {0} and createtime < {1}" \
+              " and source = 'weixin' and adaccount = 'weixin-rd'".format(start_timestamp_tmp, end_timestamp)
+    elif source == '微信公众号':
+        sql = "select count(*) as count_source from users where createtime >= {0} and createtime < {1}" \
+              " and source = 'weixin' and adaccount = 'weixin-ios-rdpyq'".format(start_timestamp_tmp, end_timestamp)
     elif source == '抖音kol':
         sql = "select count(distinct distinct_id) as count_source from events where event = 'registerSuccessAct' " \
               "and PartnerOldUser is null and regexp_like(distinct_id, '^[0-9]+$') and date = '{0}'".format(end_date_tmp)
@@ -1214,6 +1338,12 @@ def get_add_activate(source, source_by, url, start_timestamp, end_timestamp):
               "'微信小程序' end khd from events e where e.event='GeneralOpenApp' and date between '{5}' and '{6}' group by " \
               "e.distinct_id,khd)n on m.first_id=n.distinct_id)tmp where " \
               "tmp.khd = '百度小程序'".format(start_timestamp, end_timestamp, source_by, start_timestamp, end_timestamp, start_date_tmp, end_date_tmp)
+    elif source == '微信朋友圈':
+        sql = "select count(*) as count_source from users where createtime >= {0} and createtime < {1}" \
+              " and source = 'weixin' and adaccount = 'weixin-rd'".format(start_timestamp, end_timestamp)
+    elif source == '微信公众号':
+        sql = "select count(*) as count_source from users where createtime >= {0} and createtime < {1}" \
+              " and source = 'weixin' and adaccount = 'weixin-ios-rdpyq'".format(start_timestamp, end_timestamp)
     elif source == '抖音kol':
         sql = "select count(distinct distinct_id) as count_source from events where event = 'registerSuccessAct' " \
               "and PartnerOldUser is null and regexp_like(distinct_id, '^[0-9]+$') and date between '{0}' " \
@@ -1279,7 +1409,7 @@ def save_dict_to_csv(dict_sum):
         file.write(str(dict_sum) + '\n')
 
 
-def write_data_dict_to_xlsx(db_aplum, source, costs, source_by, start_date_tmp, end_date_tmp, start_timestamp,
+def get_all_data(db_aplum, source, costs, source_by, start_date_tmp, end_date_tmp, start_timestamp,
                            end_timestamp):
     result_dict = dict()
     # 来源
@@ -1399,7 +1529,7 @@ if __name__ == '__main__':
     source_dict = get_source(db_market, source_dict)
     source_list = ['all', 'nature', 'nature_IOS', 'nature_Android', 'nature_wechat', 'nature_baidu', 'channel_all',
                    'channel_flow', 'channel_kol']
-    # source_list = ['channel_all', 'channel_flow', 'channel_kol']
+    # source_list = ['微信朋友圈', '微信公众号']
     for k in source_dict.keys():
         # 来源
         source = str(source_dict[k]['second_name'])
@@ -1429,7 +1559,7 @@ if __name__ == '__main__':
             sql_costs = "select sum(costs) as sum_costs from t_market_cost where costs_date = '{0}'"\
                 .format(start_date_tmp)
             costs = get_costs_by_sql(db_market, sql_costs)
-            write_data_dict_to_xlsx(db_aplum, source, costs, source_by,
+            get_all_data(db_aplum, source, costs, source_by,
                                     start_date_tmp,
                                     end_date_tmp,
                                     start_timestamp, end_timestamp)
@@ -1447,7 +1577,7 @@ if __name__ == '__main__':
                 costs = get_costs_by_sql(db_market, sql_costs)
             else:
                 costs = 0.0
-            write_data_dict_to_xlsx(db_aplum, source, costs, source_by,
+            get_all_data(db_aplum, source, costs, source_by,
                                     start_date_tmp,
                                     end_date_tmp,
                                     start_timestamp, end_timestamp)
@@ -1462,7 +1592,7 @@ if __name__ == '__main__':
                         "and source in ({1})" \
                 .format(start_date_tmp, source_by)
             costs = get_costs_by_sql(db_market, sql_costs)
-            write_data_dict_to_xlsx(db_aplum, source, costs, source_by,
+            get_all_data(db_aplum, source, costs, source_by,
                                     start_date_tmp, end_date_tmp,
                                     start_timestamp, end_timestamp)
         elif source == 'channel_flow':
@@ -1472,7 +1602,7 @@ if __name__ == '__main__':
                         "and source in ({1})" \
                 .format(start_date_tmp, source_by)
             costs = get_costs_by_sql(db_market, sql_costs)
-            write_data_dict_to_xlsx(db_aplum, source, costs, source_by,
+            get_all_data(db_aplum, source, costs, source_by,
                                     start_date_tmp, end_date_tmp,
                                     start_timestamp, end_timestamp)
         elif source == '抖音kol':
@@ -1484,8 +1614,7 @@ if __name__ == '__main__':
             if costs == 0.0:
                 continue
             source_by = ''
-            write_data_dict_to_xlsx(db_aplum, source, costs, source_by, start_date_tmp, end_date_tmp,
-                                    start_timestamp, end_timestamp)
+            get_all_data(db_aplum, source, costs, source_by, start_date_tmp, end_date_tmp, start_timestamp, end_timestamp)
         else:
             if str(source).endswith('KOL'):
                 sql_source = "select source from t_market_cost where source in (select source from t_market_source " \
@@ -1500,6 +1629,4 @@ if __name__ == '__main__':
                         "and source in ({1})" \
                 .format(start_date_tmp, source_by)
             costs = get_costs_by_sql(db_market, sql_costs)
-            write_data_dict_to_xlsx(db_aplum, source, costs, source_by,
-                                    start_date_tmp, end_date_tmp,
-                                    start_timestamp, end_timestamp)
+            get_all_data(db_aplum, source, costs, source_by, start_date_tmp, end_date_tmp, start_timestamp, end_timestamp)

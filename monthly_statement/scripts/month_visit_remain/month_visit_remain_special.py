@@ -6,7 +6,6 @@ import time
 import json
 import xlsxwriter
 from sqlalchemy import create_engine
-from dateutil.relativedelta import relativedelta
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import smtplib
@@ -54,14 +53,6 @@ def get_count_date_by_sql(costs, source, url, sql, start_date_tmp):
         type = 3
     elif source == 'channel_kol':
         type = 4
-    elif source == 'flow_IOS':
-        type = 10
-    elif source == 'flow_Android':
-        type = 11
-    elif source == 'flow_wechat':
-        type = 12
-    elif source == 'flow_baidu':
-        type = 13
     else:
         type = 5
     key_source = str(source)
@@ -131,20 +122,18 @@ def get_count_date_by_sql(costs, source, url, sql, start_date_tmp):
     return result_dict
 
 
-def get_activate_date_by_source_date(start_timestamp, end_timestamp, source_by, costs, flow_dict, url, db_market, source, start_date_tmp, end_date_tmp):
+def get_activate_date_by_source_date(source_by, costs, flow_dict, url, db_market, source, start_date_tmp, end_date_tmp):
     start_date_tmp_second = str(str(start_date_tmp).split('-')[0]) + '-' + str(
         str(start_date_tmp).split('-')[1]) + '-02'
-    end_date_tmp_event = (datetime.strptime(start_date_tmp, '%Y-%m-%d') + relativedelta(months=13)).strftime('%Y-%m-%d')
-    print(end_date_tmp_event)
     # print(start_date_tmp_second)
     if source == 'all':
         sql = "select * from (SELECT from_unixtime(unix_timestamp(date_sub( date, dayofmonth( date ) - 1 ))," \
-              " 'yyyy-MM-dd') the_month, count( DISTINCT user_id ) totalusernum FROM EVENTS WHERE date < '{0}' and " \
-              "EVENT = 'GeneralOpenApp' AND user_id IN (SELECT DISTINCT u.id FROM (select * from events where date >= '{1}' and date <'{2}' " \
+              " 'yyyy-MM-dd') the_month, count( DISTINCT user_id ) totalusernum FROM EVENTS WHERE	" \
+              "EVENT = 'GeneralOpenApp' AND user_id IN (SELECT DISTINCT u.id FROM (select * from events where date >= '{0}' and date <'{1}' " \
               "and EVENT = 'GeneralOpenApp' AND IsFirstTime = 1) e	LEFT JOIN " \
-              "(select id from users)u ON e.user_id = u.id ) GROUP BY the_month having the_month >= " \
-              "'{3}' union select '{4}' as the_month,0 from users limit 1)tmp ORDER BY tmp.the_month ASC"\
-            .format(end_date_tmp_event, start_date_tmp, end_date_tmp, start_date_tmp, start_date_tmp_second)
+              "(select id from users )u ON e.user_id = u.id ) GROUP BY the_month having the_month >= " \
+              "'{2}' union select '{3}' as the_month,0 from users limit 1)tmp ORDER BY tmp.the_month ASC"\
+            .format(start_date_tmp, end_date_tmp, start_date_tmp, start_date_tmp_second)
         result_dict = get_count_date_by_sql(costs, source, url, sql, start_date_tmp)
     # source_list = ['all', 'nature', 'channel_all', 'channel_flow', 'channel_kol']
     elif source == 'nature':
@@ -165,13 +154,13 @@ def get_activate_date_by_source_date(start_timestamp, end_timestamp, source_by, 
             source_by = "'" + "','".join(str(i) for i in source_list_tmp) + "'"
 
         sql = "select * from (SELECT from_unixtime(unix_timestamp(date_sub( date, dayofmonth( date ) - 1 )), 'yyyy-MM-dd') " \
-              "the_month, count( DISTINCT user_id ) totalusernum FROM EVENTS WHERE date < '{5}' and	EVENT = 'GeneralOpenApp' " \
+              "the_month, count( DISTINCT user_id ) totalusernum FROM EVENTS WHERE	EVENT = 'GeneralOpenApp' " \
               "AND user_id IN (SELECT DISTINCT u.id FROM EVENTS e	LEFT JOIN (select id from users where " \
               "source not in ({0}) or source is null)u " \
               "ON e.user_id = u.id WHERE e.date >= '{1}' and e.date <'{2}' and e.EVENT = 'GeneralOpenApp' " \
               "AND e.IsFirstTime = 1 ) GROUP BY the_month having the_month >= '{3}' union select '{4}' " \
               "as the_month,0 from users limit 1)tmp ORDER BY tmp.the_month ASC"\
-            .format(source_by, start_date_tmp, end_date_tmp, start_date_tmp, start_date_tmp_second, end_date_tmp_event)
+            .format(source_by, start_date_tmp, end_date_tmp, start_date_tmp, start_date_tmp_second)
         result_dict = get_count_date_by_sql(costs, source, url, sql, start_date_tmp)
     elif source == 'channel_all':
         source_list_tmp = list()
@@ -207,12 +196,12 @@ def get_activate_date_by_source_date(start_timestamp, end_timestamp, source_by, 
         #                                                                                start_date_tmp, end_date_tmp,
         #                                                                                start_date_tmp, end_date_tmp)
         sql = "select * from (SELECT from_unixtime(unix_timestamp(date_sub( date, dayofmonth( date ) - 1 )), 'yyyy-MM-dd') " \
-              "the_month, count( DISTINCT user_id ) totalusernum FROM EVENTS WHERE date < '{5}' and	EVENT = 'GeneralOpenApp' " \
+              "the_month, count( DISTINCT user_id ) totalusernum FROM EVENTS WHERE	EVENT = 'GeneralOpenApp' " \
               "AND user_id IN (SELECT DISTINCT u.id FROM EVENTS e	LEFT JOIN (select id from users where source " \
               "in ({0}))u ON e.user_id = u.id WHERE e.date >= '{1}' and e.date " \
               "<'{2}' and e.EVENT = 'GeneralOpenApp' AND e.IsFirstTime = 1 ) GROUP BY the_month having " \
               "the_month >= '{3}' union select '{4}' as the_month,0 from users limit 1)tmp ORDER BY tmp.the_month ASC"\
-            .format(source_by, start_date_tmp, end_date_tmp, start_date_tmp, start_date_tmp_second, end_date_tmp_event)
+            .format(source_by, start_date_tmp, end_date_tmp, start_date_tmp, start_date_tmp_second)
         result_dict = get_count_date_by_sql(costs, source, url, sql, start_date_tmp)
     elif source == 'channel_flow':
         source_list_tmp = list()
@@ -231,12 +220,12 @@ def get_activate_date_by_source_date(start_timestamp, end_timestamp, source_by, 
             source_by = "'" + "','".join(str(i) for i in source_list_tmp) + "'"
 
         sql = "select * from (SELECT from_unixtime(unix_timestamp(date_sub( date, dayofmonth( date ) - 1 )), 'yyyy-MM-dd') " \
-              "the_month, count( DISTINCT user_id ) totalusernum FROM EVENTS WHERE date < '{5}' and	EVENT = 'GeneralOpenApp' " \
+              "the_month, count( DISTINCT user_id ) totalusernum FROM EVENTS WHERE	EVENT = 'GeneralOpenApp' " \
               "AND user_id IN (SELECT DISTINCT u.id FROM EVENTS e	LEFT JOIN (select id from users where source " \
               "in ({0}))u ON e.user_id = u.id WHERE e.date >= '{1}' and e.date " \
               "<'{2}' and e.EVENT = 'GeneralOpenApp' AND e.IsFirstTime = 1 ) GROUP BY the_month having " \
               "the_month >= '{3}' union select '{4}' as the_month,0 from users limit 1)tmp ORDER BY tmp.the_month ASC"\
-            .format(source_by, start_date_tmp, end_date_tmp, start_date_tmp, start_date_tmp_second, end_date_tmp_event)
+            .format(source_by, start_date_tmp, end_date_tmp, start_date_tmp, start_date_tmp_second)
         # print(sql)
         result_dict = get_count_date_by_sql(costs, source, url, sql, start_date_tmp)
     elif source == 'channel_kol':
@@ -256,12 +245,12 @@ def get_activate_date_by_source_date(start_timestamp, end_timestamp, source_by, 
             source_by = "'" + "','".join(str(i) for i in source_list_tmp) + "'"
 
         sql = "select * from (SELECT from_unixtime(unix_timestamp(date_sub( date, dayofmonth( date ) - 1 )), 'yyyy-MM-dd') " \
-              "the_month, count( DISTINCT user_id ) totalusernum FROM EVENTS WHERE date < '{5}' and	EVENT = 'GeneralOpenApp' " \
+              "the_month, count( DISTINCT user_id ) totalusernum FROM EVENTS WHERE	EVENT = 'GeneralOpenApp' " \
               "AND user_id IN (SELECT DISTINCT u.id FROM EVENTS e	LEFT JOIN (select id from users where source " \
               "in ({0}))u ON e.user_id = u.id WHERE e.date >= '{1}' and e.date " \
               "<'{2}' and e.EVENT = 'GeneralOpenApp' AND e.IsFirstTime = 1 ) GROUP BY the_month having " \
               "the_month >= '{3}' union select '{4}' as the_month,0 from users limit 1)tmp ORDER BY tmp.the_month ASC"\
-            .format(source_by, start_date_tmp, end_date_tmp, start_date_tmp, start_date_tmp_second, end_date_tmp_event)
+            .format(source_by, start_date_tmp, end_date_tmp, start_date_tmp, start_date_tmp_second)
         result_dict = get_count_date_by_sql(costs, source, url, sql, start_date_tmp)
     elif source in ('flow_IOS', 'flow_Android', 'flow_wechat', 'flow_baidu'):
         source_list_tmp = list()
@@ -280,7 +269,7 @@ def get_activate_date_by_source_date(start_timestamp, end_timestamp, source_by, 
             source_by = "'" + "','".join(str(i) for i in source_list_tmp) + "'"
 
         sql = "select * from (SELECT from_unixtime(unix_timestamp(date_sub( date, dayofmonth( date ) - 1 )), 'yyyy-MM-dd') " \
-              "the_month, count( DISTINCT user_id ) totalusernum FROM EVENTS WHERE date < '{6}' and	EVENT = 'GeneralOpenApp' " \
+              "the_month, count( DISTINCT user_id ) totalusernum FROM EVENTS WHERE	EVENT = 'GeneralOpenApp' " \
               "AND user_id IN (SELECT DISTINCT u.id FROM (select *, case when plumfrontend='IOS客户端' then 'IOS' " \
               "when plumfrontend = 'Android客户端' then 'Android' when plumfrontend='百度小程序' then '百度小程序' " \
               "else  '微信小程序' end khd from events)e	LEFT JOIN (select id from users where source " \
@@ -289,17 +278,17 @@ def get_activate_date_by_source_date(start_timestamp, end_timestamp, source_by, 
               "having " \
               "the_month >= '{4}' union select '{5}' as the_month,0 from users limit 1 )tmp ORDER BY " \
               "tmp.the_month ASC".format(source_by, start_date_tmp, end_date_tmp, flow_dict[source], start_date_tmp,
-                                         start_date_tmp_second, end_date_tmp_event)
+                                         start_date_tmp_second)
         # print(sql)
         result_dict = get_count_date_by_sql(costs, source, url, sql, start_date_tmp)
     elif source == 'CPA':
         sql = "select * from (SELECT from_unixtime(unix_timestamp(date_sub( date, dayofmonth( date ) - 1 )), 'yyyy-MM-dd') " \
-              "the_month, count( DISTINCT user_id ) totalusernum FROM EVENTS WHERE date < '{7}' and	EVENT = 'GeneralOpenApp' " \
+              "the_month, count( DISTINCT user_id ) totalusernum FROM EVENTS WHERE	EVENT = 'GeneralOpenApp' " \
               "AND user_id IN (SELECT DISTINCT u.id FROM EVENTS e	LEFT JOIN (select id from users where createtime >= {0} " \
               " and createtime < {1} and adaccount in ({2}))u ON e.user_id = u.id WHERE e.date >= '{3}' and e.date " \
               "<'{4}' and e.EVENT = 'GeneralOpenApp' AND e.IsFirstTime = 1 ) GROUP BY the_month having " \
               "the_month >= '{5}' union select '{6}' as the_month,0 from users limit 1)tmp ORDER BY tmp.the_month ASC"\
-            .format(start_timestamp, end_timestamp, source_by, start_date_tmp, end_date_tmp, start_date_tmp, start_date_tmp_second, end_date_tmp_event)
+            .format(start_timestamp, end_timestamp, source_by, start_date_tmp, end_date_tmp, start_date_tmp, start_date_tmp_second)
         result_dict = get_count_date_by_sql(costs, source, url, sql, start_date_tmp)
     elif source in ('微信公众号', '微信朋友圈'):
         # print(start_timestamp)
@@ -309,23 +298,23 @@ def get_activate_date_by_source_date(start_timestamp, end_timestamp, source_by, 
         # print(end_date_tmp)
         # print(start_date_tmp_second)
         sql = "select * from (SELECT from_unixtime(unix_timestamp(date_sub( date, dayofmonth( date ) - 1 )), 'yyyy-MM-dd') " \
-              "the_month, count( DISTINCT user_id ) totalusernum FROM EVENTS WHERE date < '{7}' and	EVENT = 'GeneralOpenApp' " \
+              "the_month, count( DISTINCT user_id ) totalusernum FROM EVENTS WHERE	EVENT = 'GeneralOpenApp' " \
               "AND user_id IN (SELECT DISTINCT u.id FROM EVENTS e	LEFT JOIN (select id from users where createtime >= {0} " \
               " and createtime < {1} {2})u ON e.user_id = u.id WHERE e.date >= '{3}' and e.date " \
               "<'{4}' and e.EVENT = 'GeneralOpenApp' AND e.IsFirstTime = 1 ) GROUP BY the_month having " \
               "the_month >= '{5}' union select '{6}' as the_month,0 from users limit 1)tmp ORDER BY tmp.the_month ASC"\
-            .format(start_timestamp, end_timestamp, source_by, start_date_tmp, end_date_tmp, start_date_tmp, start_date_tmp_second, end_date_tmp_event)
+            .format(start_timestamp, end_timestamp, source_by, start_date_tmp, end_date_tmp, start_date_tmp, start_date_tmp_second)
         # print(sql)
         result_dict = get_count_date_by_sql(costs, source, url, sql, start_date_tmp)
     elif source == '抖音kol':
         sql = "select * from (SELECT from_unixtime(unix_timestamp(date_sub( date, dayofmonth( date ) - 1 )), 'yyyy-MM-dd') " \
-              "the_month, count( DISTINCT user_id ) totalusernum FROM EVENTS WHERE date < '{0}' and	EVENT = 'GeneralOpenApp' " \
+              "the_month, count( DISTINCT user_id ) totalusernum FROM EVENTS WHERE	EVENT = 'GeneralOpenApp' " \
               "AND user_id IN (SELECT DISTINCT u.user_id FROM EVENTS e	LEFT JOIN (select user_id from events where event = 'registerSuccessAct' " \
               "and PartnerOldUser is null and regexp_like(distinct_id, '^[0-9]+$') and date >= '{0}' " \
               "and date < '{1}')u ON e.user_id = u.user_id WHERE e.date >= '{2}' and e.date " \
               "<'{3}' and e.EVENT = 'GeneralOpenApp' AND e.IsFirstTime = 1 ) GROUP BY the_month having " \
               "the_month >= '{4}' union select '{5}' as the_month,0 from users limit 1)tmp ORDER BY tmp.the_month ASC"\
-            .format(start_date_tmp, end_date_tmp, start_date_tmp, end_date_tmp, start_date_tmp, start_date_tmp_second, end_date_tmp_event)
+            .format(start_date_tmp, end_date_tmp, start_date_tmp, end_date_tmp, start_date_tmp, start_date_tmp_second)
         result_dict = get_count_date_by_sql(costs, source, url, sql, start_date_tmp)
     else:
         source_list_tmp = list()
@@ -342,17 +331,17 @@ def get_activate_date_by_source_date(start_timestamp, end_timestamp, source_by, 
             source_by = "'" + str(source_list_tmp[0]) + "'"
         else:
             source_by = "'" + "','".join(str(i) for i in source_list_tmp) + "'"
-        # print(source_by)
+        print(source_by)
 
         sql = "select * from (SELECT from_unixtime(unix_timestamp(date_sub( date, dayofmonth( date ) - 1 )), 'yyyy-MM-dd') " \
-              "the_month, count( DISTINCT user_id ) totalusernum FROM EVENTS WHERE date < '{5}' and	EVENT = 'GeneralOpenApp' " \
+              "the_month, count( DISTINCT user_id ) totalusernum FROM EVENTS WHERE	EVENT = 'GeneralOpenApp' " \
               "AND user_id IN (SELECT DISTINCT u.id FROM EVENTS e	LEFT JOIN (select id from users where source " \
               "in ({0}))u ON e.user_id = u.id WHERE e.date >= '{1}' and e.date " \
               "<'{2}' and e.EVENT = 'GeneralOpenApp' AND e.IsFirstTime = 1 ) GROUP BY the_month having " \
               "the_month >= '{3}' union select '{4}' as the_month,0 from users limit 1)tmp ORDER BY tmp.the_month ASC".format(
             source_by, start_date_tmp, end_date_tmp,
-            start_date_tmp, start_date_tmp_second, end_date_tmp_event)
-        # print(sql)
+            start_date_tmp, start_date_tmp_second)
+        print(sql)
         result_dict = get_count_date_by_sql(costs, source, url, sql, start_date_tmp)
     # print(result_dict)
 
@@ -457,50 +446,221 @@ def get_costs_by_source_date(db_market, source, start_date_tmp):
 if __name__ == '__main__':
     result_dict = dict()
     # start_date, end_date = get_start_end_date()
-    date_list = ['2016-10-01', '2016-11-01', '2016-12-01', '2017-01-01', '2017-02-01', '2017-03-01', '2017-04-01',
-                 '2017-05-01', '2017-06-01', '2017-07-01', '2017-08-01', '2017-09-01', '2017-10-01', '2017-11-01',
-                 '2017-12-01', '2018-01-01', '2018-02-01', '2018-03-01', '2018-04-01',
-                 '2018-05-01', '2018-06-01', '2018-07-01', '2018-08-01', '2018-09-01', '2018-10-01', '2018-11-01',
-                 '2018-12-01', '2019-01-01', '2019-02-01', '2019-03-01', '2019-04-01',
-                 '2019-05-01', '2019-06-01', '2019-07-01']
+    # date_list = ['2016-10-01', '2016-11-01', '2016-12-01', '2017-01-01', '2017-02-01', '2017-03-01', '2017-04-01',
+    #              '2017-05-01', '2017-06-01', '2017-07-01', '2017-08-01', '2017-09-01', '2017-10-01', '2017-11-01',
+    #              '2017-12-01', '2018-01-01', '2018-02-01', '2018-03-01', '2018-04-01',
+    #              '2018-05-01', '2018-06-01', '2018-07-01', '2018-08-01', '2018-09-01', '2018-10-01', '2018-11-01',
+    #              '2018-12-01', '2019-01-01', '2019-02-01', '2019-03-01', '2019-04-01',
+    #              '2019-05-01', '2019-06-01', '2019-07-01', '2019-08-01']
     # print(date_list)
 
-    # date_list = ['2019-05-01', '2019-06-01', '2019-07-01']
+    # date_list = ['2018-10-01', '2018-11-01',
+    #              '2018-12-01', '2019-01-01', '2019-02-01', '2019-03-01', '2019-04-01',
+    #              '2019-05-01', '2019-06-01', '2019-07-01']
     source_dict = dict()
     db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
     db_aplum = MySQLdb.connect(mysqlhost, mysqlusername, mysqlpasswd, db, charset='utf8')
     source_dict = get_source(db_market, source_dict)
-    source_list = ['all', 'nature', 'channel_all', 'channel_flow', 'channel_kol', 'flow_IOS', 'flow_Android',
-                   'flow_wechat', 'flow_baidu']
-    # source_list = ['all']
-    # source_list = ['微信朋友圈', '微信公众号', 'CPA', '抖音kol']
-    # source_list = ['友盟', '快手', 'b站', '微博KOL', 'B站KOL', '小红KOL']
+    # source_list = ['all', 'nature', 'channel_all', 'channel_flow', 'channel_kol', 'flow_IOS', 'flow_Android',
+                   # 'flow_wechat', 'flow_baidu']
+    # source_list = []
+    source_list = ['微信朋友圈', '微信公众号', 'CPA', '抖音kol']
 
     flow_dict = {"flow_IOS": "IOS",
                  "flow_Android": "Android",
                  "flow_wechat": "微信小程序",
                  "flow_baidu": "百度小程序"
                  }
-    for k in source_dict.keys():
-        # 来源
-        source = str(source_dict[k]['second_name'])
-        if source in source_list:
-            continue
-        else:
-            source_list.append(source)
+    # for k in source_dict.keys():
+    #     # 来源
+    #     source = str(source_dict[k]['second_name'])
+    #     if source in source_list:
+    #         continue
+    #     else:
+    #         source_list.append(source)
     print("source_list:" + str(len(source_list)))
-    for current_date in date_list:
+    # for current_date in date_list:
     # for source in source_list:
-        for source in source_list:
-            if source in ('CPA', '微信朋友圈', '微信公众号', '抖音kol'):
-                print(source)
-                continue
-            else:
-            # for current_date in date_list:
-                start_date_tmp = current_date
+    #     # for source in source_list:
+    #     for current_date in date_list:
+    #         start_date_tmp = current_date
+    #         end_date_tmp = get_end_date_tmp(start_date_tmp)
+    #         print(source)
+    #         print(start_date_tmp + '>>>>>>>>>' + end_date_tmp + '\n')
+    #         # date_tmp = date_tmp + '-01'
+    #         if source in ('微信朋友圈', '微信公众号', 'CPA', '抖音kol'):
+    #             if source == 'CPA':
+    #                 date_account_dict = {"2018-11-01": "'cpa-zshd','cpa-zshd1'",
+    #                                      "2018-12-01": "'cpa-zshd','cpa-zshd3','cpa-zshd4','cpa-zshd5'",
+    #                                      "2019-01-01": "'cpa-zshd','cpa-zshd1','cpa-zshd2','cpa-zshd3','cpa-zshd4'",
+    #                                      "2019-03-01": "'cpa-zshd','cpa-zshd1','cpa-zshd2','cpa-zshd3','cpa-zshd4','cpa-zshd5','cpa-zshd6','cpa-zshd7','cpa-zshd9','cpa-zshd10'",
+    #                                      "2019-04-01": "'cpa-zshd12','cpa-zshd5','cpa-zshd6','cpa-zshd15','cpa-zshd7','cpa-zshd10','cpa-zshd9','cpa-yl01','cpa-yl05'",
+    #                                      "2019-05-01": "'cpa-zshd12','cpa-zshd11','cpa-zshd15','cpa-zshd5','cpa-zshd7'"}
+    #                 for start_date_tmp in date_account_dict.keys():
+    #                     end_date_tmp = get_end_date_tmp(start_date_tmp)
+    #                     start_timestamp = int(
+    #                         time.mktime(
+    #                             time.strptime('{0} 00:00:00'.format(start_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
+    #
+    #                     # end_date_timestamp = (datetime.strptime(end_date_tmp, '%Y-%m-%d') + timedelta(days=1)).strftime(
+    #                     #     '%Y-%m-%d')
+    #                     end_timestamp = int(
+    #                         time.mktime(time.strptime('{0} 00:00:00'.format(end_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
+    #                     source_by = str(date_account_dict[start_date_tmp])
+    #                     # sql_costs = "select sum(costs) as sum_costs from t_market_cost where source = 'cpa'" \
+    #                     #             " and costs_date = '{0}'" \
+    #                     #     .format(start_date_tmp)
+    #                     costs = get_costs_by_source_date(db_market, source, start_date_tmp)
+    #                     result_dict = get_activate_date_by_source_date(source_by, costs, flow_dict, url, db_market, source,
+    #                                                                    start_date_tmp,
+    #                                                                    end_date_tmp)
+    #             elif source == '微信公众号':
+    #                 date_account_dict = {"2018-11-01": "",
+    #                                      "2018-12-01": "",
+    #                                      "2019-01-01": "",
+    #                                      "2019-02-01": "",
+    #                                      "2019-03-01": "",
+    #                                      "2019-04-01": "'weixin-ios-rdpyq'",
+    #                                      "2019-05-01": "'weixin-ios-rdpyq'",
+    #                                      "2019-06-01": "'weixin-ios-rdpyq'",
+    #                                      "2019-07-01": "'weixin-ios-rdpyq'",
+    #                                      }
+    #                 for start_date_tmp in date_account_dict.keys():
+    #                     end_date_tmp = get_end_date_tmp(start_date_tmp)
+    #                     start_timestamp = int(
+    #                         time.mktime(
+    #                             time.strptime('{0} 00:00:00'.format(start_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
+    #
+    #                     end_timestamp = int(
+    #                         time.mktime(
+    #                             time.strptime('{0} 00:00:00'.format(end_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
+    #                     # sql_costs = "select sum(costs) as sum_costs from t_market_cost where source = '微信公众号' and " \
+    #                     #             "costs_date = '{0}'" \
+    #                     #     .format(start_date_tmp)
+    #                     # costs = get_costs_by_sql(db_market, sql_costs)
+    #                     if start_date_tmp in ('2018-11-01', '2018-12-01', '2019-01-01', '2019-02-01', '2019-03-01'):
+    #                         source_by = "and source = 'weixin'"
+    #                     else:
+    #                         source_by = "and source = 'weixin' and adaccount = {0}".format(
+    #                             str(date_account_dict[start_date_tmp]))
+    #                     costs = get_costs_by_source_date(db_market, source, start_date_tmp)
+    #                     result_dict = get_activate_date_by_source_date(source_by, costs, flow_dict, url, db_market,
+    #                                                                    source,
+    #                                                                    start_date_tmp,
+    #                                                                    end_date_tmp)
+    #             elif source == '微信朋友圈':
+    #                 date_account_dict = {"2019-04-01": "'weixin-rd'",
+    #                                      "2019-05-01": "'weixin-rd'",
+    #                                      "2019-06-01": "'weixin-rd'",
+    #                                      "2019-07-01": "'weixin-rd'",
+    #                                      }
+    #                 for start_date_tmp in date_account_dict.keys():
+    #                     end_date_tmp = get_end_date_tmp(start_date_tmp)
+    #                     start_timestamp = int(
+    #                         time.mktime(
+    #                             time.strptime('{0} 00:00:00'.format(start_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
+    #
+    #                     end_timestamp = int(
+    #                         time.mktime(
+    #                             time.strptime('{0} 00:00:00'.format(end_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
+    #                     # sql_costs = "select sum(costs) as sum_costs from t_market_cost where source = '微信朋友圈' and " \
+    #                     #             "costs_date = '{0}'" \
+    #                     #     .format(start_date_tmp)
+    #                     # costs = get_costs_by_sql(db_market, sql_costs)
+    #                     source_by = "and source = 'weixin' and adaccount = {0}".format(
+    #                         str(date_account_dict[start_date_tmp]))
+    #                     costs = get_costs_by_source_date(db_market, source, start_date_tmp)
+    #                     result_dict = get_activate_date_by_source_date(source_by, costs, flow_dict, url, db_market,
+    #                                                                    source,
+    #                                                                    start_date_tmp,
+    #                                                                    end_date_tmp)
+    #             else:
+    #                 date_list = ['2019-05-01', '2019-06-01', '2019-07-01']
+    #                 for start_date_tmp in date_list:
+    #                     end_date_tmp = get_end_date_tmp(start_date_tmp)
+    #                     print(end_date_tmp)
+    #                     start_timestamp = int(
+    #                         time.mktime(
+    #                             time.strptime('{0} 00:00:00'.format(start_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
+    #
+    #                     end_timestamp = int(
+    #                         time.mktime(
+    #                             time.strptime('{0} 00:00:00'.format(end_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
+    #                     # sql_costs = "select sum(costs) as sum_costs from t_market_cost where source in(select source from " \
+    #                     #             "t_market_source where second_name = '抖音kol') and " \
+    #                     #             "costs_date = '{0}'" \
+    #                     #     .format(start_date_tmp)
+    #                     # costs = get_costs_by_sql(db_market, sql_costs)
+    #                     source_by = ''
+    #                     costs = get_costs_by_source_date(db_market, source, start_date_tmp)
+    #                     result_dict = get_activate_date_by_source_date(source_by, costs, flow_dict, url, db_market,
+    #                                                                    source,
+    #                                                                    start_date_tmp,
+    #                                                                    end_date_tmp)
+    #         else:
+    #             # print(source)
+    #             # print(start_date_tmp)
+    #             if source in ('nature', 'flow_IOS', 'flow_Android', 'flow_wechat', 'flow_baidu'):
+    #                 costs = 0.0
+    #             else:
+    #                 costs = get_costs_by_source_date(db_market, source, start_date_tmp)
+    #             # source_list_tmp = list()
+    #             # sid_list = list()
+    #             source_by = ''
+    #             result_dict = get_activate_date_by_source_date(source_by, costs, flow_dict, url, db_market, source, start_date_tmp,
+    #                                                            end_date_tmp)
+                # print(result_dict)
+                # write_dict_to_mysql(result_dict)
+
+    source_list = ['微信朋友圈', '微信公众号', 'CPA', '抖音kol']
+    for source in source_list:
+        # # for source in source_list:
+        # for current_date in date_list:
+        #     start_date_tmp = current_date
+        #     end_date_tmp = get_end_date_tmp(start_date_tmp)
+        #     print(source)
+        #     print(start_date_tmp + '>>>>>>>>>' + end_date_tmp + '\n')
+        #     # date_tmp = date_tmp + '-01'
+        #     if source in ('微信朋友圈', '微信公众号', 'CPA', '抖音kol'):
+        if source == 'CPA':
+            date_account_dict = {"2018-11-01": "'cpa-zshd','cpa-zshd1'",
+                                 "2018-12-01": "'cpa-zshd','cpa-zshd3','cpa-zshd4','cpa-zshd5'",
+                                 "2019-01-01": "'cpa-zshd','cpa-zshd1','cpa-zshd2','cpa-zshd3','cpa-zshd4'",
+                                 "2019-03-01": "'cpa-zshd','cpa-zshd1','cpa-zshd2','cpa-zshd3','cpa-zshd4','cpa-zshd5','cpa-zshd6','cpa-zshd7','cpa-zshd9','cpa-zshd10'",
+                                 "2019-04-01": "'cpa-zshd12','cpa-zshd5','cpa-zshd6','cpa-zshd15','cpa-zshd7','cpa-zshd10','cpa-zshd9','cpa-yl01','cpa-yl05'",
+                                 "2019-05-01": "'cpa-zshd12','cpa-zshd11','cpa-zshd15','cpa-zshd5','cpa-zshd7'"}
+            for start_date_tmp in date_account_dict.keys():
                 end_date_tmp = get_end_date_tmp(start_date_tmp)
-                print(source)
-                print(start_date_tmp + '>>>>>>>>>' + end_date_tmp + '\n')
+                start_timestamp = int(
+                    time.mktime(
+                        time.strptime('{0} 00:00:00'.format(start_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
+
+                # end_date_timestamp = (datetime.strptime(end_date_tmp, '%Y-%m-%d') + timedelta(days=1)).strftime(
+                #     '%Y-%m-%d')
+                end_timestamp = int(
+                    time.mktime(time.strptime('{0} 00:00:00'.format(end_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
+                source_by = str(date_account_dict[start_date_tmp])
+                # sql_costs = "select sum(costs) as sum_costs from t_market_cost where source = 'cpa'" \
+                #             " and costs_date = '{0}'" \
+                #     .format(start_date_tmp)
+                costs = get_costs_by_source_date(db_market, source, start_date_tmp)
+                result_dict = get_activate_date_by_source_date(source_by, costs, flow_dict, url, db_market, source,
+                                                               start_date_tmp,
+                                                               end_date_tmp)
+                write_dict_to_mysql(result_dict)
+        elif source == '微信公众号':
+            date_account_dict = {"2018-11-01": "",
+                                 "2018-12-01": "",
+                                 "2019-01-01": "",
+                                 "2019-02-01": "",
+                                 "2019-03-01": "",
+                                 "2019-04-01": "'weixin-ios-rdpyq'",
+                                 "2019-05-01": "'weixin-ios-rdpyq'",
+                                 "2019-06-01": "'weixin-ios-rdpyq'",
+                                 "2019-07-01": "'weixin-ios-rdpyq'",
+                                 }
+            for start_date_tmp in date_account_dict.keys():
+                end_date_tmp = get_end_date_tmp(start_date_tmp)
                 start_timestamp = int(
                     time.mktime(
                         time.strptime('{0} 00:00:00'.format(start_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
@@ -508,17 +668,69 @@ if __name__ == '__main__':
                 end_timestamp = int(
                     time.mktime(
                         time.strptime('{0} 00:00:00'.format(end_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
-                # date_tmp = date_tmp + '-01'
-                # print(source)
-                # print(start_date_tmp)
-                if source in ('nature', 'flow_IOS', 'flow_Android', 'flow_wechat', 'flow_baidu'):
-                    costs = 0.0
+                # sql_costs = "select sum(costs) as sum_costs from t_market_cost where source = '微信公众号' and " \
+                #             "costs_date = '{0}'" \
+                #     .format(start_date_tmp)
+                # costs = get_costs_by_sql(db_market, sql_costs)
+                if start_date_tmp in ('2018-11-01', '2018-12-01', '2019-01-01', '2019-02-01', '2019-03-01'):
+                    source_by = "and source = 'weixin'"
                 else:
-                    costs = get_costs_by_source_date(db_market, source, start_date_tmp)
-                # source_list_tmp = list()
-                # sid_list = list()
-                source_by = ''
-                result_dict = get_activate_date_by_source_date(start_timestamp, end_timestamp, source_by, costs, flow_dict, url, db_market, source, start_date_tmp,
+                    source_by = "and source = 'weixin' and adaccount = {0}".format(
+                        str(date_account_dict[start_date_tmp]))
+                costs = get_costs_by_source_date(db_market, source, start_date_tmp)
+                result_dict = get_activate_date_by_source_date(source_by, costs, flow_dict, url, db_market,
+                                                               source,
+                                                               start_date_tmp,
                                                                end_date_tmp)
-                print(result_dict)
+                write_dict_to_mysql(result_dict)
+        elif source == '微信朋友圈':
+            date_account_dict = {"2019-04-01": "'weixin-rd'",
+                                 "2019-05-01": "'weixin-rd'",
+                                 "2019-06-01": "'weixin-rd'",
+                                 "2019-07-01": "'weixin-rd'",
+                                 }
+            for start_date_tmp in date_account_dict.keys():
+                end_date_tmp = get_end_date_tmp(start_date_tmp)
+                start_timestamp = int(
+                    time.mktime(
+                        time.strptime('{0} 00:00:00'.format(start_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
+
+                end_timestamp = int(
+                    time.mktime(
+                        time.strptime('{0} 00:00:00'.format(end_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
+                # sql_costs = "select sum(costs) as sum_costs from t_market_cost where source = '微信朋友圈' and " \
+                #             "costs_date = '{0}'" \
+                #     .format(start_date_tmp)
+                # costs = get_costs_by_sql(db_market, sql_costs)
+                source_by = "and source = 'weixin' and adaccount = {0}".format(
+                    str(date_account_dict[start_date_tmp]))
+                costs = get_costs_by_source_date(db_market, source, start_date_tmp)
+                result_dict = get_activate_date_by_source_date(source_by, costs, flow_dict, url, db_market,
+                                                               source,
+                                                               start_date_tmp,
+                                                               end_date_tmp)
+                write_dict_to_mysql(result_dict)
+        else:
+            date_list = ['2019-05-01', '2019-06-01', '2019-07-01']
+            for start_date_tmp in date_list:
+                end_date_tmp = get_end_date_tmp(start_date_tmp)
+                print(end_date_tmp)
+                start_timestamp = int(
+                    time.mktime(
+                        time.strptime('{0} 00:00:00'.format(start_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
+
+                end_timestamp = int(
+                    time.mktime(
+                        time.strptime('{0} 00:00:00'.format(end_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
+                # sql_costs = "select sum(costs) as sum_costs from t_market_cost where source in(select source from " \
+                #             "t_market_source where second_name = '抖音kol') and " \
+                #             "costs_date = '{0}'" \
+                #     .format(start_date_tmp)
+                # costs = get_costs_by_sql(db_market, sql_costs)
+                source_by = ''
+                costs = get_costs_by_source_date(db_market, source, start_date_tmp)
+                result_dict = get_activate_date_by_source_date(source_by, costs, flow_dict, url, db_market,
+                                                               source,
+                                                               start_date_tmp,
+                                                               end_date_tmp)
                 write_dict_to_mysql(result_dict)

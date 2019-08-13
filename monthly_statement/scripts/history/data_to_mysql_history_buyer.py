@@ -69,7 +69,7 @@ if __name__ == '__main__':
     today = date.today()
     db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
     cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
-    file_path = '/home/aplum/work_lh/data_dict_to_csv/2019-08-09-dict.csv'
+    file_path = '/home/aplum/work_lh/data_dict_to_csv/2019-08-12-dict.csv'
     # file_path = '/home/liuhang/2019-08-06-dict.csv'
     result_dict = dict()
     with open(file_path, 'r', encoding='utf-8') as file:
@@ -117,10 +117,12 @@ if __name__ == '__main__':
                     source_tmp = ''
                 result_dict[key].append(source_tmp)
                 result_dict[key].append(str(line_dict[key]['month']))
-                if source_type in (1, 6, 7, 8, 9):
-                    result_dict[key].append(0.0)
-                else:
-                    result_dict[key].append(get_costs_by_source_date(cursor, source, str(line_dict[key]['month'])))
+                # result_dict[key].append(str(line_dict[key]['month']))
+                result_dict[key].append(round(float(line_dict[key]['costs']), 2))
+                # if source_type in (1, 6, 7, 8, 9):
+                #     result_dict[key].append(0.0)
+                # else:
+                #     result_dict[key].append(get_costs_by_source_date(cursor, source, str(line_dict[key]['month'])))
                 result_dict[key].append(int(line_dict[key]['today_actived_num']))
                 result_dict[key].append(int(line_dict[key]['new_actived_user']))
                 result_dict[key].append(float(line_dict[key]['avg_actived_costs']))

@@ -234,6 +234,12 @@ def get_order_sum_realpayprice(nature_dict, source, source_by, url, start_timest
               "(select * from events where event = 'PayOrderDetail' and date between '{6}' and '{7}') b " \
               "on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
             .format(start_timestamp, end_timestamp, source_by, start_date_tmp, end_date_tmp, nature_dict[source], start_date_tmp, end_date_tmp)
+    elif str(source).endswith('KOL') or source in ('小红书', 'channel_kol'):
+        sql = "select sum(b.orderitem_realpayprice) as sum_realpay from (select second_id from users where " \
+              "firstordertime >= {0} and firstordertime < {1} and source in ({2}))a left join (select " \
+              "distinct_id, orderitem_realpayprice from events where event = 'PayOrderDetail' and date " \
+              "between '{3}' and '{4}')b on a.second_id = b.distinct_id where b.distinct_id is not null"\
+            .format(start_timestamp, end_timestamp, source_by, start_date_tmp, end_date_tmp)
     else:
         sql = "select sum(c.orderitem_realpayprice) sum_realpay from (select a.second_id, a.source, a.createtime, " \
               "b.orderitem_realpayprice from (select distinct second_id, source, createtime from users where " \
@@ -287,6 +293,13 @@ def get_order_num(nature_dict, source, source_by, url, start_timestamp, end_time
               "date between '{6}' and '{7}') b on a.second_id = b.distinct_id where " \
               "b.distinct_id is not null)c".format(start_timestamp, end_timestamp, source_by, start_date_tmp,
                                                    end_date_tmp, nature_dict[source], start_date_tmp, end_date_tmp)
+    elif str(source).endswith('KOL') or source in ('小红书', 'channel_kol'):
+        sql = "select count(distinct b.orderid) as count_source from (select second_id from users where " \
+              "firstordertime >= {0} and firstordertime < {1} and source in ({2}))a left join (select distinct_id, " \
+              "orderid from events where event = 'PayOrderDetail' and date between '{3}' and '{4}')b on a.second_id " \
+              "= b.distinct_id where b.distinct_id is not null"\
+            .format(start_timestamp, end_timestamp, source_by, start_date_tmp, end_date_tmp)
+
     else:
         sql = "select count(distinct c.orderid) as count_source from (select a.second_id, a.source, a.createtime, b.orderid from " \
               "(select distinct second_id, source, createtime from users where source in ({0}) and " \
@@ -320,6 +333,14 @@ def get_order_user_num(nature_dict, source, source_by, url, start_timestamp, end
               "(select distinct distinct_id from events where event = 'PayOrderDetail' and date between '{6}' and '{7}') b " \
               "on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
             .format(start_timestamp, end_timestamp, source_by, start_date_tmp, end_date_tmp, nature_dict[source], start_date_tmp, end_date_tmp)
+    elif str(source).endswith('KOL') or source in ('小红书', 'channel_kol'):
+        sql = "select count(distinct b.distinct_id) as count_source from (select second_id from users where " \
+              "firstordertime >= {0} and firstordertime < {1} and source in ({2}))a left join (select " \
+              "distinct_id from events where event = 'PayOrderDetail' and date between '{3}' and '{4}')b " \
+              "on a.second_id = b.distinct_id where b.distinct_id is not null"\
+            .format(start_timestamp, end_timestamp, source_by, start_date_tmp, end_date_tmp)
+        # print(sql)
+
     else:
         sql = "select count(*) as count_source from (select distinct a.second_id, a.source, a.createtime from " \
               "(select distinct second_id, source, createtime from users where source in ({0}) and " \
@@ -327,7 +348,7 @@ def get_order_user_num(nature_dict, source, source_by, url, start_timestamp, end
               "(select distinct distinct_id from events where event = 'PayOrderDetail' and date between '{3}' and '{4}') b " \
               "on a.second_id = b.distinct_id where b.distinct_id is not null)c" \
             .format(source_by, start_timestamp, end_timestamp, start_date_tmp, end_date_tmp)
-    # print(sql)
+    print(sql)
     order_user_num = get_count_source_by_sql(sql, url)
     return order_user_num
 
@@ -543,6 +564,7 @@ def get_all_data(nature_dict, db_aplum, source, costs, source_by, start_date_tmp
 
 
 def get_source_by_by_sql(db_market, sql):
+    source_list_tmp = list()
     cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
     cursor.execute(sql)
     source_data = cursor.fetchall()
@@ -568,14 +590,12 @@ def get_end_date_tmp(date_tmp):
     next_month = int(current_month + 1)
     if next_month < 10:
         end_date_tmp = str(current_year) + '-0' + str(next_month) + '-01'
-        end_date_tmp = (datetime.strptime(end_date_tmp, '%Y-%m-%d') + timedelta(days=-1)).strftime('%Y-%m-%d')
     elif next_month > 12:
         current_year = current_year + 1
         end_date_tmp = str(current_year) + '-01' + '-01'
-        end_date_tmp = (datetime.strptime(end_date_tmp, '%Y-%m-%d') + timedelta(days=-1)).strftime('%Y-%m-%d')
     else:
         end_date_tmp = str(current_year) + '-' + str(next_month) + '-01'
-        end_date_tmp = (datetime.strptime(end_date_tmp, '%Y-%m-%d') + timedelta(days=-1)).strftime('%Y-%m-%d')
+    end_date_tmp = (datetime.strptime(end_date_tmp, '%Y-%m-%d') + timedelta(days=-1)).strftime('%Y-%m-%d')
     return end_date_tmp
 
 
@@ -603,7 +623,7 @@ if __name__ == '__main__':
                  '2017-07', '2017-08', '2017-09', '2017-10', '2017-11', '2017-12', '2018-01', '2018-02', '2018-03',
                  '2018-04', '2018-05', '2018-06', '2018-07', '2018-08', '2018-09', '2018-10', '2018-11', '2018-12',
                  '2019-01', '2019-02', '2019-03', '2019-04', '2019-05', '2019-06', '2019-07']
-    # date_list = ['2019-07']
+    date_list = ['2019-07']
 
     # 定义自然量字典
     nature_dict = {"nature": "'百度小程序', '微信小程序','IOS','Android'",
@@ -614,8 +634,7 @@ if __name__ == '__main__':
                    }
     source_list = ['all', 'nature', 'nature_IOS', 'nature_Android', 'nature_wechat', 'nature_baidu', 'channel_all',
                    'channel_flow', 'channel_kol']
-    # source_list = ['channel_all',
-    #                    'channel_flow', 'channel_kol']
+    source_list = ['channel_kol', 'channel_all']
     # 遍历所有的source,拿到所有的second_name,展示层面为second_name,查询层面为second_name对应的所有source
     for k in source_dict.keys():
         # 来源
@@ -643,8 +662,8 @@ if __name__ == '__main__':
                 # date_tmp = date_tmp + '-01'
                 # 如果source在这其中,需要单独处理,有处理程序source_info_history_special.py
                 if source in ('CPA', '抖音kol', '微信公众号', '微信朋友圈'):
-                    continue
                     print(source)
+                    continue
                 else:
                     print(source)
                     costs = 0.00
@@ -698,12 +717,14 @@ if __name__ == '__main__':
                         get_all_data(nature_dict, db_aplum, source, costs, source_by, start_date_tmp, end_date_tmp,
                                                 start_timestamp, end_timestamp)
                     else:
-                        if str(source).endswith('KOL'):
+                        # 博主激活码的统计要严格按照投放时间统计,所以需要加时间限制条件
+                        if str(source).endswith('KOL') or source == '小红书':
                             sql_source = "select source from t_market_cost where source in (select source from t_market_source " \
                                          "where second_name = '{0}') and costs_date = '{1}'".format(source,
                                                                                                     start_date_tmp)
                             source_by = get_source_by_by_sql(db_market, sql_source)
                             if source_by == '':
+                                print('source为' + str(source) + ',月份为' + str(start_date_tmp) + ',统计跳过')
                                 continue
                         else:
                             sql_source = "select source from t_market_source where second_name = '{0}'".format(source)

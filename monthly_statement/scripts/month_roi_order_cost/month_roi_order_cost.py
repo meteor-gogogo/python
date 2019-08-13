@@ -50,28 +50,6 @@ def write_dict_to_csv(result_dict):
 
 
 def get_count_date_by_sql(costs, source, url, sql, start_date_tmp):
-    # result_dict = dict()
-    #
-    # key_source = str(source)
-    # key_date = str(start_date_tmp)
-    # key = key_source + '&' + key_date
-    # result_dict[key] = list(0 for i in range(31))
-    # print(result_dict[key])
-    # if source == 'all':
-    #     type = 0
-    # elif source == 'nature':
-    #     type = 1
-    # elif source == 'channel_all':
-    #     type = 2
-    # elif source == 'channel_flow':
-    #     type = 3
-    # elif source == 'channel_kol':
-    #     type = 4
-    # else:
-    #     type = 5
-    #
-    # result_dict[key] = list()
-    # result_dict[key].append(int(type))
     tmp_dict = dict()
     for i in range(25):
         key = str((datetime.strptime(start_date_tmp, '%Y-%m-%d') + relativedelta(months=i)).strftime('%Y-%m-%d'))
@@ -116,7 +94,7 @@ def get_count_date_by_sql(costs, source, url, sql, start_date_tmp):
             result_dict[key][4] = costs
             for i in range(5, 30):
                 result_dict[key][i] = 0
-            print(result_dict)
+            print(result_dict[key])
             write_dict_to_mysql(result_dict)
             result_dict.clear()
             # write_dict_to_csv(result_dict)
@@ -148,7 +126,7 @@ def get_count_date_by_sql(costs, source, url, sql, start_date_tmp):
             result_dict[key][4] = costs
             for i in range(5, 30):
                 result_dict[key][i] = 0
-            print(result_dict)
+            print(result_dict[key])
             write_dict_to_mysql(result_dict)
             result_dict.clear()
         else:
@@ -168,7 +146,7 @@ def get_count_date_by_sql(costs, source, url, sql, start_date_tmp):
                     if len(datajson) < 3:
                         tmp_dict[key_date][key_date + 'sum'].append(0)
                     else:
-                        tmp_dict[key_date][key_date + 'sum'].append(int(datajson['sum_realpay']))
+                        tmp_dict[key_date][key_date + 'sum'].append(float(datajson['sum_realpay']))
                     # print(datajson['distinct_id'])
                     # print(datajson['sum_realpay'])
                     # print(key_date)
@@ -226,7 +204,7 @@ def get_count_date_by_sql(costs, source, url, sql, start_date_tmp):
                 result_dict[key][i] = int(sum_num)
             # write_dict_to_mysql(result_dict)
             result_dict[key][30] = int(time.time())
-            print(result_dict)
+            print(result_dict[key])
             write_dict_to_mysql(result_dict)
             result_dict.clear()
             key_source = str(source)
@@ -268,12 +246,11 @@ def get_count_date_by_sql(costs, source, url, sql, start_date_tmp):
                     break
                 result_dict[key][i] = len(user_set)
             result_dict[key][30] = int(time.time())
-            print(result_dict)
+            print(result_dict[key])
             write_dict_to_mysql(result_dict)
             result_dict.clear()
     else:
         print("sa hive sql accur error, sql为%s" % sql)
-
 
 
 def get_activate_date_by_source_date(source_by, costs, start_timestamp, end_timestamp, url, db_market, source, start_date_tmp, end_date_tmp):
@@ -295,6 +272,15 @@ def get_activate_date_by_source_date(source_by, costs, start_timestamp, end_time
               " HAVING the_month >= '{3}' ORDER BY the_month ASC".format(start_timestamp, end_timestamp, source_by, start_date_tmp)
 
         get_count_date_by_sql(costs, source, url, sql, start_date_tmp)
+    elif str(source).endswith('KOL') or source in ('小红书', 'channel_kol'):
+        sql = "SELECT from_unixtime(unix_timestamp(date_sub( date, dayofmonth( date ) - 1 )),'yyyy-MM-dd') " \
+              "the_month, distinct_id, sum(orderitem_realpayprice) as sum_realpay FROM EVENTS WHERE " \
+              "EVENT = 'PayOrderDetail' 	AND distinct_id IN (select second_id from users " \
+              "where firstordertime >= {0} and firstordertime < {1} and source in ({2})) GROUP BY the_month,distinct_id " \
+              " HAVING the_month >= '{3}' ORDER BY the_month ASC".format(start_timestamp, end_timestamp, source_by,
+                                                                         start_date_tmp)
+        print(sql)
+        get_count_date_by_sql(costs, source, url, sql, start_date_tmp)
     else:
         sql = "SELECT from_unixtime(unix_timestamp(date_sub( date, dayofmonth( date ) - 1 )),'yyyy-MM-dd') " \
               "the_month, distinct_id, sum(orderitem_realpayprice) as sum_realpay FROM EVENTS WHERE " \
@@ -302,10 +288,8 @@ def get_activate_date_by_source_date(source_by, costs, start_timestamp, end_time
               "where createtime >= {0}  and createtime < {1} and source in ({2})) GROUP BY the_month,distinct_id " \
               " HAVING the_month >= '{3}' ORDER BY the_month ASC".format(start_timestamp, end_timestamp, source_by,
                                                                          start_date_tmp)
+        print(sql)
         get_count_date_by_sql(costs, source, url, sql, start_date_tmp)
-
-
-
 
 
 def get_source(db_market, source_dict):
@@ -393,6 +377,7 @@ def get_costs_by_sql(db_market, sql_costs):
             costs = float(row['sum_costs'])
     return costs
 
+
 def get_source_by_by_sql(db_market, sql):
     source_list_tmp = list()
     cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
@@ -400,7 +385,12 @@ def get_source_by_by_sql(db_market, sql):
     source_data = cursor.fetchall()
     cursor.close()
     for row in source_data:
+        if row['source'] is None:
+            continue
         source_list_tmp.append(str(row['source']))
+
+    if len(source_list_tmp) == 0:
+        return ''
 
     if len(source_list_tmp) == 1:
         source_by = "'" + str(source_list_tmp[0]) + "'"
@@ -418,22 +408,22 @@ if __name__ == '__main__':
                  '2018-05-01', '2018-06-01', '2018-07-01', '2018-08-01', '2018-09-01', '2018-10-01', '2018-11-01',
                  '2018-12-01', '2019-01-01', '2019-02-01', '2019-03-01', '2019-04-01',
                  '2019-05-01', '2019-06-01', '2019-07-01']
-    # date_list = ['2018-12-01', '2019-01-01']
+    # date_list = ['2019-07-01']
     # print(date_list)
     source_dict = dict()
     db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
     db_aplum = MySQLdb.connect(mysqlhost, mysqlusername, mysqlpasswd, db, charset='utf8')
     source_dict = get_source(db_market, source_dict)
-    source_list = ['all', 'nature', 'channel_all', 'channel_flow', 'channel_kol']
-    # source_list = ['all']
+    # source_list = ['all', 'nature', 'channel_all', 'channel_flow', 'channel_kol']
+    source_list = ['channel_kol', 'channel_all']
     # # source_list = ['all', 'nature']
-    for k in source_dict.keys():
-        # 来源
-        source = str(source_dict[k]['second_name'])
-        if (source in source_list):
-            continue
-        else:
-            source_list.append(source)
+    # for k in source_dict.keys():
+    #     # 来源
+    #     source = str(source_dict[k]['second_name'])
+    #     if source in source_list:
+    #         continue
+    #     else:
+    #         source_list.append(source)
     print("source_list:" + str(len(source_list)))
     for source in source_list:
         for current_date in date_list:
@@ -451,8 +441,8 @@ if __name__ == '__main__':
             print(start_date_tmp + '>>>>>>>>>' + end_date_tmp + '\n')
             # date_tmp = date_tmp + '-01'
             if source in ('CPA', '抖音kol', '微信公众号', '微信朋友圈'):
-                continue
                 print(source)
+                continue
             else:
                 if source == 'all':
                     # all统计不需要过滤source字段, source_by给空是为了调用该方法
@@ -462,7 +452,10 @@ if __name__ == '__main__':
                     costs = get_costs_by_sql(db_market, sql_costs)
                     get_activate_date_by_source_date(source_by, costs, start_timestamp, end_timestamp, url, db_market, source, start_date_tmp, end_date_tmp)
                 elif source in ('channel_all', 'nature'):
-                    sql_source = "select source from t_market_source"
+                    sql_source = "select source from t_market_source " \
+                                 "where name = '信息流' union (select source from t_market_cost where source in (select source " \
+                                 "from t_market_source where name = '博主kol') and costs_date = '{0}')".format(
+                        start_date_tmp)
                     source_by = get_source_by_by_sql(db_market, sql_source)
                     if source == 'channel_all':
                         sql_costs = "select sum(costs) as sum_costs from t_market_cost where costs_date = '{0}'" \
@@ -472,8 +465,11 @@ if __name__ == '__main__':
                         costs = 0.0
                     get_activate_date_by_source_date(source_by, costs, start_timestamp, end_timestamp, url, db_market, source, start_date_tmp, end_date_tmp)
                 elif source == 'channel_kol':
-                    sql_source = "select source from t_market_source where name = '博主kol'"
+                    sql_source = "select source from t_market_cost where source in (select source from t_market_source " \
+                                 "where name = '博主kol') and costs_date = '{0}'".format(start_date_tmp)
                     source_by = get_source_by_by_sql(db_market, sql_source)
+                    if source_by == '':
+                        continue
                     sql_costs = "select sum(costs) as sum_costs from t_market_cost where costs_date = '{0}' " \
                                 "and source in ({1})" \
                         .format(start_date_tmp, source_by)
@@ -488,8 +484,20 @@ if __name__ == '__main__':
                     costs = get_costs_by_sql(db_market, sql_costs)
                     get_activate_date_by_source_date(source_by, costs, start_timestamp, end_timestamp, url, db_market, source, start_date_tmp, end_date_tmp)
                 else:
-                    sql_source = "select source from t_market_source where second_name = '{0}'".format(source)
-                    source_by = get_source_by_by_sql(db_market, sql_source)
+                    # 博主激活码的统计要严格按照投放时间统计,所以需要加时间限制条件
+                    if str(source).endswith('KOL') or source == '小红书':
+                        sql_source = "select source from t_market_cost where source in (select source from t_market_source " \
+                                     "where second_name = '{0}') and costs_date = '{1}'".format(source, start_date_tmp)
+                        source_by = get_source_by_by_sql(db_market, sql_source)
+                        if source_by == '':
+                            continue
+                    else:
+                        sql_source = "select source from t_market_source where second_name = '{0}'".format(source)
+                        source_by = get_source_by_by_sql(db_market, sql_source)
+                        if source_by == '':
+                            continue
+                    # sql_source = "select source from t_market_source where second_name = '{0}'".format(source)
+                    # source_by = get_source_by_by_sql(db_market, sql_source)
                     sql_costs = "select sum(costs) as sum_costs from t_market_cost where costs_date = '{0}' " \
                                 "and source in ({1})" \
                         .format(start_date_tmp, source_by)

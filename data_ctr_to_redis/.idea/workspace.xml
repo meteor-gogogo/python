@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="47043d1d-40f6-473f-9e50-7cf9575fe0bd" name="Default Changelist" comment="" />
+    <list default="true" id="47043d1d-40f6-473f-9e50-7cf9575fe0bd" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../monthly_statement/scripts/month_visit_remain/month_visit_remain_special.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/ctr_data_to_redis_day.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/ctr_data_to_redis_day.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data_statistics/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../data_statistics/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../flink-training-exercises" beforeDir="false" afterPath="$PROJECT_DIR$/../flink-training-exercises" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/by_day/data_to_mysql_day_buyer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/by_day/data_to_mysql_day_buyer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/by_day/source_info_day.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/by_day/source_info_day.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_buyer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_buyer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_buyer_special.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_buyer_special.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_seller.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_seller.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_seller_special.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_seller_special.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/history/source_info_history.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/history/source_info_history.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/month_cost/month_cost_to_mysql.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/month_cost/month_cost_to_mysql.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/month_roi_order_cost/month_roi_order_cost.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/month_roi_order_cost/month_roi_order_cost.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/month_roi_order_cost/month_roi_order_cost_special.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/month_roi_order_cost/month_roi_order_cost_special.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/month_visit_remain/month_visit_remain.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/month_visit_remain/month_visit_remain.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/order_detail/order_detail.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/order_detail/order_product_money.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,8 +42,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/scripts/ctr_data_to_redis_day.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+            <state relative-caret-position="345">
+              <caret line="380" column="58" lean-forward="true" selection-start-line="380" selection-start-column="58" selection-end-line="380" selection-end-column="58" />
               <folding>
                 <element signature="e#37#76#0" expanded="true" />
               </folding>
@@ -34,8 +54,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scripts/ctr_data_to_redis_hour.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="432">
-              <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="25" selection-end-column="50" />
+            <state relative-caret-position="378">
+              <caret line="354" column="63" selection-start-line="354" selection-start-column="63" selection-end-line="354" selection-end-column="63" />
               <folding>
                 <element signature="e#37#76#0" expanded="true" />
               </folding>
@@ -87,6 +107,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
@@ -106,6 +129,7 @@
     <option name="width" value="1225" />
     <option name="height" value="1040" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -131,7 +155,8 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/akdfkhkh" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -225,10 +250,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="7" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17327066" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17528543" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="Alibaba Cloud Explorer" order="3" />
@@ -290,8 +315,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/scripts/ctr_data_to_redis_hour.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="25" selection-end-column="50" />
+        <state relative-caret-position="378">
+          <caret line="354" column="63" selection-start-line="354" selection-start-column="63" selection-end-line="354" selection-end-column="63" />
           <folding>
             <element signature="e#37#76#0" expanded="true" />
           </folding>
@@ -300,8 +325,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/scripts/ctr_data_to_redis_day.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+        <state relative-caret-position="345">
+          <caret line="380" column="58" lean-forward="true" selection-start-line="380" selection-start-column="58" selection-end-line="380" selection-end-column="58" />
           <folding>
             <element signature="e#37#76#0" expanded="true" />
           </folding>

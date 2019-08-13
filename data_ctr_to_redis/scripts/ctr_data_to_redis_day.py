@@ -285,7 +285,11 @@ def read_click_date(file_path, lastdate, duration):
             source_of_supply = str(line_arr[12])
             degree = str(line_arr[13])
             is_promotion = str(line_arr[14])
-            click_event = is_click + ':' + is_blackcard_member + ':' + position + ':' + status + ':' + id + ':' + original_price + ':' + sale_price + ':' + discount_price + ':' + discount_rate + ':' + bid + ':' + source_of_supply + ':' + degree + ':' + is_promotion
+            if is_promotion == 'True':
+                is_promotion_num = 1
+            else:
+                is_promotion_num = 0
+            click_event = is_click + ':' + is_blackcard_member + ':' + position + ':' + status + ':' + id + ':' + original_price + ':' + sale_price + ':' + discount_price + ':' + discount_rate + ':' + bid + ':' + source_of_supply + ':' + degree + ':' + str(is_promotion_num)
             click_event = process_price(click_event)
             click_list.append(click_event)
     return click_list
@@ -610,8 +614,6 @@ if __name__ == '__main__':
             # if degree == '':
             #     continue
             is_promotion = str(row_arr[12])
-
-
 
             ctr_dict = get_source_of_supply_dict(source_of_supply, is_click, ctr_dict)
             # print('source_of_supply_dict: ' + str(len(ctr_dict)))

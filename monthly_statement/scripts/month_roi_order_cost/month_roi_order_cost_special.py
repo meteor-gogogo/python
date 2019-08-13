@@ -168,7 +168,7 @@ def get_count_date_by_sql(costs, source, url, sql, start_date_tmp):
                     if len(datajson) < 3:
                         tmp_dict[key_date][key_date + 'sum'].append(0)
                     else:
-                        tmp_dict[key_date][key_date + 'sum'].append(int(datajson['sum_realpay']))
+                        tmp_dict[key_date][key_date + 'sum'].append(float(datajson['sum_realpay']))
                     # print(datajson['distinct_id'])
                     # print(datajson['sum_realpay'])
                     # print(key_date)
@@ -273,7 +273,6 @@ def get_count_date_by_sql(costs, source, url, sql, start_date_tmp):
             result_dict.clear()
     else:
         print("sa hive sql accur error, sql为%s" % sql)
-
 
 
 def get_activate_date_by_source_date(source_by, costs, start_timestamp, end_timestamp, url, source, start_date_tmp, end_date_tmp):
@@ -418,7 +417,7 @@ def get_activate_date_by_source_date(source_by, costs, start_timestamp, end_time
                     if len(data) < 3:
                         tmp_dict[key_date][key_date + 'sum'].append(0)
                     else:
-                        tmp_dict[key_date][key_date + 'sum'].append(int(data['sum_realpay']))
+                        tmp_dict[key_date][key_date + 'sum'].append(float(data['sum_realpay']))
                     # print(datajson['distinct_id'])
                     # print(datajson['sum_realpay'])
                     # print(key_date)
@@ -548,6 +547,7 @@ def get_end_date_tmp(start_date_tmp):
         end_date_tmp = str(int(str(start_date_tmp).split('-')[0]) + 1) + '-0' + str(month_tmp - 12) + '-01'
     else:
         end_date_tmp = str(str(start_date_tmp).split('-')[0]) + '-' + str(month_tmp) + '-01'
+    end_date_tmp = (datetime.strptime(end_date_tmp, '%Y-%m-%d') + timedelta(days=-1)).strftime('%Y-%m-%d')
     return end_date_tmp
 
 
@@ -611,6 +611,7 @@ def get_costs_by_sql(db_market, sql_costs):
             costs = float(row['sum_costs'])
     return costs
 
+
 def get_source_by_by_sql(db_market, sql):
     source_list_tmp = list()
     cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
@@ -647,10 +648,13 @@ if __name__ == '__main__':
                                  "2019-05-01": "'cpa-zshd12','cpa-zshd11','cpa-zshd15','cpa-zshd5','cpa-zshd7'"}
             for start_date_tmp in date_account_dict.keys():
                 end_date_tmp = get_end_date_tmp(start_date_tmp)
+                print(start_date_tmp + ' ==> ' + end_date_tmp)
                 start_timestamp = int(
                     time.mktime(time.strptime('{0} 00:00:00'.format(start_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
+                # 2019-07-31 ==> 2019-08-01
+                end_date_tmp_tmp = (datetime.strptime(end_date_tmp, '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d')
                 end_timestamp = int(
-                    time.mktime(time.strptime('{0} 00:00:00'.format(end_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
+                    time.mktime(time.strptime('{0} 00:00:00'.format(end_date_tmp_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
                 source_by = str(date_account_dict[start_date_tmp])
                 sql_costs = "select sum(costs) as sum_costs from t_market_cost where source = 'cpa'" \
                             " and costs_date = '{0}'"\
@@ -671,10 +675,13 @@ if __name__ == '__main__':
                                  }
             for start_date_tmp in date_account_dict.keys():
                 end_date_tmp = get_end_date_tmp(start_date_tmp)
+                print(start_date_tmp + ' ==> ' + end_date_tmp)
                 start_timestamp = int(
                     time.mktime(time.strptime('{0} 00:00:00'.format(start_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
+                # 2019-07-31 ==> 2019-08-01
+                end_date_tmp_tmp = (datetime.strptime(end_date_tmp, '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d')
                 end_timestamp = int(
-                    time.mktime(time.strptime('{0} 00:00:00'.format(end_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
+                    time.mktime(time.strptime('{0} 00:00:00'.format(end_date_tmp_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
                 sql_costs = "select sum(costs) as sum_costs from t_market_cost where source = '微信公众号' and " \
                             "costs_date = '{0}'" \
                     .format(start_date_tmp)
@@ -693,10 +700,14 @@ if __name__ == '__main__':
                                  }
             for start_date_tmp in date_account_dict.keys():
                 end_date_tmp = get_end_date_tmp(start_date_tmp)
+                print(start_date_tmp + ' ==> ' + end_date_tmp)
                 start_timestamp = int(
                     time.mktime(time.strptime('{0} 00:00:00'.format(start_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
+                # 2019-07-31 ==> 2019-08-01
+                end_date_tmp_tmp = (datetime.strptime(end_date_tmp, '%Y-%m-%d') + timedelta(days=1)).strftime(
+                    '%Y-%m-%d')
                 end_timestamp = int(
-                    time.mktime(time.strptime('{0} 00:00:00'.format(end_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
+                    time.mktime(time.strptime('{0} 00:00:00'.format(end_date_tmp_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
                 sql_costs = "select sum(costs) as sum_costs from t_market_cost where source = '微信朋友圈' and " \
                             "costs_date = '{0}'" \
                     .format(start_date_tmp)
@@ -708,15 +719,22 @@ if __name__ == '__main__':
             date_list = ['2019-05-01', '2019-06-01', '2019-07-01']
             for start_date_tmp in date_list:
                 end_date_tmp = get_end_date_tmp(start_date_tmp)
+                print(start_date_tmp + ' ==> ' + end_date_tmp)
                 start_timestamp = int(
                     time.mktime(time.strptime('{0} 00:00:00'.format(start_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
+                # 2019-07-31 ==> 2019-08-01
+                end_date_tmp_tmp = (datetime.strptime(end_date_tmp, '%Y-%m-%d') + timedelta(days=1)).strftime(
+                    '%Y-%m-%d')
                 end_timestamp = int(
-                    time.mktime(time.strptime('{0} 00:00:00'.format(end_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
+                    time.mktime(time.strptime('{0} 00:00:00'.format(end_date_tmp_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
                 sql_costs = "select sum(costs) as sum_costs from t_market_cost where source in(select source from " \
                             "t_market_source where second_name = '抖音kol') and " \
                             "costs_date = '{0}'" \
                     .format(start_date_tmp)
                 costs = get_costs_by_sql(db_market, sql_costs)
+                if costs == 0.0:
+                    print('source为' + str(source) + ',costs为' + str(costs) + ',统计跳过')
+                    continue
                 source_by = ''
                 get_activate_date_by_source_date(source_by, costs, start_timestamp, end_timestamp,
                                                  url, source, start_date_tmp, end_date_tmp)

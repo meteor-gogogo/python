@@ -4,13 +4,6 @@ from datetime import datetime, timedelta, date
 import requests
 import time
 import json
-import xlsxwriter
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-import smtplib
-import os
-import sys
-import traceback
 import MySQLdb
 import pandas as pd
 import numpy
@@ -50,17 +43,39 @@ def get_post_seller_num(db_aplum):
 
 
 def get_order_user_num(url):
-    sql = "SELECT FROM_UNIXTIME(m.sj,'%Y-%m') y, count(m.id) as count_seller from( select td.user_id id, min(td.order_time) sj " \
-          "FROM t_order td LEFT JOIN t_order_item tdi on tdi.order_id=td.id where td.status not in ('new','topay','cancel') " \
-          "and td.splitted='0' group by td.user_id) m GROUP BY y"
     buyer_dict = dict()
-    cursor = db_aplum.cursor(cursorclass=MySQLdb.cursors.DictCursor)
-    cursor.execute(sql)
-    costs_data = cursor.fetchall()
-    cursor.close()
-    for row in costs_data:
-        # row = process_price(row)
-        buyer_dict[str(row['y'])] = int(row['count_seller'])
+    date_list = ['2016-10', '2016-11', '2016-12', '2017-01', '2017-02', '2017-03', '2017-04', '2017-05', '2017-06',
+                 '2017-07', '2017-08', '2017-09', '2017-10', '2017-11', '2017-12', '2018-01', '2018-02', '2018-03',
+                 '2018-04', '2018-05', '2018-06', '2018-07', '2018-08', '2018-09', '2018-10', '2018-11', '2018-12',
+                 '2019-01', '2019-02', '2019-03', '2019-04', '2019-05', '2019-06', '2019-07']
+    for date_tmp in date_list:
+        start_date_tmp = date_tmp + '-01'
+        end_date_tmp = get_end_date_tmp(date_tmp)
+        start_timestamp, end_timestamp = get_timestamp(start_date_tmp, end_date_tmp)
+        sql = "SELECT from_unixtime(unix_timestamp(date_sub( date, dayofmonth( date ) - 1 )), 'yyyy-MM-dd') " \
+              "the_month, count(distinct e.user_id)as count_source FROM EVENTS e	LEFT JOIN users u ON e.user_id = u.id " \
+              "WHERE u.firstordertime >= {0} and u.firstordertime < {1} AND " \
+              "e.EVENT =  'PayOrderDetail' and e.date between '{2}' and '{3}' group by the_month"\
+            .format(start_timestamp, end_timestamp, start_date_tmp, end_date_tmp)
+        payload = {'q': sql, 'format': 'json'}
+        r = requests.post(url, data=payload)
+        if r.status_code == 200:
+            datastr = r.text
+            if len(datastr) == 0:
+                count_source = 0
+            else:
+                dataarr = datastr.split('\n')
+                for data in dataarr:
+                    try:
+                        datajson = json.loads(data)
+                        if str(datajson) == '{}':
+                            continue
+                        buyer_date = str(datajson['the_month'])
+                        buyer_dict[buyer_date] = int(datajson['count_source'])
+                    except json.decoder.JSONDecodeError as identifier:
+                        pass
+        else:
+            print("sa hive sql accur error, sql为%s" % sql)
     return buyer_dict
 
 
@@ -75,6 +90,31 @@ def get_costs_by_month(db_market):
         # row = process_price(row)
         costs_dict[str(row['costs_date'])] = float(row['sum_costs'])
     return costs_dict
+
+
+def get_end_date_tmp(date_tmp):
+    current_month = int(date_tmp.split('-')[1])
+    current_year = int(date_tmp.split('-')[0])
+    next_month = int(current_month + 1)
+    if next_month < 10:
+        end_date_tmp = str(current_year) + '-0' + str(next_month) + '-01'
+    elif next_month > 12:
+        current_year = current_year + 1
+        end_date_tmp = str(current_year) + '-01' + '-01'
+    else:
+        end_date_tmp = str(current_year) + '-' + str(next_month) + '-01'
+    end_date_tmp = (datetime.strptime(end_date_tmp, '%Y-%m-%d') + timedelta(days=-1)).strftime('%Y-%m-%d')
+    return end_date_tmp
+
+
+def get_timestamp(start_date_tmp, end_date_tmp):
+    start_timestamp = int(
+        time.mktime(time.strptime('{0} 00:00:00'.format(start_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
+
+    end_date_timestamp = (datetime.strptime(end_date_tmp, '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d')
+    end_timestamp = int(
+        time.mktime(time.strptime('{0} 00:00:00'.format(end_date_timestamp), '%Y-%m-%d %H:%M:%S')) * 1000)
+    return start_timestamp, end_timestamp
 
 
 if __name__ == '__main__':
@@ -106,8 +146,8 @@ if __name__ == '__main__':
             costs = 0.0
         result_dict_tmp['costs'].append(costs)
 
-        if date in buyer_dict.keys():
-            buyer = buyer_dict[date]
+        if date_tmp in buyer_dict.keys():
+            buyer = buyer_dict[date_tmp]
         else:
             buyer = 0
         result_dict_tmp['new_buyer'].append(buyer)
