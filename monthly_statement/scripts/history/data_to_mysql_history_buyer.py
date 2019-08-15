@@ -21,7 +21,7 @@ def write_dict_to_excel(result_dict):
     fields = ['type', 'second_name', 'exe_date', 'costs', 'today_actived_num', 'new_actived_user', 'avg_actived_costs',
               'new_registered_user', 'avg_registered_costs', 'avg_registered_rate', 'new_ordered_user',
               'avg_ordered_user_costs', 'avg_ordered_rate', 'new_ordered_num', 'avg_ordered_costs', 'kdj_costs',
-              'order_costs', 'roi', 'ddyj_mjjc', 'mmjpjcb', 'create_time']
+              'order_costs', 'roi', 'ddyj_mjjc', 'mmjpjcb', 'create_time', 'new_seller', 'new_jcmjs']
     df = pd.DataFrame(list(result_dict.values()), columns=fields)
     print(df)
     # writer = pd.ExcelWriter('/home/liuhang/2019-08-02.xlsx')
@@ -70,7 +70,7 @@ if __name__ == '__main__':
     db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
     cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
     file_path = '/home/aplum/work_lh/data_dict_to_csv/2019-08-12-dict.csv'
-    # file_path = '/home/liuhang/2019-08-06-dict.csv'
+    # file_path = '/home/liuhang/2019-08-12-dict.csv'
     result_dict = dict()
     with open(file_path, 'r', encoding='utf-8') as file:
         lines = file.readlines()
@@ -139,8 +139,11 @@ if __name__ == '__main__':
                 result_dict[key].append(float(line_dict[key]['roi']))
                 result_dict[key].append(int(line_dict[key]['ddyj_mjjc']))
                 result_dict[key].append(float(line_dict[key]['mmjpjcb']))
+
                 timestamp = int(time.time())
                 result_dict[key].append(timestamp)
+                result_dict[key].append(int(line_dict[key]['new_seller']))
+                result_dict[key].append(int(line_dict[key]['new_jcmjs']))
     with open(file_path, 'r', encoding='utf-8') as file:
         lines = file.readlines()
         # line = file.readline()

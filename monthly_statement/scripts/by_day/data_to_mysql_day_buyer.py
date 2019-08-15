@@ -22,7 +22,7 @@ mysql_db = 'aplum_mis'
 
 
 def checkData(datestr):
-    t_name = "t_market_month_buyer"
+    t_name = "t_market_day_buyer"
     datanum = getDataNum(datestr, t_name)
     print('当前重复数据: {}'.format(datanum))
     if datanum > 0:
@@ -55,6 +55,10 @@ def write_dict_to_mysql(result_dict):
               'new_registered_user', 'avg_registered_costs', 'avg_registered_rate', 'new_ordered_user',
               'avg_ordered_user_costs', 'avg_ordered_rate', 'new_ordered_num', 'avg_ordered_costs', 'kdj_costs',
               'order_costs', 'roi', 'ddyj_mjjc', 'mmjpjcb', 'create_time']
+    # fields = ['type', 'second_name', 'exe_date', 'costs', 'today_actived_num', 'new_actived_user', 'avg_actived_costs',
+    #           'new_registered_user', 'avg_registered_costs', 'avg_registered_rate', 'new_ordered_user',
+    #           'avg_ordered_user_costs', 'avg_ordered_rate', 'new_ordered_num', 'avg_ordered_costs', 'kdj_costs',
+    #           'order_costs', 'roi', 'ddyj_mjjc', 'mmjpjcb', 'create_time', 'new_seller', 'new_jcmjs']
     df = pd.DataFrame(list(result_dict.values()), columns=fields)
     # print(df)
     # writer = pd.ExcelWriter('/home/liuhang/2019-08-02.xlsx')
@@ -62,7 +66,7 @@ def write_dict_to_mysql(result_dict):
     # writer.save()
     # writer.close()
     yesterday_month = str(date.today() + timedelta(days=-1))
-    # checkData(yesterday_month)
+    checkData(yesterday_month)
     engine = create_engine(
         "mysql+pymysql://{0}:{1}@{2}/{3}?charset={4}".format(mysql_user, mysql_passwd, mysql_host,
                                                              mysql_db,
@@ -141,12 +145,16 @@ if __name__ == '__main__':
                 result_dict[key].append(float(line_dict[key]['mmjpjcb']))
                 timestamp = int(time.time())
                 result_dict[key].append(timestamp)
+
+                # result_dict[key].append(int(line_dict[key]['new_seller']))
+                # result_dict[key].append(int(line_dict[key]['new_jcmjs']))
     with open(file_path, 'r', encoding='utf-8') as file:
         lines = file.readlines()
         # line = file.readline()
         for line in lines:
             line_dict = eval(line)
             for key in line_dict.keys():
+                # 将博主的激活注册相关信息算到自然量中,并且channel_all的相关信息与channel_flow保持一致
                 if str(line_dict[key]['source']).endswith('KOL') or str(line_dict[key]['source']).endswith('kol'):
                     key_tmp = 'nature&' + str(line_dict[key]['month'])
                     # print(key_tmp)

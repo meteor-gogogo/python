@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6cea9a4f-a9be-4c98-b99d-d7780aab0f8b" name="Default Changelist" comment="" />
+    <list default="true" id="6cea9a4f-a9be-4c98-b99d-d7780aab0f8b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data_statistics/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../data_statistics/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../flink-training-exercises" beforeDir="false" afterPath="$PROJECT_DIR$/../flink-training-exercises" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/.idea/monthly_statement.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/.idea/monthly_statement.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/by_day/data_to_mysql_day_buyer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/by_day/data_to_mysql_day_buyer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/by_day/source_info_day.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/by_day/source_info_day.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_buyer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_buyer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_buyer_special.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_buyer_special.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_seller.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_seller.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_seller_special.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_seller_special.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/history/source_info_history.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/history/source_info_history.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/history/source_info_history_special.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/history/source_info_history_special.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -13,7 +30,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/Desktop/plum/渠道推广报表需求/月度访问留存/month_visit_remain.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="11151">
+            <state relative-caret-position="7980">
               <caret line="413" column="36" selection-start-line="413" selection-start-column="36" selection-end-line="413" selection-end-column="36" />
               <folding>
                 <element signature="e#37#83#0" expanded="true" />
@@ -25,7 +42,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/Desktop/plum/渠道推广报表需求/月表/按日查询/source_info_day.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="27027">
+            <state relative-caret-position="19740">
               <caret line="1001" selection-end-line="1235" />
               <folding>
                 <element signature="e#37#83#0" expanded="true" />
@@ -37,8 +54,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="14" column="11" selection-start-line="14" selection-start-column="11" selection-end-line="14" selection-end-column="54" />
+            <state relative-caret-position="320">
+              <caret line="40" column="61" selection-start-line="40" selection-start-column="61" selection-end-line="40" selection-end-column="61" />
               <folding>
                 <element signature="e#0#46#0" expanded="true" />
               </folding>
@@ -49,7 +66,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/Desktop/plum/渠道推广报表需求/月表/source_info_history.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
+            <state relative-caret-position="200">
               <caret line="24" column="27" selection-start-line="24" selection-start-column="27" selection-end-line="24" selection-end-column="27" />
             </state>
           </provider>
@@ -58,7 +75,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/base/other.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="243">
+            <state relative-caret-position="180">
               <caret line="9" selection-start-line="9" selection-end-line="9" />
             </state>
           </provider>
@@ -67,7 +84,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/base/recommend.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="243">
+            <state relative-caret-position="180">
               <caret line="9" selection-start-line="9" selection-end-line="9" />
             </state>
           </provider>
@@ -76,7 +93,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/baseoperator/dataoperator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="810">
+            <state relative-caret-position="360">
               <caret line="30" column="58" selection-start-line="29" selection-start-column="22" selection-end-line="30" selection-end-column="58" />
               <folding>
                 <element signature="e#37#73#0" expanded="true" />
@@ -99,6 +116,9 @@
       <find>None</find>
       <find>betweeb</find>
     </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -145,18 +165,18 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="1">
     <option name="x" value="565" />
     <option name="y" value="15" />
     <option name="width" value="1225" />
     <option name="height" value="1040" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -168,10 +188,12 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="C:/MyWork/code/data_statistics" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunDashboard">
@@ -278,9 +300,9 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="C:\MyWork\code\venv\Scripts\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test.py" />
@@ -316,16 +338,16 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="7" />
+    <frame x="452" y="12" width="980" height="832" extended-state="1" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15580927" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15466101" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="Alibaba Cloud Explorer" order="3" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.30543318" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.30441177" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.21276596" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -524,13 +546,7 @@
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/Desktop/plum/渠道推广报表需求/月表/data_to_mysql_history.py" />
-    <entry file="file://$USER_HOME$/.PyCharmCE2019.1/system/python_stubs/1695764529/builtins.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="4722" column="8" selection-start-line="4722" selection-start-column="8" selection-end-line="4722" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/.PyCharmCE2019.1/system/python_stubs/1695764529/builtins.py" />
     <entry file="file://$USER_HOME$/Desktop/plum/渠道推广报表需求/月度成本/month_cost.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="297">
@@ -585,7 +601,7 @@
     </entry>
     <entry file="file://$USER_HOME$/Desktop/plum/渠道推广报表需求/月度访问留存/month_visit_remain.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="11151">
+        <state relative-caret-position="7980">
           <caret line="413" column="36" selection-start-line="413" selection-start-column="36" selection-end-line="413" selection-end-column="36" />
           <folding>
             <element signature="e#37#83#0" expanded="true" />
@@ -595,7 +611,7 @@
     </entry>
     <entry file="file://$USER_HOME$/Desktop/plum/渠道推广报表需求/月表/按日查询/source_info_day.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="27027">
+        <state relative-caret-position="19740">
           <caret line="1001" selection-end-line="1235" />
           <folding>
             <element signature="e#37#83#0" expanded="true" />
@@ -605,28 +621,28 @@
     </entry>
     <entry file="file://$USER_HOME$/Desktop/plum/渠道推广报表需求/月表/source_info_history.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
+        <state relative-caret-position="200">
           <caret line="24" column="27" selection-start-line="24" selection-start-column="27" selection-end-line="24" selection-end-column="27" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/base/other.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="243">
+        <state relative-caret-position="180">
           <caret line="9" selection-start-line="9" selection-end-line="9" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/base/recommend.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="243">
+        <state relative-caret-position="180">
           <caret line="9" selection-start-line="9" selection-end-line="9" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/baseoperator/dataoperator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="810">
+        <state relative-caret-position="360">
           <caret line="30" column="58" selection-start-line="29" selection-start-column="22" selection-end-line="30" selection-end-column="58" />
           <folding>
             <element signature="e#37#73#0" expanded="true" />
@@ -636,8 +652,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="14" column="11" selection-start-line="14" selection-start-column="11" selection-end-line="14" selection-end-column="54" />
+        <state relative-caret-position="320">
+          <caret line="40" column="61" selection-start-line="40" selection-start-column="61" selection-end-line="40" selection-end-column="61" />
           <folding>
             <element signature="e#0#46#0" expanded="true" />
           </folding>

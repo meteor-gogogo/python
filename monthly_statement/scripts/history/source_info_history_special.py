@@ -1122,6 +1122,7 @@ if __name__ == '__main__':
     result_dict = dict()
     # date_list = ['2019-07']
     source_list = ['CPA', '微信公众号', '微信朋友圈', '抖音kol']
+    # source_list = ['微信公众号', '微信朋友圈']
     # source_list = ['抖音kol']
     # source_list = ['all', 'nature']
     for source in source_list:
@@ -1167,7 +1168,7 @@ if __name__ == '__main__':
                     '%Y-%m-%d')
                 end_timestamp = int(
                     time.mktime(time.strptime('{0} 00:00:00'.format(end_date_timestamp), '%Y-%m-%d %H:%M:%S')) * 1000)
-                sql_costs = "select sum(costs) as sum_costs from t_market_cost where source = '微信公众号' and " \
+                sql_costs = "select sum(costs) as sum_costs from t_market_cost where source = 'wxgzh' and " \
                             "costs_date = '{0}'" \
                     .format(start_date_tmp)
                 costs = get_costs_by_sql(db_market, sql_costs)
@@ -1192,7 +1193,7 @@ if __name__ == '__main__':
                     '%Y-%m-%d')
                 end_timestamp = int(
                     time.mktime(time.strptime('{0} 00:00:00'.format(end_date_timestamp), '%Y-%m-%d %H:%M:%S')) * 1000)
-                sql_costs = "select sum(costs) as sum_costs from t_market_cost where source = '微信朋友圈' and " \
+                sql_costs = "select sum(costs) as sum_costs from t_market_cost where source = 'wxpyq' and " \
                             "costs_date = '{0}'" \
                     .format(start_date_tmp)
                 costs = get_costs_by_sql(db_market, sql_costs)

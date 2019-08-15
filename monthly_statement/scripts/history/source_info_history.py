@@ -623,7 +623,7 @@ if __name__ == '__main__':
                  '2017-07', '2017-08', '2017-09', '2017-10', '2017-11', '2017-12', '2018-01', '2018-02', '2018-03',
                  '2018-04', '2018-05', '2018-06', '2018-07', '2018-08', '2018-09', '2018-10', '2018-11', '2018-12',
                  '2019-01', '2019-02', '2019-03', '2019-04', '2019-05', '2019-06', '2019-07']
-    date_list = ['2019-07']
+    # date_list = ['2019-07']
 
     # 定义自然量字典
     nature_dict = {"nature": "'百度小程序', '微信小程序','IOS','Android'",
@@ -634,7 +634,7 @@ if __name__ == '__main__':
                    }
     source_list = ['all', 'nature', 'nature_IOS', 'nature_Android', 'nature_wechat', 'nature_baidu', 'channel_all',
                    'channel_flow', 'channel_kol']
-    source_list = ['channel_kol', 'channel_all']
+    # source_list = ['channel_kol', 'channel_all']
     # 遍历所有的source,拿到所有的second_name,展示层面为second_name,查询层面为second_name对应的所有source
     for k in source_dict.keys():
         # 来源

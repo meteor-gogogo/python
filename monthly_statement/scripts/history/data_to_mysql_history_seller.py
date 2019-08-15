@@ -69,7 +69,7 @@ if __name__ == '__main__':
     db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
     cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
     file_path = '/home/aplum/work_lh/data_dict_to_csv/2019-08-12-dict.csv'
-    # file_path = '/home/liuhang/2019-08-07-dict.csv'
+    # file_path = '/home/liuhang/2019-08-12-dict.csv'
     result_dict = dict()
     with open(file_path, 'r', encoding='utf-8') as file:
         lines = file.readlines()

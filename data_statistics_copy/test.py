@@ -33,7 +33,7 @@ if __name__ == '__main__':
     # print(str(datetime.strptime(str(date.today()), '%Y-%m-%d').strftime('%Y-%m')))
     # # print(date.today())
     start_timestamp = int(time.mktime(time.strptime('2016-10-01 00:00:00', '%Y-%m-%d %H:%M:%S')) * 1000)
-    end_timestamp = int(time.mktime(time.strptime('2016-11-01 00:00:00', '%Y-%m-%d %H:%M:%S')) * 1000)
+    end_timestamp = int(time.mktime(time.strptime('2019-08-12 00:00:00', '%Y-%m-%d %H:%M:%S')) * 1000)
     print(start_timestamp)
     print(end_timestamp)
     # print(int(time.mktime(time.strptime('2018-11-01 00:00:00', '%Y-%m-%d %H:%M:%S')) * 1000))
