@@ -28,6 +28,11 @@ statmysqlusername = 'plumdb'
 statmysqlpasswd = 'plumdb@2019'
 statdb = 'aplum_stat'
 
+fields = ['stat_date', 'src_page_type', 'show_pv', 'list_uv', 'list_pv', 'detail_uv', 'detail_pv', 'detail_distinct_pv',
+          'detail_sid_pv', 'cart_list_pv', 'cart_pv', 'cart_total_discountprice', 'order_uv', 'order_pv',
+          'order_product_pv', 'order_total_discountprice', 'order_total_realpayprice']
+
+
 def getTableName(pystr):
     if 'ctr_tomysql_new' in pystr:
         tablename = 'type_ctr_total_daily'
@@ -125,7 +130,6 @@ def getAutoActivityIdList():
         autoActidList.append(k)
     return autoActidList
 
-
 # 获取系统维护活动的日报后台展示数据
 def getAutoActidData(date, autoActidList):
     pidstr = getPidStr(autoActidList)
@@ -135,6 +139,7 @@ def getAutoActidData(date, autoActidList):
     cursor_stat.execute(sql)
     results = cursor_stat.fetchall()
     return results
+
 
 # 获取人工维护活动的日报后台展示数据
 def getManualActidData(date, autoActidList):
@@ -146,19 +151,17 @@ def getManualActidData(date, autoActidList):
     results = cursor_stat.fetchall()
     return results
 
-
 # 获取活动日报后台展示总数据(人工维护和系统维护之和)
 def getActivityData(date):
-    sql = "SELECT stat_date,src_page_type, SUM( show_pv ) as show_pv, SUM( list_uv ) as list_uv, SUM( list_pv ) as list_pv, SUM( detail_uv ) as detail_uv, SUM( detail_pv ) as detail_pv, SUM( detail_sid_pv ) as detail_sid_pv, SUM( detail_distinct_pv ) as detail_distinct_pv, SUM( cart_list_pv ) as cart_list_pv, SUM( cart_pv ) as cart_pv, SUM( cart_total_discountprice ) as cart_total_discountprice, SUM( order_uv ) as order_uv, SUM( order_pv ) as order_pv, SUM( order_product_pv ) as order_product_pv, SUM( order_total_discountprice ) as order_total_discountprice, SUM( order_total_realpayprice ) as order_total_realpayprice FROM spid_ctr_daily WHERE src_page_type = 'activity' AND stat_date = '{0}' ".format(
+    sql = "SELECT stat_date,src_page_type, SUM( show_pv ) as show_pv, SUM( list_uv ) as list_uv, SUM( list_pv ) as list_pv, SUM( detail_uv ) as detail_uv, SUM( detail_pv ) as detail_pv, SUM( detail_sid_pv ) as detail_sid_pv, SUM( detail_distinct_pv ) as detail_distinct_pv, SUM( cart_list_pv ) as cart_list_pv, SUM( cart_pv ) as cart_pv, SUM( cart_total_discountprice ) as cart_total_discountprice, SUM( order_uv ) as order_uv, SUM( order_pv ) as order_pv, SUM( order_product_pv ) as order_product_pv, SUM( order_total_discountprice ) as order_total_discountprice, SUM( order_total_realpayprice ) as order_total_realpayprice FROM type_ctr_daily WHERE src_page_type = 'activity' AND stat_date = '{0}' ".format(
         date)
     cursor_stat.execute(sql)
     results = cursor_stat.fetchall()
     return results
 
-
 # 获取搜索分类及品牌列表的日报后台展示数据
 def getTypeData(date):
-    sql = "SELECT stat_date, src_page_type, SUM( show_pv ) as show_pv, SUM( list_uv ) as list_uv, SUM( list_pv ) as list_pv, SUM( detail_uv ) as detail_uv, SUM( detail_pv ) as detail_pv, SUM( detail_sid_pv ) as detail_sid_pv, SUM( detail_distinct_pv ) as detail_distinct_pv, SUM( cart_list_pv ) as cart_list_pv, SUM( cart_pv ) as cart_pv, SUM( cart_total_discountprice ) as cart_total_discountprice, SUM( order_uv ) as order_uv, SUM( order_pv ) as order_pv, SUM( order_product_pv ) as order_product_pv, SUM( order_total_discountprice ) as order_total_discountprice, SUM( order_total_realpayprice ) as order_total_realpayprice FROM type_ctr_daily WHERE  src_page_type != 'activity' AND src_page_type != 'all' AND stat_date = '{0}' GROUP BY src_page_type".format(
+    sql = "SELECT stat_date, src_page_type, SUM( show_pv ) as show_pv, SUM( list_uv ) as list_uv, SUM( list_pv ) as list_pv, SUM( detail_uv ) as detail_uv, SUM( detail_pv ) as detail_pv, SUM( detail_sid_pv ) as detail_sid_pv, SUM( detail_distinct_pv ) as detail_distinct_pv, SUM( cart_list_pv ) as cart_list_pv, SUM( cart_pv ) as cart_pv, SUM( cart_total_discountprice ) as cart_total_discountprice, SUM( order_uv ) as order_uv, SUM( order_pv ) as order_pv, SUM( order_product_pv ) as order_product_pv, SUM( order_total_discountprice ) as order_total_discountprice, SUM( order_total_realpayprice ) as order_total_realpayprice FROM type_ctr_daily WHERE stat_date = '{0}' GROUP BY src_page_type".format(
         date)
     cursor_stat.execute(sql)
     results = cursor_stat.fetchall()
@@ -195,43 +198,23 @@ if __name__ == '__main__':
         datestr = date.strftime("%Y-%m-%d")
         print(datestr)
         pystr = str(sys.argv[0])
-        checkData(datestr, pystr)
         autoActidList = getAutoActivityIdList()
-        results_activity_auto = getAutoActidData(date,autoActidList)
-        results_activity_manual = getManualActidData(date,autoActidList)
-        results_activity_all = getActivityData(date)
+        results_activity_auto = getAutoActidData(date, autoActidList)
+        results_activity_manual = getManualActidData(date, autoActidList)
+        # results_activity_all = getActivityData(date)
         results_type = getTypeData(date)
-        results_all = getData_List_All(date)
+        # results_all = getData_List_All(date)
         # print(results_activity_auto)
         # print(results_activity_manual)
         # print(results_activity_all)
-        df_activity_auto = pd.DataFrame(list(results_activity_auto),
-                               columns=['stat_date', 'src_page_type', 'show_pv', 'list_uv', 'list_pv',
-                                        'detail_uv', 'detail_pv', 'detail_distinct_pv', 'detail_sid_pv', 'cart_list_pv',
-                                        'cart_pv', 'cart_total_discountprice', 'order_uv', 'order_pv',
-                                        'order_product_pv', 'order_total_discountprice', 'order_total_realpayprice'])
-        df_activity_manual = pd.DataFrame(list(results_activity_manual),
-                               columns=['stat_date', 'src_page_type', 'show_pv', 'list_uv', 'list_pv',
-                                        'detail_uv', 'detail_pv', 'detail_distinct_pv', 'detail_sid_pv', 'cart_list_pv',
-                                        'cart_pv', 'cart_total_discountprice', 'order_uv', 'order_pv',
-                                        'order_product_pv', 'order_total_discountprice', 'order_total_realpayprice'])
-        df_activity_all = pd.DataFrame(list(results_activity_all),
-                               columns=['stat_date', 'src_page_type', 'show_pv', 'list_uv', 'list_pv',
-                                        'detail_uv', 'detail_pv', 'detail_distinct_pv', 'detail_sid_pv', 'cart_list_pv',
-                                        'cart_pv', 'cart_total_discountprice', 'order_uv', 'order_pv',
-                                        'order_product_pv', 'order_total_discountprice', 'order_total_realpayprice'])
-        df_type = pd.DataFrame(list(results_type),
-                               columns=['stat_date', 'src_page_type', 'show_pv', 'list_uv', 'list_pv',
-                                        'detail_uv', 'detail_pv', 'detail_distinct_pv', 'detail_sid_pv', 'cart_list_pv',
-                                        'cart_pv', 'cart_total_discountprice', 'order_uv', 'order_pv',
-                                        'order_product_pv', 'order_total_discountprice', 'order_total_realpayprice'])
-        df_all = pd.DataFrame(list(results_all),
-                              columns=['stat_date', 'src_page_type', 'show_pv', 'list_uv', 'list_pv',
-                                       'detail_uv', 'detail_pv', 'detail_distinct_pv', 'detail_sid_pv', 'cart_list_pv',
-                                       'cart_pv', 'cart_total_discountprice', 'order_uv', 'order_pv',
-                                       'order_product_pv', 'order_total_discountprice', 'order_total_realpayprice'])
-        df_new = df_type.append(df_all).append(df_activity_auto).append(df_activity_manual).append(df_activity_all)
+        df_activity_auto = pd.DataFrame(list(results_activity_auto), columns=fields)
+        df_activity_manual = pd.DataFrame(list(results_activity_manual), columns=fields)
+        # df_activity_all = pd.DataFrame(list(results_activity_all), columns=fields)
+        df_type = pd.DataFrame(list(results_type), columns=fields)
+        # df_all = pd.DataFrame(list(results_all), columns=fields)
+        df_new = df_activity_auto.append(df_activity_manual).append(df_type)
         print(df_new)
+        checkData(datestr, pystr)
         df_new.to_sql(name='type_ctr_total_daily', con=con, if_exists='append', index=False)
         cursor_stat.close()
         db_stat.close()

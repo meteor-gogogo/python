@@ -2,22 +2,71 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6cea9a4f-a9be-4c98-b99d-d7780aab0f8b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../monthly_statement/scripts/costs_api/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../monthly_statement/scripts/costs_api/costs_by_api.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../monthly_statement/scripts/history/source_info_history.py.bak" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data_statistics/.idea/data_statistics.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../data_statistics/.idea/data_statistics.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data_statistics/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../data_statistics/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../data_statistics/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../data_statistics/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data_statistics/scripts/ctr_tomysql_new.py" beforeDir="false" afterPath="$PROJECT_DIR$/../data_statistics/scripts/ctr_tomysql_new.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data_statistics/scripts/type_tomysql.py" beforeDir="false" afterPath="$PROJECT_DIR$/../data_statistics/scripts/type_tomysql.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/data_statistics_copy.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/data_statistics_copy.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../flink-training-exercises" beforeDir="false" afterPath="$PROJECT_DIR$/../flink-training-exercises" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../monthly_statement/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../monthly_statement/.idea/monthly_statement.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/.idea/monthly_statement.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../monthly_statement/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/by_day/data_to_mysql_day_buyer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/by_day/data_to_mysql_day_buyer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/by_day/source_info_day.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/by_day/source_info_day.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/history/2019-08-12-dict.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/history/2019-08-14-special-dict.csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_buyer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_buyer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_buyer_special.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_buyer_special.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_seller.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_seller.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_seller_special.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_seller_special.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/history/source_info_history.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/history/source_info_history.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/history/source_info_history_special.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/history/source_info_history_special.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/requests-2.22.0.dist-info/INSTALLER" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/requests-2.22.0.dist-info/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/requests-2.22.0.dist-info/METADATA" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/requests-2.22.0.dist-info/RECORD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/requests-2.22.0.dist-info/WHEEL" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/requests-2.22.0.dist-info/top_level.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/requests/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/../venv/Lib/site-packages/requests/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/requests/__version__.py" beforeDir="false" afterPath="$PROJECT_DIR$/../venv/Lib/site-packages/requests/__version__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/requests/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/../venv/Lib/site-packages/requests/api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3-1.25.3.dist-info/INSTALLER" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3-1.25.3.dist-info/LICENSE.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3-1.25.3.dist-info/METADATA" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3-1.25.3.dist-info/RECORD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3-1.25.3.dist-info/WHEEL" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3-1.25.3.dist-info/top_level.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/connection.py" beforeDir="false" afterPath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/connection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/connectionpool.py" beforeDir="false" afterPath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/connectionpool.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/contrib/_securetransport/bindings.py" beforeDir="false" afterPath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/contrib/_securetransport/bindings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/contrib/pyopenssl.py" beforeDir="false" afterPath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/contrib/pyopenssl.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/contrib/securetransport.py" beforeDir="false" afterPath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/contrib/securetransport.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/contrib/socks.py" beforeDir="false" afterPath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/contrib/socks.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/fields.py" beforeDir="false" afterPath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/fields.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/packages/rfc3986/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/packages/rfc3986/_mixin.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/packages/rfc3986/abnf_regexp.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/packages/rfc3986/api.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/packages/rfc3986/builder.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/packages/rfc3986/compat.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/packages/rfc3986/exceptions.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/packages/rfc3986/iri.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/packages/rfc3986/misc.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/packages/rfc3986/normalizers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/packages/rfc3986/parseresult.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/packages/rfc3986/uri.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/packages/rfc3986/validators.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/poolmanager.py" beforeDir="false" afterPath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/poolmanager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/response.py" beforeDir="false" afterPath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/response.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/util/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/util/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/util/request.py" beforeDir="false" afterPath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/util/request.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/util/ssl_.py" beforeDir="false" afterPath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/util/ssl_.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/util/timeout.py" beforeDir="false" afterPath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/util/timeout.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/util/url.py" beforeDir="false" afterPath="$PROJECT_DIR$/../venv/Lib/site-packages/urllib3/util/url.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -54,8 +103,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="40" column="61" selection-start-line="40" selection-start-column="61" selection-end-line="40" selection-end-column="61" />
+            <state relative-caret-position="500">
+              <caret line="79" column="47" selection-start-line="79" selection-start-column="47" selection-end-line="79" selection-end-column="47" />
               <folding>
                 <element signature="e#0#46#0" expanded="true" />
               </folding>
@@ -165,7 +214,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="565" />
     <option name="y" value="15" />
     <option name="width" value="1225" />
@@ -177,6 +226,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -188,12 +238,11 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../data_statistics" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunDashboard">
@@ -338,10 +387,9 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="452" y="12" width="980" height="832" extended-state="1" />
-    <editor active="true" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="7" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15466101" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.11624835" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="Alibaba Cloud Explorer" order="3" />
@@ -652,8 +700,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="40" column="61" selection-start-line="40" selection-start-column="61" selection-end-line="40" selection-end-column="61" />
+        <state relative-caret-position="500">
+          <caret line="79" column="47" selection-start-line="79" selection-start-column="47" selection-end-line="79" selection-end-column="47" />
           <folding>
             <element signature="e#0#46#0" expanded="true" />
           </folding>

@@ -11,10 +11,10 @@ mysql_user = 'plumdb'
 mysql_passwd = 'plumdb@2018'
 mysql_db = 'aplum_mis'
 
-# mysql_host = '127.0.0.1'
-# mysql_user = 'aplum'
-# mysql_passwd = 'plum2016'
-# mysql_db = 'aplum_mis'
+mysql_host = '127.0.0.1'
+mysql_user = 'aplum'
+mysql_passwd = 'plum2016'
+mysql_db = 'aplum_mis'
 
 
 def write_dict_to_excel(result_dict):
@@ -24,7 +24,7 @@ def write_dict_to_excel(result_dict):
               'order_costs', 'roi', 'ddyj_mjjc', 'mmjpjcb', 'create_time', 'new_seller', 'new_jcmjs']
     df = pd.DataFrame(list(result_dict.values()), columns=fields)
     print(df)
-    # writer = pd.ExcelWriter('/home/liuhang/2019-08-02.xlsx')
+    # writer = pd.ExcelWriter('/home/aplum/work_lh/2019-08-15.xlsx')
     # df.to_excel(excel_writer=writer, index=False, sheet_name='月表', encoding='utf-8')
     # writer.save()
     # writer.close()
@@ -62,6 +62,32 @@ def get_costs_by_source_date(cursor, source, start_date_tmp):
 
 
 if __name__ == '__main__':
+    position_dict = {'B站KOL': 400,
+                     '小红书KOL': 401,
+                     '微信KOL': 402,
+                     '微博KOL': 403,
+                     '抖音kol': 404,
+                     '美拍KOL': 405,
+                     '豆瓣KOL': 406,
+                     'b站': 607,
+                     '头条': 608,
+                     '广点通': 609,
+                     '微博': 610,
+                     '快手': 611,
+                     '知乎': 612,
+                     'CPA': 613,
+                     'Google': 614,
+                     'inmobi': 615,
+                     '友盟': 616,
+                     '最右': 617,
+                     '爱奇艺': 618,
+                     '百度信息流': 619,
+                     '百度搜索': 620,
+                     '豆瓣': 621,
+                     '微信MP': 622,
+                     '微信朋友圈': 623,
+                     '微信公众号': 624
+                     }
     # 最终结果列表
     # result_list = list()
     # timestamp = int(time.time())
@@ -69,9 +95,10 @@ if __name__ == '__main__':
     today = date.today()
     db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
     cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
-    file_path = '/home/aplum/work_lh/data_dict_to_csv/2019-08-12-dict.csv'
-    # file_path = '/home/liuhang/2019-08-12-dict.csv'
+    # file_path = '/home/aplum/work_lh/data_dict_to_csv/2019-08-15-dict.csv'
+    file_path = '/home/liuhang/2019-08-15-dict.csv'
     result_dict = dict()
+    month_set = set()
     with open(file_path, 'r', encoding='utf-8') as file:
         lines = file.readlines()
         # line = file.readline()
@@ -81,6 +108,7 @@ if __name__ == '__main__':
             # 数据存在一个字典中,key的形式为source&month,value是完整的数据,也是字典
             # 每一行的数据只有一个key,例如: all&2018-11-01
             for key in line_dict.keys():
+                month_set.add(str(line_dict[key]['month']))
                 # print(key)
                 # 市场推广人员source录入错误,对这两个source过来的数据进行过滤,扔掉
                 source = str(line_dict[key]['source'])
@@ -106,12 +134,14 @@ if __name__ == '__main__':
                     source_type = 8
                 elif source == 'nature_baidu':
                     source_type = 9
+                elif source.endswith('KOL') or source.endswith('kol'):
+                    source_type = 15
                 else:
-                    source_type = 5
+                    source_type = 14
                 # if source_type in (6, 7, 8, 9):
                 #     continue
                 result_dict[key].append(int(source_type))
-                if source_type == 5:
+                if source_type in (14, 15):
                     source_tmp = str(line_dict[key]['source'])
                 else:
                     source_tmp = ''
@@ -144,6 +174,15 @@ if __name__ == '__main__':
                 result_dict[key].append(timestamp)
                 result_dict[key].append(int(line_dict[key]['new_seller']))
                 result_dict[key].append(int(line_dict[key]['new_jcmjs']))
+                if source_type in (14, 15):
+                    result_dict[key].append(int(position_dict[source]))
+                else:
+                    result_dict[key].append(200)
+    for i in month_set:
+        key_channel_all = 'channel_all&' + str(i)
+        key_nature = 'nature&' + str(i)
+        result_dict[key_channel_all] = [0.0] * 24
+        result_dict[key_nature] = [0.0] * 24
     with open(file_path, 'r', encoding='utf-8') as file:
         lines = file.readlines()
         # line = file.readline()
@@ -153,13 +192,13 @@ if __name__ == '__main__':
                 source = str(line_dict[key]['source'])
                 if source in ('头条信息流', '微博信息流'):
                     continue
-                if str(line_dict[key]['source']).endswith('KOL'):
-                    key_tmp = 'nature&' + str(line_dict[key]['month'])
-                    result_dict[key_tmp][4] = int(line_dict[key]['today_actived_num']) + int(result_dict[key_tmp][4])
-                    result_dict[key_tmp][5] = int(line_dict[key]['new_actived_user']) + int(result_dict[key_tmp][5])
-                    result_dict[key_tmp][7] = int(line_dict[key]['new_registered_user']) + int(result_dict[key_tmp][7])
-                    # result_dict[key_tmp][8] = int(line_dict[key]['today_actived_num']) + int(result_dict[key_tmp][4])
-                    result_dict[key_tmp][9] = int(int(result_dict[key_tmp][7]) / int(result_dict[key_tmp][5]) * 10000)
+                if str(line_dict[key]['source']).endswith('KOL') or str(line_dict[key]['source']) in ('channel_kol', '抖音kol'):
+                    # key_tmp = 'nature&' + str(line_dict[key]['month'])
+                    # result_dict[key_tmp][4] = int(line_dict[key]['today_actived_num']) + int(result_dict[key_tmp][4])
+                    # result_dict[key_tmp][5] = int(line_dict[key]['new_actived_user']) + int(result_dict[key_tmp][5])
+                    # result_dict[key_tmp][7] = int(line_dict[key]['new_registered_user']) + int(result_dict[key_tmp][7])
+                    # # result_dict[key_tmp][8] = int(line_dict[key]['today_actived_num']) + int(result_dict[key_tmp][4])
+                    # result_dict[key_tmp][9] = int(int(result_dict[key_tmp][7]) / int(result_dict[key_tmp][5]) * 10000)
 
                     result_dict[key][4] = 0
                     result_dict[key][5] = 0
@@ -167,11 +206,67 @@ if __name__ == '__main__':
                     result_dict[key][7] = 0
                     result_dict[key][8] = 0.0
                     result_dict[key][9] = 0
-
-                    key_all = 'channel_all&' + str(line_dict[key]['month'])
-                    key_flow = 'channel_flow&' + str(line_dict[key]['month'])
-                    for i in range(4, 10):
-                        result_dict[key_all][i] = result_dict[key_flow][i]
                 else:
                     continue
+
+    with open(file_path, 'r', encoding='utf-8') as file:
+        lines = file.readlines()
+        # line = file.readline()
+        for line in lines:
+            line_dict = eval(line)
+            for key in line_dict.keys():
+                source = str(line_dict[key]['source'])
+                if source in ('头条信息流', '微博信息流'):
+                    continue
+                if source == 'CPA':
+                    key_flow = 'channel_flow&' + str(line_dict[key]['month'])
+                    for i in range(3, 20):
+                        result_dict[key_flow][i] = result_dict[key_flow][i] + result_dict[key][i]
+                    for i in range(21, 23):
+                        result_dict[key_flow][i] = result_dict[key_flow][i] + result_dict[key][i]
+                if source == '抖音kol':
+                    key_kol = 'channel_kol&' + str(line_dict[key]['month'])
+                    for i in range(3, 20):
+                        result_dict[key_kol][i] = result_dict[key_kol][i] + result_dict[key][i]
+                    for i in range(21, 23):
+                        result_dict[key_kol][i] = result_dict[key_kol][i] + result_dict[key][i]
+
+    for month in month_set:
+        key_all_all = 'all&' + str(month)
+        key_nature = 'nature&' + str(month)
+        key_all = 'channel_all&' + str(month)
+        key_flow = 'channel_flow&' + str(month)
+        key_kol = 'channel_kol&' + str(month)
+        result_dict[key_all][0] = 2
+        result_dict[key_all][1] = ''
+        result_dict[key_all][2] = str(month)
+        if key_kol not in result_dict.keys():
+            result_dict[key_kol] = [0.0] * 24
+            result_dict[key_kol][0] = 4
+            result_dict[key_kol][1] = ''
+            result_dict[key_kol][2] = str(month)
+            result_dict[key_kol][3] = 0.0
+            # result_dict[key_kol] = [0.0] * 23
+            for i in range(4, 20):
+                result_dict[key_kol][i] = 0.0
+            result_dict[key_kol][20] = int(time.time())
+            for i in range(21, 24):
+                result_dict[key_kol][i] = 0.0
+
+        for i in range(3, 20):
+            result_dict[key_all][i] = result_dict[key_flow][i] + result_dict[key_kol][i]
+        result_dict[key_all][20] = int(time.time())
+        for i in range(21, 23):
+            result_dict[key_all][i] = result_dict[key_flow][i] + result_dict[key_kol][i]
+        result_dict[key_nature][0] = 1
+        result_dict[key_nature][1] = ''
+        result_dict[key_nature][2] = str(month)
+        result_dict[key_nature][3] = 0.0
+        for i in range(4, 20):
+            result_dict[key_nature][i] = result_dict[key_all_all][i] - result_dict[key_all][i]
+        result_dict[key_nature][20] = int(time.time())
+        for i in range(21, 23):
+            result_dict[key_nature][i] = result_dict[key_all_all][i] - result_dict[key_all][i]
+    # for key in result_dict.keys():
+    #     result_dict[key][]
     write_dict_to_excel(result_dict)

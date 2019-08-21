@@ -43,6 +43,16 @@ typedict = {'category': "分类页", 'activity': "活动页", 'search': "搜索�
 
 platformlist = ['IOS客户端', 'Android客户端', '微信小程序', '普通网页', '微信内网页', '百度小程序']
 
+fields = ['stat_date', 'platform', 'src_page_type', 'show_uv', 'show_pv', 'show_total_saleprice',
+          'show_total_discountprice', 'list_uv', 'list_pv', 'detail_uv', 'detail_pv', 'detail_distinct_pv',
+          'detail_sid_pv', 'detail_total_saleprice', 'detail_total_discountprice', 'detail_distinct_total_saleprice',
+          'detail_distinct_total_discountprice', 'cart_uv', 'cart_pv', 'cart_total_saleprice',
+          'cart_total_discountprice', 'cart_list_uv', 'cart_list_pv', 'cart_list_total_saleprice',
+          'cart_list_total_discountprice', 'wish_uv', 'wish_pv', 'wish_total_saleprice', 'wish_total_discountprice',
+          'order_uv', 'order_pv', 'order_product_pv', 'order_total_saleprice', 'order_total_discountprice',
+          'order_total_realpayprice']
+
+
 def getTableName(pystr):
     if 'ctr_tomysql_new' in pystr:
         tablename = 'type_ctr_total_daily'
@@ -90,6 +100,7 @@ def alarm(userlist, msg):
         return True
     else:
         return False
+
 
 def sendMain(addressList, attachmentName):
     sender = 'aplumctr@aplum-inc.com'  # 发送邮件的邮箱地址
@@ -198,11 +209,10 @@ def getPidStr(pidList):
 
 
 def getSptypeList(sptype):
-    pidlist = []
-    if sptype == 'all':
-        pidlist = ['category', 'activity', 'search', 'brand', 'index', 'other', 'recommend','live','live_video']
+    if sptype == 'list_all':
+        pidlist = ['search','category','brand']
     else:
-        pidlist.append(sptype)
+        pidlist = ['category', 'activity', 'search', 'brand', 'index', 'other', 'recommend', 'live', 'live_video']
     return pidlist
 
 
@@ -240,10 +250,10 @@ def getShowInfo(pf, sptype, date, spiddict):
     else:
         pflist_show = getPfShowList(pf)
         devicelist = getPfDeviceList(pf)
-        sptypelist = getSptypeList('all')
+        sptypelist = getSptypeList(sptype)
         for devicetype in devicelist:
             aggfield = devicetype + ".keyword"
-            if sptype == 'all':
+            if 'all' in sptype:
                 spiddoc = {
                     "size": 0,
                     "query": {
@@ -332,9 +342,9 @@ def getShowInfo(pf, sptype, date, spiddict):
 
 # 获取单日各详细分类的列表pv及uv
 def getListInfo(sptype, date, datadict):
-    sptypelist = getSptypeList('all')
+    sptypelist = getSptypeList(sptype)
     sptypestr = getPidStr(sptypelist)
-    if sptype == 'all':
+    if  'all' in sptype:
         sql = "SELECT plumfrontend AS pf, COUNT(*) AS pv_list,	COUNT( DISTINCT ( distinct_ID ) ) AS uv_list FROM EVENTS WHERE EVENT = 'ViewProductList' AND date = '{0}' AND sid != '' AND src_page_type in ('{1}') GROUP BY pf ".format(
             date, sptypestr)
     else:
@@ -371,9 +381,9 @@ def getListInfo(sptype, date, datadict):
 
 # 获取单日各详细分类的详情信息,含不去重uv,pv,在售总价及折扣总价等
 def getDetailInfo(sptype, date, datadict):
-    sptypelist = getSptypeList('all')
+    sptypelist = getSptypeList(sptype)
     sptypestr = getPidStr(sptypelist)
-    if sptype == 'all':
+    if 'all' in sptype:
         sql = "SELECT plumfrontend AS pf,COUNT(*) AS pv_detail,COUNT( DISTINCT ( distinct_ID ) ) AS uv_detail, SUM(productsale_price) AS totalsp,SUM(productdiscount_price) AS totalcp FROM EVENTS WHERE EVENT = 'ViewProduct' AND date ='{0}' AND sid != '' AND src_page_type in ('{1}') GROUP BY pf ".format(
             date, sptypestr)
     else:
@@ -413,9 +423,9 @@ def getDetailInfo(sptype, date, datadict):
 
 # 获取单日各详细分类的去重详情信息,含去重uv,pv,在售总价及折扣总价等
 def getDetailDistinctAndSidInfo(sptype, date, datadict):
-    sptypelist = getSptypeList('all')
+    sptypelist = getSptypeList(sptype)
     sptypestr = getPidStr(sptypelist)
-    if sptype == 'all':
+    if 'all' in sptype:
         sql = "SELECT ta.pf,count(*) as pv_detail_distinct,count(distinct(ta.sid)) AS pv_detail_sid,sum(sp) as totalsp,sum(cp) as totalcp FROM (SELECT sid,plumfrontend AS pf, distinct_ID as uid, productid as pid, productdiscount_price as sp, productsale_price as cp FROM EVENTS WHERE EVENT = 'ViewProduct' AND date = '{0}' AND sid != '' AND src_page_type in ('{1}')  GROUP BY sid,pf,uid,productid,sp,cp) ta GROUP BY ta.pf".format(
             date, sptypestr)
     else:
@@ -455,9 +465,9 @@ def getDetailDistinctAndSidInfo(sptype, date, datadict):
 
 # 获取单日各详细分类的详情信息,含不去重uv,pv,在售总价及折扣总价等
 def getWishInfo(sptype, date, datadict):
-    sptypelist = getSptypeList('all')
+    sptypelist = getSptypeList(sptype)
     sptypestr = getPidStr(sptypelist)
-    if sptype == 'all':
+    if 'all' in sptype:
         sql = "SELECT plumfrontend AS pf,COUNT(*) AS pv_wish,COUNT( DISTINCT ( distinct_ID ) ) AS uv_wish, SUM(productsale_price) AS totalsp,SUM(productdiscount_price) AS totalcp FROM EVENTS WHERE EVENT = 'AddWish' AND date ='{0}' AND sid != '' AND src_page_type in ('{1}') GROUP BY pf ".format(
             date, sptypestr)
     else:
@@ -497,9 +507,9 @@ def getWishInfo(sptype, date, datadict):
 
 # 获取单日各详细分类的列表加购信息,含uv,pv,在售总价及折扣总价等
 def getListAddCartInfo(sptype, date, datadict):
-    sptypelist = getSptypeList('all')
+    sptypelist = getSptypeList(sptype)
     sptypestr = getPidStr(sptypelist)
-    if sptype == 'all':
+    if 'all' in sptype:
         sql = "SELECT tc.pf,count(tc.sid) as pv_cart_list,count(distinct(tc.uid)) as uv_cart_list,sum(tc.sp) as totalsp,sum(tc.cp) as totalcp FROM (SELECT ta.sid,ta.uid,ta.sp,ta.cp,tb.sptype,ta.pf FROM (SELECT sid, plumfrontend AS pf,distinct_ID as uid, productid AS pid, productsale_price as sp, productdiscount_price as cp FROM EVENTS WHERE EVENT = 'AddCart' AND src_page_type = 'list' AND sid != '' AND date = '{0}'  GROUP BY sid, pid, sp,pf,cp,uid ) ta LEFT JOIN (SELECT sid, distinct_ID as uid, src_page_type AS sptype FROM EVENTS WHERE EVENT IN ( 'ViewProduct', 'ViewProductList' ) AND date = '{1}' AND sid != '' AND src_page_type in ('{2}') GROUP BY sid,uid, sptype ) tb ON ta.sid = tb.sid AND ta.uid = tb.uid) tc WHERE tc.sptype != '' GROUP BY tc.pf".format(
             date, date, sptypestr)
     else:
@@ -539,9 +549,9 @@ def getListAddCartInfo(sptype, date, datadict):
 
 # 获取单日各详细分类的加购信息,含uv,pv,在售总价及折扣总价等
 def getAddCartInfo(sptype, date, datadict):
-    sptypelist = getSptypeList('all')
+    sptypelist = getSptypeList(sptype)
     sptypestr = getPidStr(sptypelist)
-    if sptype == 'all':
+    if 'all' in sptype:
         sql = "SELECT tc.pf,count(tc.sid) as pv_cart,count(distinct(tc.uid)) as uv_cart,sum(tc.sp) as totalsp,sum(tc.cp) as totalcp FROM (SELECT ta.sid,ta.uid,ta.sp,ta.cp,tb.sptype,ta.pf FROM (SELECT sid, plumfrontend AS pf,distinct_ID as uid, productid AS pid, productsale_price as sp, productdiscount_price as cp FROM EVENTS WHERE EVENT = 'AddCart'  AND sid != '' AND date = '{0}'  GROUP BY sid, pid, sp,pf,cp,uid ) ta LEFT JOIN (SELECT sid, distinct_ID as uid, src_page_type AS sptype FROM EVENTS WHERE EVENT IN ( 'ViewProduct', 'ViewProductList' ) AND date = '{1}' AND sid != '' AND src_page_type in ('{2}') GROUP BY sid,uid, sptype ) tb ON ta.sid = tb.sid AND ta.uid = tb.uid) tc WHERE tc.sptype != '' GROUP BY tc.pf ".format(
             date, date, sptypestr)
     else:
@@ -581,9 +591,9 @@ def getAddCartInfo(sptype, date, datadict):
 
 # 获取单日各详细分类的订单信息,含uv,pv,在售总价及折扣总价等
 def getOrderProductInfo(sptype, lastdate, date, datadict):
-    sptypelist = getSptypeList('all')
+    sptypelist = getSptypeList(sptype)
     sptypestr = getPidStr(sptypelist)
-    if sptype == 'all':
+    if 'all' in sptype:
         sql = "SELECT pf, count( * ) AS pv_order_product,count(distinct(tf.uid)) as uv_order,sum( tf.saleprice ) AS totalsp, sum( tf.countprice ) AS totalcp, sum( tf.payprice ) AS totalpp FROM (SELECT te.uid, te.pid, te.oid, te.time, te.sptype, te.pf, te.saleprice, te.countprice, te.payprice, row_number ( ) over ( PARTITION BY te.pid ORDER BY te.time DESC ) rk FROM (SELECT td.pf,tc.pid, tc.time, tc.sptype, td.oid, tc.uid, td.saleprice, td.countprice, td.payprice FROM (SELECT ta.sid, ta.pid, ta.time, tb.sptype, ta.uid FROM (SELECT sid, productid AS pid, time, distinct_ID AS uid FROM EVENTS WHERE EVENT = 'AddCart' AND sid != '' AND date BETWEEN  '{0}' AND '{1}' GROUP BY sid, pid, time, uid ) ta LEFT JOIN (SELECT sid, src_page_type AS sptype FROM EVENTS WHERE EVENT IN ( 'ViewProductList', 'ViewProduct' )	AND date BETWEEN  '{2}' AND '{3}' AND sid != '' GROUP BY sid, sptype) tb ON ta.sid = tb.sid ) tc LEFT JOIN (SELECT plumfrontend AS pf, orderid AS oid, productid AS pid, distinct_ID AS uid, orderitem_saleprice AS saleprice, orderitem_discountprice AS countprice, orderitem_realpayprice AS payprice FROM EVENTS WHERE EVENT = 'PayOrderDetail' AND date = '{4}'  GROUP BY pf, oid, pid, uid, saleprice, countprice, payprice ) td ON tc.pid = td.pid AND tc.uid = td.uid ) te WHERE te.oid > 0 ) tf WHERE tf.rk = 1 AND tf.sptype in ('{5}') GROUP BY pf ".format(
             lastdate, date, lastdate, date, date, sptypestr)
     else:
@@ -625,9 +635,9 @@ def getOrderProductInfo(sptype, lastdate, date, datadict):
 
 # 获取单日订单数
 def getOrderNum(sptype, lastdate, date, datadict):
-    sptypelist = getSptypeList('all')
+    sptypelist = getSptypeList(sptype)
     sptypestr = getPidStr(sptypelist)
-    if sptype == 'all':
+    if 'all' in sptype:
         sql = "SELECT tf.pf, count(distinct(tf.oid)) as pv_order FROM (SELECT te.uid, te.pid, te.pf,te.oid, te.time, te.sptype, te.saleprice, te.countprice, te.payprice, row_number ( ) over ( PARTITION BY te.pid ORDER BY te.time DESC ) rk FROM (SELECT tc.pid, tc.time, tc.sptype, td.pf,td.oid, tc.uid, td.saleprice, td.countprice, td.payprice FROM (SELECT ta.sid, ta.pid, ta.time, tb.sptype, ta.uid FROM (SELECT sid, productid AS pid, time, distinct_ID AS uid FROM EVENTS WHERE EVENT = 'AddCart' AND sid != '' AND date BETWEEN  '{0}' AND '{1}' GROUP BY sid, pid, time, uid ) ta LEFT JOIN (SELECT sid,	src_page_type AS sptype FROM EVENTS WHERE EVENT IN ( 'ViewProductList', 'ViewProduct' ) AND date BETWEEN  '{2}' AND '{3}' AND sid != '' GROUP BY sid, sptype) tb ON ta.sid = tb.sid ) tc LEFT JOIN (SELECT plumfrontend AS pf,orderid AS oid, productid AS pid, distinct_ID AS uid, orderitem_saleprice AS saleprice, orderitem_discountprice AS countprice, orderitem_realpayprice AS payprice FROM EVENTS WHERE EVENT = 'PayOrderDetail' AND date = '{4}'  GROUP BY pf, oid, pid, uid, saleprice, countprice, payprice ) td ON tc.pid = td.pid AND tc.uid = td.uid ) te WHERE te.oid > 0 ) tf WHERE tf.rk = 1 AND tf.sptype in ('{5}') GROUP BY tf.pf ".format(
             lastdate, date, lastdate, date, date, sptypestr)
     else:
@@ -694,8 +704,7 @@ if __name__ == '__main__':
         datestr = date.strftime("%Y-%m-%d")
         print(date, today)
         pystr = str(sys.argv[0])
-        checkData(datestr, pystr)
-        typelist = ['detail', 'all']
+        typelist = ['detail', 'all', 'list_all']
         datadict_total = dict()
         for pf in platformlist:
             for sptype in typelist:
@@ -703,22 +712,12 @@ if __name__ == '__main__':
                 datadict = getDataDict(pf, sptype, lastdate, date, datadict_total)
             # print(datadict)
         # print(datadict_total)
-        dfa = pd.DataFrame(list(datadict_total.values()),
-                           columns=['stat_date', 'platform', 'src_page_type', 'show_uv', 'show_pv',
-                                    'show_total_saleprice', 'show_total_discountprice', 'list_uv', 'list_pv',
-                                    'detail_uv', 'detail_pv', 'detail_distinct_pv', 'detail_sid_pv',
-                                    'detail_total_saleprice', 'detail_total_discountprice',
-                                    'detail_distinct_total_saleprice', 'detail_distinct_total_discountprice', 'cart_uv',
-                                    'cart_pv', 'cart_total_saleprice', 'cart_total_discountprice', 'cart_list_uv',
-                                    'cart_list_pv', 'cart_list_total_saleprice', 'cart_list_total_discountprice',
-                                    'wish_uv', 'wish_pv', 'wish_total_saleprice', 'wish_total_discountprice',
-                                    'order_uv', 'order_pv', 'order_product_pv', 'order_total_saleprice',
-                                    'order_total_discountprice', 'order_total_realpayprice'])
-
+        dfa = pd.DataFrame(list(datadict_total.values()), columns=fields)
         print(dfa.head())
         totalnum = dfa.shape[0]
         EachInsert = 10000
         times = int(totalnum / EachInsert + 1)
+        checkData(datestr, pystr)
         for t in range(int(times)):
             pidStr = []
             start = t * EachInsert
@@ -730,17 +729,7 @@ if __name__ == '__main__':
         con.close()
         print('数据写入成功')
         filename = './' + "typectr_{}.csv".format(datestr)
-        dfa.to_csv(filename, index=True, sep=',',
-                   columns=['stat_date', 'platform', 'src_page_type', 'show_uv', 'show_pv',
-                            'show_total_saleprice', 'show_total_discountprice', 'list_uv', 'list_pv',
-                            'detail_uv', 'detail_pv', 'detail_distinct_pv', 'detail_sid_pv',
-                            'detail_total_saleprice', 'detail_total_discountprice',
-                            'detail_distinct_total_saleprice', 'detail_distinct_total_discountprice', 'cart_uv',
-                            'cart_pv', 'cart_total_saleprice', 'cart_total_discountprice', 'cart_list_uv',
-                            'cart_list_pv', 'cart_list_total_saleprice', 'cart_list_total_discountprice',
-                            'wish_uv', 'wish_pv', 'wish_total_saleprice', 'wish_total_discountprice',
-                            'order_uv', 'order_pv', 'order_product_pv', 'order_total_saleprice',
-                            'order_total_discountprice', 'order_total_realpayprice'])
+        dfa.to_csv(filename, index=True, sep=',', columns=fields)
         print("current time:", time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
         print('Ended Polling: %s' % tic())
         addr_list = ['suzerui@aplum.com.cn']

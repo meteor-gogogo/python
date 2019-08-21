@@ -988,7 +988,7 @@ def get_source(db_market, source_dict):
 def save_dict_to_csv(dict_sum):
     # line = ''
     today = date.today()
-    with open('/home/aplum/work_lh/data_dict_to_csv/{0}-special-dict.csv'.format(today), 'a+', newline='') as file:
+    with open('/home/aplum/work_lh/data_dict_to_csv/{0}-dict.csv'.format(today), 'a+', newline='') as file:
         # for x in dict_sum.items():
         #     file.write(str(x) + '\n')
 

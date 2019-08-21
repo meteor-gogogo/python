@@ -10,7 +10,8 @@ from dateutil.relativedelta import relativedelta
 
 sensors_url = "http://websa.aplum-inc.com/api/sql/query?token=15ba27be5b7895379a0574993db783281988c16f95969fe423847d31ed95728d"
 if __name__ == '__main__':
-    for i in range(0,0):
+    print([0] * 10)
+    for i in range(0, 0):
         print(i)
     print((datetime.strptime('2018-11-01', '%Y-%m-%d') + relativedelta(months=0)).strftime('%Y-%m-%d'))
     # print(str((date.today() + timedelta(days=-1)).replace(day=1)))
@@ -32,8 +33,8 @@ if __name__ == '__main__':
     # print(int(str(date.today()).split('-')[1]))
     # print(str(datetime.strptime(str(date.today()), '%Y-%m-%d').strftime('%Y-%m')))
     # # print(date.today())
-    start_timestamp = int(time.mktime(time.strptime('2016-10-01 00:00:00', '%Y-%m-%d %H:%M:%S')) * 1000)
-    end_timestamp = int(time.mktime(time.strptime('2019-08-12 00:00:00', '%Y-%m-%d %H:%M:%S')) * 1000)
+    start_timestamp = int(time.mktime(time.strptime('2019-06-01 00:00:00', '%Y-%m-%d %H:%M:%S')) * 1000)
+    end_timestamp = int(time.mktime(time.strptime('2019-07-01 00:00:00', '%Y-%m-%d %H:%M:%S')) * 1000)
     print(start_timestamp)
     print(end_timestamp)
     # print(int(time.mktime(time.strptime('2018-11-01 00:00:00', '%Y-%m-%d %H:%M:%S')) * 1000))

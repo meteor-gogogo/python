@@ -4,6 +4,8 @@ from datetime import datetime, timedelta, date
 import requests
 import time
 import json
+import getopt
+from sqlalchemy import create_engine
 import xlsxwriter
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -60,11 +62,11 @@ def get_month_seller_income(nature_dict, source, aplum_cursor, source_by, url, s
     elif source == '抖音kol':
         sql = "select c.distinct_id from (select a.distinct_id from " \
               "(select distinct distinct_id from events where event = 'registerSuccessAct' and PartnerOldUser " \
-              "is null and regexp_like(distinct_id, '^[0-9]+$') and date between '{0}' and '{1}')" \
+              "is null and regexp_like(distinct_id, '^[0-9]+$') and date between '{0}' and '{1}' and partner in ({4}))" \
               "a left join " \
               "(select distinct distinct_id from events where event = 'SellerJoin' and date between '{2}' " \
               "and '{3}') b on a.distinct_id = b.distinct_id where b.distinct_id is not null)c" \
-            .format(start_date_tmp, end_date_tmp, start_date_tmp, end_date_tmp)
+            .format(start_date_tmp, end_date_tmp, start_date_tmp, end_date_tmp, source_by)
         payload = {'q': sql, 'format': 'json'}
         r = requests.post(url, data=payload)
         if r.status_code == 200:
@@ -204,10 +206,10 @@ def get_post_seller_num(nature_dict, source, aplum_cursor, source_by, url, start
     elif source == '抖音kol':
         sql = "select c.distinct_id from (select a.distinct_id from " \
               "(select distinct distinct_id from events where event = 'registerSuccessAct' and PartnerOldUser is null " \
-              "and regexp_like(distinct_id, '^[0-9]+$') and date between '{0}' and '{1}')a left join " \
+              "and regexp_like(distinct_id, '^[0-9]+$') and date between '{0}' and '{1}' and partner in ({4}))a left join " \
               "(select distinct distinct_id from events where event = 'SellerJoin' and date between '{2}' " \
               "and '{3}') b on a.distinct_id = b.distinct_id where b.distinct_id is not null)c" \
-            .format(start_date_tmp, end_date_tmp, start_date_tmp, end_date_tmp)
+            .format(start_date_tmp, end_date_tmp, start_date_tmp, end_date_tmp, source_by)
         payload = {'q': sql, 'format': 'json'}
         r = requests.post(url, data=payload)
         if r.status_code == 200:
@@ -331,11 +333,11 @@ def get_register_seller_num(nature_dict, source, source_by, url, start_timestamp
     elif source == '抖音kol':
         sql = "select count(*) as count_source from (select distinct a.distinct_id from " \
               "(select distinct distinct_id from events where event = 'registerSuccessAct' and PartnerOldUser " \
-              "is null and regexp_like(distinct_id, '^[0-9]+$') and date between '{0}' and '{1}')" \
+              "is null and regexp_like(distinct_id, '^[0-9]+$') and date between '{0}' and '{1}' and partner in ({4}))" \
               "a left join " \
               "(select distinct distinct_id from events where event = 'SellerJoin' and date between '{2}' " \
               "and '{3}') b on a.distinct_id = b.distinct_id where b.distinct_id is not null)c" \
-            .format(start_date_tmp, end_date_tmp, start_date_tmp, end_date_tmp)
+            .format(start_date_tmp, end_date_tmp, start_date_tmp, end_date_tmp, source_by)
     elif source == '微信朋友圈':
         sql = "select count(*) as count_source from (select distinct a.second_id, a.source, a.createtime, b.distinct_id from " \
               "(select distinct second_id, source, createtime from users where source = 'weixin' and adaccount = 'weixin-rd' and " \
@@ -394,7 +396,7 @@ def get_order_sum_realpayprice(nature_dict, aplum_cursor, source, source_by, url
         register_seller_list = list()
         sql = "select distinct distinct_id from events where event = 'registerSuccessAct' " \
               "and PartnerOldUser is null and regexp_like(distinct_id, '^[0-9]+$') and date between '{0}' " \
-              "and '{1}'".format(start_date_tmp, end_date_tmp)
+              "and '{1}' and partner in ({2})".format(start_date_tmp, end_date_tmp, source_by)
         payload = {'q': sql, 'format': 'json'}
         r = requests.post(url, data=payload)
         if r.status_code == 200:
@@ -428,7 +430,10 @@ def get_order_sum_realpayprice(nature_dict, aplum_cursor, source, source_by, url
         for row in source_data:
             # row = process_price(row)
             # print(row)
-            order_sum_realpayprice = round(float(row['count_source']), 2)
+            if row['count_source'] is None:
+                order_sum_realpayprice = 0.0
+            else:
+                order_sum_realpayprice = round(float(row['count_source']), 2)
         return order_sum_realpayprice
     elif source == '微信朋友圈':
         sql = "select sum(c.orderitem_realpayprice) sum_realpay from (select a.second_id, a.source, a.createtime, " \
@@ -506,7 +511,7 @@ def get_order_num(nature_dict, aplum_cursor, source, source_by, url, start_times
         register_seller_list = list()
         sql = "select distinct distinct_id from events where event = 'registerSuccessAct' " \
               "and PartnerOldUser is null and regexp_like(distinct_id, '^[0-9]+$') and date between '{0}' " \
-              "and '{1}'".format(start_date_tmp, end_date_tmp)
+              "and '{1}' and partner in ({2})".format(start_date_tmp, end_date_tmp, source_by)
         payload = {'q': sql, 'format': 'json'}
         r = requests.post(url, data=payload)
         if r.status_code == 200:
@@ -603,7 +608,7 @@ def get_order_user_num(nature_dict, aplum_cursor, source, source_by, url, start_
         register_seller_list = list()
         sql = "select distinct distinct_id from events where event = 'registerSuccessAct' " \
               "and PartnerOldUser is null and regexp_like(distinct_id, '^[0-9]+$') and date between '{0}' " \
-              "and '{1}'".format(start_date_tmp, end_date_tmp)
+              "and '{1}' and partner in ({2})".format(start_date_tmp, end_date_tmp, source_by)
         payload = {'q': sql, 'format': 'json'}
         r = requests.post(url, data=payload)
         if r.status_code == 200:
@@ -825,14 +830,300 @@ def get_source(market_cursor, source_dict):
     return source_dict
 
 
-def save_dict_to_csv(dict_sum):
+def save_dict_to_csv(dict_sum, today):
     # line = ''
-    today = date.today()
+    # today = date.today() + timedelta(days=-1)
     with open('/home/aplum/work_lh/data_dict_to_csv/{0}-day-dict.csv'.format(today), 'a+', newline='') as file:
         # for x in dict_sum.items():
         #     file.write(str(x) + '\n')
 
         file.write(str(dict_sum) + '\n')
+
+
+
+def data_to_mysql(today):
+    position_dict = {'B站KOL': 400,
+                     '小红书KOL': 401,
+                     '微信KOL': 402,
+                     '微博KOL': 403,
+                     '抖音kol': 404,
+                     '美拍KOL': 405,
+                     '豆瓣KOL': 406,
+                     'b站': 607,
+                     '头条': 608,
+                     '广点通': 609,
+                     '微博': 610,
+                     '快手': 611,
+                     '知乎': 612,
+                     'CPA': 613,
+                     'Google': 614,
+                     'inmobi': 615,
+                     '友盟': 616,
+                     '最右': 617,
+                     '爱奇艺': 618,
+                     '百度信息流': 619,
+                     '百度搜索': 620,
+                     '豆瓣': 621,
+                     '微信MP': 622,
+                     '微信朋友圈': 623,
+                     '微信公众号': 624
+                     }
+    # db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
+    # 最终结果列表
+    # result_list = list()
+    # timestamp = int(time.time())
+    # print(timestamp)
+    # today = date.today() + timedelta(days=-1)
+    file_path = '/home/aplum/work_lh/data_dict_to_csv/{0}-day-dict.csv'.format(today)
+    # file_path = '/home/liuhang/2019-08-16-day-dict.csv'
+    result_dict = dict()
+    month_set = set()
+    with open(file_path, 'r', encoding='utf-8') as file:
+        lines = file.readlines()
+        # line = file.readline()
+        for line in lines:
+            # print(line)
+            line_dict = eval(line)
+            for key in line_dict.keys():
+                month_set.add(str(line_dict[key]['month']))
+                # print(key)
+                result_dict[key] = list()
+                source = str(line_dict[key]['source'])
+                if source == 'all':
+                    source_type = 0
+                elif source == 'nature':
+                    source_type = 1
+                elif source == 'channel_all':
+                    source_type = 2
+                elif source == 'channel_flow':
+                    source_type = 3
+                elif source == 'channel_kol':
+                    source_type = 4
+                elif source == 'nature_Android':
+                    source_type = 6
+                elif source == 'nature_IOS':
+                    source_type = 7
+                elif source == 'nature_wechat':
+                    source_type = 8
+                elif source == 'nature_baidu':
+                    source_type = 9
+                else:
+                    source_type = 5
+                # if source_type in (6, 7, 8, 9):
+                #     continue
+                result_dict[key].append(int(source_type))
+                if source_type == 5:
+                    source_tmp = str(line_dict[key]['source'])
+                else:
+                    source_tmp = ''
+                result_dict[key].append(source_tmp)
+                result_dict[key].append(str(line_dict[key]['month']))
+                result_dict[key].append(float(line_dict[key]['costs']))
+                result_dict[key].append(int(line_dict[key]['today_actived_num']))
+                result_dict[key].append(int(line_dict[key]['new_actived_user']))
+                result_dict[key].append(float(line_dict[key]['avg_actived_costs']))
+                result_dict[key].append(int(line_dict[key]['new_registered_user']))
+                result_dict[key].append(float(line_dict[key]['avg_registered_costs']))
+                result_dict[key].append(int(line_dict[key]['avg_registered_rate']))
+                result_dict[key].append(int(line_dict[key]['new_ordered_user']))
+                result_dict[key].append(float(line_dict[key]['avg_ordered_user_costs']))
+                result_dict[key].append(int(line_dict[key]['avg_ordered_rate']))
+                result_dict[key].append(int(line_dict[key]['new_ordered_num']))
+                result_dict[key].append(float(line_dict[key]['avg_ordered_costs']))
+                result_dict[key].append(float(line_dict[key]['kdj_costs']))
+                result_dict[key].append(float(line_dict[key]['order_costs']))
+                result_dict[key].append(float(line_dict[key]['roi']))
+                result_dict[key].append(int(line_dict[key]['ddyj_mjjc']))
+                result_dict[key].append(float(line_dict[key]['mmjpjcb']))
+                timestamp = int(time.time())
+                result_dict[key].append(timestamp)
+                if source_type == 5:
+                    result_dict[key].append(int(position_dict[source]))
+                else:
+                    result_dict[key].append(200)
+    # for i in month_set:
+    #     key_channel_all = 'channel_all&' + str(i)
+    #     key_nature = 'nature&' + str(i)
+    #     result_dict[key_channel_all] = list()
+    #     result_dict[key_nature] = list()
+    #     result_dict[key_channel_all].append(2)
+    #     result_dict[key_channel_all].append('')
+    #     result_dict[key_channel_all].append(str(i))
+    #     for num in range(4, 20):
+    #         result_dict[key_channel_all].append(0.0)
+    #     result_dict[key_channel_all].append(int(time.time()))
+    #     result_dict[key_channel_all].append(2)
+    #     result_dict[key_channel_all].append('')
+    #     result_dict[key_channel_all].append(str(i))
+    #     for num in range(4, 20):
+    #         result_dict[key_channel_all].append(0.0)
+    #     result_dict[key_channel_all].append(int(time.time()))
+    for i in month_set:
+        key_channel_all = 'channel_all&' + str(i)
+        key_nature = 'nature&' + str(i)
+        # key_channel_kol = 'channel_kol&' + str(i)
+        # key_channel_flow = 'channel_flow&' + str(i)
+        result_dict[key_channel_all] = [0.0] * 22
+        result_dict[key_channel_all][0] = 2
+        result_dict[key_channel_all][1] = ''
+        result_dict[key_channel_all][2] = str(i)
+        result_dict[key_nature] = [0.0] * 22
+        result_dict[key_channel_all][0] = 1
+        result_dict[key_channel_all][1] = ''
+        result_dict[key_channel_all][2] = str(i)
+
+    with open(file_path, 'r', encoding='utf-8') as file:
+        lines = file.readlines()
+        # line = file.readline()
+        for line in lines:
+            line_dict = eval(line)
+            for key in line_dict.keys():
+                # 将博主的激活注册相关信息算到自然量中,并且channel_all的相关信息与channel_flow保持一致
+                if str(line_dict[key]['source']).endswith('KOL') or str(line_dict[key]['source']) in (
+                'channel_kol', '抖音kol'):
+                    # key_tmp = 'nature&' + str(line_dict[key]['month'])
+                    # print(key_tmp)
+                    # result_dict[key_tmp][4] = int(line_dict[key]['today_actived_num']) + int(result_dict[key_tmp][4])
+                    # result_dict[key_tmp][5] = int(line_dict[key]['new_actived_user']) + int(result_dict[key_tmp][5])
+                    # result_dict[key_tmp][7] = int(line_dict[key]['new_registered_user']) + int(result_dict[key_tmp][7])
+                    # # result_dict[key_tmp][8] = int(line_dict[key]['today_actived_num']) + int(result_dict[key_tmp][4])
+                    # result_dict[key_tmp][9] = int(int(result_dict[key_tmp][7]) / int(result_dict[key_tmp][5]) * 10000)
+
+                    result_dict[key][4] = 0
+                    result_dict[key][5] = 0
+                    result_dict[key][6] = 0.0
+                    result_dict[key][7] = 0
+                    result_dict[key][8] = 0.0
+                    result_dict[key][9] = 0
+
+                else:
+                    continue
+
+    with open(file_path, 'r', encoding='utf-8') as file:
+        lines = file.readlines()
+        # line = file.readline()
+        for line in lines:
+            line_dict = eval(line)
+            for key in line_dict.keys():
+                source = str(line_dict[key]['source'])
+                if source in ('头条信息流', '微博信息流'):
+                    continue
+                if source == 'CPA':
+                    key_flow = 'channel_flow&' + str(line_dict[key]['month'])
+                    for i in range(3, 20):
+                        result_dict[key_flow][i] = result_dict[key_flow][i] + result_dict[key][i]
+
+                if source == '抖音kol':
+                    key_kol = 'channel_kol&' + str(line_dict[key]['month'])
+                    if key_kol not in result_dict.keys():
+                        result_dict[key_kol] = result_dict[key]
+                    else:
+                        for i in range(4, 20):
+                            result_dict[key_kol][i] = result_dict[key_kol][i] + result_dict[key][i]
+
+    for month in month_set:
+        key_all_all = 'all&' + str(month)
+        key_nature = 'nature&' + str(month)
+        key_all = 'channel_all&' + str(month)
+        key_flow = 'channel_flow&' + str(month)
+        key_kol = 'channel_kol&' + str(month)
+        result_dict[key_all][0] = 2
+        result_dict[key_all][1] = ''
+        result_dict[key_all][2] = str(month)
+        if key_kol not in result_dict.keys():
+            result_dict[key_kol] = [0.0] * 22
+            result_dict[key_kol][0] = 4
+            result_dict[key_kol][1] = ''
+            result_dict[key_kol][2] = str(month)
+            result_dict[key_kol][3] = 0.0
+            # result_dict[key_kol] = [0.0] * 23
+            for i in range(4, 20):
+                result_dict[key_kol][i] = 0.0
+            result_dict[key_kol][20] = int(time.time())
+            result_dict[key_kol][21] = 200
+        if key_flow not in result_dict.keys():
+            result_dict[key_flow] = [0.0] * 22
+            result_dict[key_flow][0] = 3
+            result_dict[key_flow][1] = ''
+            result_dict[key_flow][2] = str(month)
+            result_dict[key_flow][3] = 0.0
+            # result_dict[key_kol] = [0.0] * 23
+            for i in range(4, 20):
+                result_dict[key_flow][i] = 0.0
+            result_dict[key_flow][20] = int(time.time())
+            result_dict[key_flow][21] = 200
+
+        for i in range(3, 20):
+            result_dict[key_all][i] = result_dict[key_flow][i] + result_dict[key_kol][i]
+        result_dict[key_all][20] = int(time.time())
+        result_dict[key_all][21] = 200
+
+        result_dict[key_nature][0] = 1
+        result_dict[key_nature][1] = ''
+        result_dict[key_nature][2] = str(month)
+        result_dict[key_nature][3] = 0.0
+        for i in range(4, 20):
+            result_dict[key_nature][i] = result_dict[key_all_all][i] - result_dict[key_all][i]
+        result_dict[key_nature][20] = int(time.time())
+        result_dict[key_nature][21] = 200
+
+    write_dict_to_mysql(today, result_dict)
+
+
+def write_dict_to_mysql(today, result_dict):
+    fields = ['type', 'second_name', 'exe_date', 'costs', 'today_actived_num', 'new_actived_user', 'avg_actived_costs',
+              'new_registered_user', 'avg_registered_costs', 'avg_registered_rate', 'new_ordered_user',
+              'avg_ordered_user_costs', 'avg_ordered_rate', 'new_ordered_num', 'avg_ordered_costs', 'kdj_costs',
+              'order_costs', 'roi', 'ddyj_mjjc', 'mmjpjcb', 'create_time', 'position']
+    # fields = ['type', 'second_name', 'exe_date', 'costs', 'today_actived_num', 'new_actived_user', 'avg_actived_costs',
+    #           'new_registered_user', 'avg_registered_costs', 'avg_registered_rate', 'new_ordered_user',
+    #           'avg_ordered_user_costs', 'avg_ordered_rate', 'new_ordered_num', 'avg_ordered_costs', 'kdj_costs',
+    #           'order_costs', 'roi', 'ddyj_mjjc', 'mmjpjcb', 'create_time', 'new_seller', 'new_jcmjs']
+    df = pd.DataFrame(list(result_dict.values()), columns=fields)
+    print(df)
+    # writer = pd.ExcelWriter('/home/aplum/work_lh/data_dict_to_csv/{0}.xlsx'.format(today))
+    # df.to_excel(excel_writer=writer, index=False, sheet_name='月表', encoding='utf-8')
+    # writer.save()
+    # writer.close()
+    # yesterday_month = str(date.today() + timedelta(days=-1))
+    checkData(today)
+    engine = create_engine(
+        "mysql+pymysql://{0}:{1}@{2}/{3}?charset={4}".format(mysql_user, mysql_passwd, mysql_host,
+                                                             mysql_db,
+                                                             'utf8'))
+    # 创建连接
+    con = engine.connect()
+    df.to_sql(name='t_market_day_buyer', con=con, if_exists='append', index=False, chunksize=10000)
+    print("写入数据成功")
+
+
+def checkData(datestr):
+    t_name = "t_market_day_buyer"
+    datanum = getDataNum(datestr, t_name)
+    print('当前重复数据: {}'.format(datanum))
+    if datanum > 0:
+        deleteData(datestr, t_name)
+    else:
+        return
+
+
+def getDataNum(datestr, t_name):
+    cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+    sql = "SELECT count(1) as num FROM `{0}` WHERE exe_date = '{1}'".format(t_name, datestr)
+    cursor.execute(sql)
+    source_data = cursor.fetchall()
+    cursor.close()
+    for k in source_data:
+        num = int(k['num'])
+    return num
+
+
+def deleteData(datestr, t_name):
+    cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+    sql = "DELETE  FROM `{0}` WHERE exe_date = '{1}'".format(t_name, datestr)
+    print(sql)
+    cursor.execute(sql)
+    db_market.commit()
 
 
 def get_all_data(nature_dict, aplum_cursor, source, costs, source_by, start_date_tmp, end_date_tmp, start_timestamp,
@@ -841,7 +1132,7 @@ def get_all_data(nature_dict, aplum_cursor, source, costs, source_by, start_date
     # 来源
     # source = str(source_dict[k]['second_name'])
     # 当前月份
-    month = start_date_tmp
+    # month = start_date_tmp
     # 当前月份花费
     # costs = float(get_costs_by_source_and_month(source_dict, costs_dict, source, date_tmp))
     # 当日激活
@@ -870,65 +1161,62 @@ def get_all_data(nature_dict, aplum_cursor, source, costs, source_by, start_date
                                 end_date_tmp)),
         2)
     order_user_post_seller = order_user_num + post_seller_num
-    if add_activate == 0:
-        register_rate = 0.00
-        order_user_trans_rate = 0.00
-    else:
-        register_rate = int(register_num / add_activate * 10000)
-        order_user_trans_rate = int(order_num / add_activate * 10000)
+    # if add_activate == 0:
+    #     register_rate = 0.00
+    #     order_user_trans_rate = 0.00
+    # else:
+    #     register_rate = int(register_num / add_activate * 10000)
+    #     order_user_trans_rate = int(order_num / add_activate * 10000)
+    #
+    # if order_num == 0:
+    #     customer_cost = 0.00
+    # else:
+    #     customer_cost = round((order_sum_realpayprice / order_num), 2)
+    #
+    # if register_seller_num == 0:
+    #     register_post_trans_rate = 0.00
+    # else:
+    #     if post_seller_num == 0:
+    #         register_post_trans_rate = 0.00
+    #     else:
+    #         register_post_trans_rate = int(post_seller_num / register_seller_num * 10000)
 
-    if order_num == 0:
-        customer_cost = 0.00
-    else:
-        customer_cost = round((order_sum_realpayprice / order_num), 2)
-
-    if register_seller_num == 0:
-        register_post_trans_rate = 0.00
-    else:
-        if post_seller_num == 0:
-            register_post_trans_rate = 0.00
-        else:
-            register_post_trans_rate = int(post_seller_num / register_seller_num * 10000)
-
-    key = str(source) + '&' + str(date.today() + timedelta(days=-1))
+    key = str(source) + '&' + str(end_date_tmp)
     result_dict[key] = dict()
     result_dict[key]['source'] = source
-    result_dict[key]['month'] = str(date.today() + timedelta(days=-1))
+    result_dict[key]['month'] = str(end_date_tmp)
     result_dict[key]['costs'] = costs
     result_dict[key]['today_actived_num'] = current_day_activate
     result_dict[key]['new_actived_user'] = add_activate
     result_dict[key]['avg_actived_costs'] = 0.0
     result_dict[key]['new_registered_user'] = register_num
     result_dict[key]['avg_registered_costs'] = 0.0
-    result_dict[key]['avg_registered_rate'] = register_rate
+    result_dict[key]['avg_registered_rate'] = 0.0
     result_dict[key]['new_ordered_user'] = order_user_num
     result_dict[key]['avg_ordered_user_costs'] = 0.0
-    result_dict[key]['avg_ordered_rate'] = order_user_trans_rate
+    result_dict[key]['avg_ordered_rate'] = 0.0
     result_dict[key]['new_ordered_num'] = order_num
     result_dict[key]['avg_ordered_costs'] = 0.0
-    result_dict[key]['kdj_costs'] = customer_cost
+    result_dict[key]['kdj_costs'] = 0.0
     result_dict[key]['order_costs'] = order_sum_realpayprice
     result_dict[key]['roi'] = 0.0
     result_dict[key]['new_seller'] = register_seller_num
     result_dict[key]['avg_seller_costs'] = 0.0
     result_dict[key]['new_jcmjs'] = post_seller_num
     result_dict[key]['avg_jcmjs_costs'] = 0.0
-    result_dict[key]['avg_jcmjs_rate'] = register_post_trans_rate
+    result_dict[key]['avg_jcmjs_rate'] = 0.0
     result_dict[key]['dyscje'] = month_seller_income
     result_dict[key]['seller_roi'] = 0.0
     result_dict[key]['ddyj_mjjc'] = order_user_post_seller
     result_dict[key]['mmjpjcb'] = 0.0
-    fields = ['source', 'month', 'costs', 'today_actived_num', 'new_actived_user', 'avg_actived_costs',
-              'new_registered_user', 'avg_registered_costs', 'avg_registered_rate', 'new_ordered_user', 'avg_ordered_user_costs'
-              , 'avg_ordered_rate', 'new_ordered_num', 'avg_ordered_costs', 'kdj_costs', 'order_costs', 'roi',
-              'new_seller', 'avg_seller_costs', 'new_jcmjs', 'avg_jcmjs_costs'
-              , 'avg_jcmjs_rate', 'dyscje', 'seller_roi', 'ddyj_mjjc', 'mmjpjcb']
-    print(result_dict)
-    save_dict_to_csv(result_dict)
+
+    # print(result_dict)
+    save_dict_to_csv(result_dict, end_date_tmp)
 
 
 def get_source_by_by_sql(market_cursor, sql):
     source_list_tmp = list()
+    # print(sql)
     market_cursor.execute(sql)
     source_data = market_cursor.fetchall()
     for row in source_data:
@@ -945,7 +1233,42 @@ def get_source_by_by_sql(market_cursor, sql):
     return source_by
 
 
+def check_source(market_cursor, source, yesterday):
+    flag = True
+    if source == 'channel_all':
+        sql_source = "select source from t_market_cost where costs_date = '{0}' and source in (select source from " \
+                     "t_market_source".format(yesterday)
+        source_by = get_source_by_by_sql(market_cursor, sql_source)
+    elif source == 'channel_kol':
+        sql_source = "select source from t_market_cost where source in (select source from t_market_source " \
+                     "where name = '博主kol' and second_name like '%KOL') and costs_date = '{0}'".format(yesterday)
+        source_by = get_source_by_by_sql(market_cursor, sql_source)
+    elif source == 'channel_flow':
+        sql_source = "select source from t_market_cost where source in (select source from t_market_source " \
+                     "where name = '信息流' and source != 'cpa') and costs_date = '{0}'".format(yesterday)
+        source_by = get_source_by_by_sql(market_cursor, sql_source)
+    else:
+        sql_source = "select source from t_market_cost where source in (select source from t_market_source " \
+                     "where second_name = '{0}') and costs_date = '{1}'".format(source, yesterday)
+        source_by = get_source_by_by_sql(market_cursor, sql_source)
+    if source_by == '':
+        flag = False
+    return flag
+
+
 if __name__ == '__main__':
+    # for i in range(3, 21):
+    delete_day = 1
+    try:
+        shortargs = 'd:'
+        opts, args = getopt.getopt(sys.argv[1:], shortargs)
+    except getopt.GetoptError:
+        print('args error')
+
+    for opt, arg in opts:
+        if opt == '-d':
+            delete_day = int(arg)
+
     # 定义渠道来源字典
     source_dict = dict()
     # 获得市场报表相关渠道,成本连接
@@ -979,22 +1302,26 @@ if __name__ == '__main__':
     # 起止日期: 2019-08-01 ~ 2019-08-13(前后包含)
     # 起止时间戳: 2019-08-01 00:00:00 ~ 2019-08-14 00:00:00
     today = date.today()
-    end_date_tmp = today + timedelta(days=-1)
+    end_date_tmp = today + timedelta(days=-delete_day)
+    end_date_tmp_second = end_date_tmp + timedelta(days=1)
     start_date_tmp = str(end_date_tmp.replace(day=1))
     print(start_date_tmp)
     start_timestamp = int(
         time.mktime(time.strptime('{0} 00:00:00'.format(start_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
     end_timestamp = int(
-        time.mktime(time.strptime('{0} 00:00:00'.format(today), '%Y-%m-%d %H:%M:%S')) * 1000)
+        time.mktime(time.strptime('{0} 00:00:00'.format(end_date_tmp_second), '%Y-%m-%d %H:%M:%S')) * 1000)
 
     for source in source_list:
         print(source)
         costs = 0.00
+        if source in ('CPA', '小红书', '其他', '大众点评'):
+            # print(source)
+            continue
         if source == 'all':
             # all统计不需要过滤source字段, source_by给空是为了调用该方法
             source_by = ''
-            sql_costs = "select sum(costs) as sum_costs from t_market_cost where costs_date = '{0}'"\
-                .format(start_date_tmp)
+            sql_costs = "select sum(costs) as sum_costs from t_market_day_cost where costs_date between '{0}' and '{1}'"\
+                .format(start_date_tmp, end_date_tmp)
             costs = get_costs_by_sql(market_cursor, sql_costs)
             get_all_data(nature_dict, aplum_cursor, source, costs, source_by, start_date_tmp, end_date_tmp,
                          start_timestamp, end_timestamp)
@@ -1002,66 +1329,116 @@ if __name__ == '__main__':
                         'nature_wechat', 'nature_baidu'):
             # sql_source = "select source from t_market_source "
             # source_by = get_source_by_by_sql(db_market, sql_source)
-            sql_source = "select source from t_market_cost where source in (select source from t_market_source " \
-                         "where name = '信息流') union (select source from t_market_cost where source in (select source " \
-                         "from t_market_source where name = '博主kol') and costs_date = '{0}')".format(start_date_tmp)
+            sql_source = "select source from t_market_day_cost where costs_date = '{0}' and source in (select " \
+                         "source from t_market_source)".format(end_date_tmp)
+            source_by = get_source_by_by_sql(market_cursor, sql_source)
+            if source_by == '':
+                print('{0} 无投放  统计结束'.format(end_date_tmp))
+                exit(0)
+            sql_source = "select distinct source from t_market_day_cost where costs_date between '{0}' and '{1}' and source in" \
+                         " (select source from t_market_source)".format(start_date_tmp, end_date_tmp)
             source_by = get_source_by_by_sql(market_cursor, sql_source)
             if source == 'channel_all':
-                sql_costs = "select sum(costs) as sum_costs from t_market_cost where costs_date = '{0}'" \
-                    .format(start_date_tmp)
+                sql_costs = "select sum(costs) as sum_costs from t_market_day_cost where costs_date between '{0}' and" \
+                            " '{1}' and source in ({2})" \
+                    .format(start_date_tmp, end_date_tmp, source_by)
                 costs = get_costs_by_sql(market_cursor, sql_costs)
             else:
                 costs = 0.0
             get_all_data(nature_dict, aplum_cursor, source, costs, source_by, start_date_tmp, end_date_tmp,
                          start_timestamp, end_timestamp)
         elif source == 'channel_kol':
-            sql_source = "select source from t_market_cost where source in (select source from t_market_source " \
-                         "where name = '博主kol') and costs_date = '{0}'".format(start_date_tmp)
+            sql_source = "select source from t_market_day_cost where source in (select source from t_market_source " \
+                         "where name = '博主kol' and second_name like '%KOL') and costs_date = '{0}'".format(end_date_tmp)
             # print(sql_source)
             source_by = get_source_by_by_sql(market_cursor, sql_source)
             if source_by == '':
                 continue
-            sql_costs = "select sum(costs) as sum_costs from t_market_cost where costs_date = '{0}' " \
-                        "and source in ({1})" \
-                .format(start_date_tmp, source_by)
+            # else:
+            #     sql_source = "select source from t_market_cost where source in (select source from t_market_source " \
+            #                  "where name = '博主kol' and second_name like '%KOL') and costs_date = '{0}'".format(
+            #         start_date_tmp)
+            #     # print(sql_source)
+            #     source_by = get_source_by_by_sql(market_cursor, sql_source)
+            sql_source = "select distinct source from t_market_day_cost where source in (select source from t_market_source " \
+                         "where name = '博主kol' and second_name like '%KOL') and costs_date between '{0}' and '{1}'"\
+                .format(start_date_tmp, end_date_tmp)
+            # print(sql_source)
+            source_by = get_source_by_by_sql(market_cursor, sql_source)
+            sql_costs = "select sum(costs) as sum_costs from t_market_day_cost where costs_date between '{0}' " \
+                        "and '{1}' and source in ({2})".format(start_date_tmp, end_date_tmp, source_by)
+            # print(sql_costs)
             costs = get_costs_by_sql(market_cursor, sql_costs)
             get_all_data(nature_dict, aplum_cursor, source, costs, source_by, start_date_tmp, end_date_tmp,
                          start_timestamp, end_timestamp)
         elif source == 'channel_flow':
-            sql_source = "select source from t_market_source where name = '信息流'"
+            sql_source = "select source from t_market_day_cost where source in (select source from t_market_source " \
+                         "where name = '信息流' and source != 'cpa') and costs_date = '{0}'".format(end_date_tmp)
             source_by = get_source_by_by_sql(market_cursor, sql_source)
-            sql_costs = "select sum(costs) as sum_costs from t_market_cost where costs_date = '{0}' " \
-                        "and source in ({1})" \
-                .format(start_date_tmp, source_by)
+            if source_by == '':
+                continue
+            # else:
+            #     sql_source = "select source from t_market_cost where source in (select source from t_market_source " \
+            #                  "where name = '信息流' and source != 'cpa') and costs_date = '{0}'".format(start_date_tmp)
+            #     source_by = get_source_by_by_sql(market_cursor, sql_source)
+            sql_source = "select distinct source from t_market_day_cost where source in (select source from t_market_source " \
+                         "where name = '信息流' and source != 'cpa') and costs_date between '{0}' and '{1}'"\
+                .format(start_date_tmp, end_date_tmp)
+            source_by = get_source_by_by_sql(market_cursor, sql_source)
+            sql_costs = "select sum(costs) as sum_costs from t_market_day_cost where costs_date between '{0}' " \
+                        "and '{1}' and source in ({2})".format(start_date_tmp, end_date_tmp, source_by)
             costs = get_costs_by_sql(market_cursor, sql_costs)
             get_all_data(nature_dict, aplum_cursor, source, costs, source_by, start_date_tmp, end_date_tmp,
                          start_timestamp, end_timestamp)
         elif source == '抖音kol':
-            sql_costs = "select sum(costs) as sum_costs from t_market_cost where source in(select source from " \
-                        "t_market_source where second_name = '抖音kol') and " \
-                        "costs_date = '{0}'" \
-                .format(start_date_tmp)
+            sql_costs = "select sum(costs) as sum_costs from t_market_day_cost where source in(select source from " \
+                        "t_market_source where second_name = '抖音kol') and costs_date = '{0}'" \
+                .format(end_date_tmp)
             costs = get_costs_by_sql(market_cursor, sql_costs)
+            # print(costs)
             if costs == 0.0:
                 continue
-            source_by = ''
+            sql_costs = "select sum(costs) as sum_costs from t_market_day_cost where source in(select source from " \
+                        "t_market_source where second_name = '抖音kol') and costs_date between '{0}' and '{1}' " \
+                .format(start_date_tmp, end_date_tmp)
+            costs = get_costs_by_sql(market_cursor, sql_costs)
+            sql_partner = "select partner from t_toutiao_partner where start_time >= {0} and start_time < {1}"\
+                .format(int(start_timestamp / 1000), int(end_timestamp / 1000))
+            partner_list = list()
+            market_cursor.execute(sql_partner)
+            source_data = market_cursor.fetchall()
+
+            for row in source_data:
+                if row['partner'] is None:
+                    continue
+                else:
+                    partner_list.append(str(row['partner']))
+
+            if len(partner_list) == 1:
+                source_by = "'" + str(partner_list[0]) + "'"
+            else:
+                source_by = "'" + "','".join(str(i) for i in partner_list) + "'"
+            # print(source_by)
             get_all_data(nature_dict, aplum_cursor, source, costs, source_by, start_date_tmp, end_date_tmp, start_timestamp, end_timestamp)
         else:
-            if str(source).endswith('KOL') or source == '小红书':
-                sql_source = "select source from t_market_cost where source in (select source from t_market_source " \
-                             "where second_name = '{0}') and costs_date = '{1}'".format(source, start_date_tmp)
-                source_by = get_source_by_by_sql(market_cursor, sql_source)
-                if source_by == '':
-                    continue
-            else:
-                sql_source = "select source from t_market_source where second_name = '{0}'".format(source)
-                source_by = get_source_by_by_sql(market_cursor, sql_source)
-            sql_costs = "select sum(costs) as sum_costs from t_market_cost where costs_date = '{0}' " \
-                        "and source in ({1})" \
-                .format(start_date_tmp, source_by)
+            sql_source = "select source from t_market_day_cost where source in (select source from t_market_source " \
+                         "where second_name = '{0}') and costs_date = '{1}'".format(source, end_date_tmp)
+            source_by = get_source_by_by_sql(market_cursor, sql_source)
+            if source_by == '':
+                continue
+            # sql_source = "select source from t_market_day_source where second_name = '{0}'".format(source)
+            # source_by = get_source_by_by_sql(market_cursor, sql_source)
+            sql_source = "select distinct source from t_market_day_cost where source in (select source from t_market_source " \
+                         "where second_name = '{0}') and costs_date between '{1}' and '{2}'"\
+                .format(source, start_date_tmp, end_date_tmp)
+            source_by = get_source_by_by_sql(market_cursor, sql_source)
+            sql_costs = "select sum(costs) as sum_costs from t_market_day_cost where costs_date between '{0}' and" \
+                        " '{1}' and source in ({2})".format(start_date_tmp, end_date_tmp, source_by)
+            # print(sql_costs)
             costs = get_costs_by_sql(market_cursor, sql_costs)
             get_all_data(nature_dict, aplum_cursor, source, costs, source_by, start_date_tmp, end_date_tmp, start_timestamp,
                          end_timestamp)
+    data_to_mysql(end_date_tmp)
     market_cursor.close()
     aplum_cursor.close()
 
