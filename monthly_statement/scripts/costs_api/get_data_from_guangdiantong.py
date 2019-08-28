@@ -40,10 +40,12 @@ def data_to_mysql(market_cursor, aid, start_date, data):
         show = int(i['impression'])
         click = int(i['click'])
         cost = float(i['cost']) / 100
-    sql = "insert into t_ad_data (second_name, aid, show_num, click_num, cost, ad_date) values('广点通', '{0}', " \
+    if cost > 0.0:
+        sql = "insert into t_ad_data (second_name, aid, show_num, click_num, cost, ad_date) values('广点通', '{0}', " \
           "{1}, {2}, {3}, '{4}')".format(aid, show, click, cost, start_date)
-    print(cost)
-    market_cursor.execute(sql)
+        market_cursor.execute(sql)
+    else:
+        pass
     print('插入数据成功')
 
 
@@ -75,7 +77,7 @@ if __name__ == '__main__':
     db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
     market_cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
     id_list = [10896792]
-    start_date_tmp = '2018-09-07'
+    start_date_tmp = '2018-09-01'
     for i in range(1000):
         start_date = (datetime.strptime(start_date_tmp, '%Y-%m-%d') + timedelta(days=i)).strftime('%Y-%m-%d')
         if str(start_date) == str(date.today()):

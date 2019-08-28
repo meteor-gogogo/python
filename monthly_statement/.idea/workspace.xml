@@ -2,12 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="58f59d37-b1f4-4626-8dfe-2f38c2216b8b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../data_ctr_to_redis/.idea/data_ctr_to_redis.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../data_ctr_to_redis/.idea/data_ctr_to_redis.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data_ctr_to_redis/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../data_ctr_to_redis/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../data_ctr_to_redis/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../data_ctr_to_redis/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data_ctr_to_redis/scripts/IpCity.py" beforeDir="false" afterPath="$PROJECT_DIR$/../data_ctr_to_redis/scripts/IpCity.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../flink-training-exercises" beforeDir="false" afterPath="$PROJECT_DIR$/../flink-training-exercises" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/by_day/get_data_from_guangdiantong.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/costs_api/get_data_from_guangdiantong.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -41,11 +39,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/scripts/by_day/get_data_from_guangdiantong.py">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/scripts/costs_api/get_data_from_guangdiantong.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1397">
-              <caret line="14" column="55" selection-start-line="14" selection-start-column="55" selection-end-line="14" selection-end-column="55" />
+            <state relative-caret-position="243">
+              <caret line="42" column="18" selection-start-line="42" selection-start-column="18" selection-end-line="42" selection-end-column="18" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -53,7 +51,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scripts/by_day/source_info_day.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-6495">
@@ -173,6 +171,7 @@
         <option value="$PROJECT_DIR$/scripts/order_detail/new_old.py" />
         <option value="$PROJECT_DIR$/scripts/costs_api/costs_by_api.py" />
         <option value="$PROJECT_DIR$/scripts/by_day/get_data_from_guangdiantong.py" />
+        <option value="$PROJECT_DIR$/scripts/costs_api/get_data_from_guangdiantong.py" />
       </list>
     </option>
   </component>
@@ -251,6 +250,9 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\MyWork\code\monthly_statement\scripts\costs_api" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\MyWork\code\monthly_statement\scripts\order_detail" />
       <recent name="C:\MyWork\code\monthly_statement\scripts\history" />
@@ -305,7 +307,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/scripts/by_day/get_data_from_guangdiantong.py" />
+      <option name="SCRIPT_NAME" value="C:\MyWork\code\monthly_statement\scripts\costs_api\get_data_from_guangdiantong.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -555,22 +557,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/by_day/get_data_from_guangdiantong.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1397">
-          <caret line="14" column="55" selection-start-line="14" selection-start-column="55" selection-end-line="14" selection-end-column="55" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/scripts/by_day/source_info_day.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-6495">
           <caret line="842" column="4" selection-start-line="842" selection-start-column="4" selection-end-line="842" selection-end-column="4" />
           <folding>
             <element signature="e#37#83#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/costs_api/get_data_from_guangdiantong.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="243">
+          <caret line="42" column="18" selection-start-line="42" selection-start-column="18" selection-end-line="42" selection-end-column="18" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
           </folding>
         </state>
       </provider>

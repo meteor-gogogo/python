@@ -82,10 +82,12 @@ def data_to_mysql(market_cursor, aid, start_date, data):
         show = int(i['show'])
         click = int(i['click'])
         cost = float(i['cost'])
-    sql = "insert into t_ad_data (second_name, aid, show_num, click_num, cost, ad_date) values('头条', '{0}', " \
+    if cost > 0.0:
+        sql = "insert into t_ad_data (second_name, aid, show_num, click_num, cost, ad_date) values('头条', '{0}', " \
           "{1}, {2}, {3}, '{4}')".format(aid, show, click, cost, start_date)
-    # print(sql)
-    market_cursor.execute(sql)
+        market_cursor.execute(sql)
+    else:
+        pass
 
 
 def main(market_cursor, start_date, ad_id):
@@ -120,3 +122,4 @@ if __name__ == '__main__':
     start_date = str(date.today() + timedelta(days=-1))
     for ad_id in ad_id_list:
         main(market_cursor, start_date, ad_id)
+        db_market.commit()
