@@ -17,12 +17,14 @@ mysql_passwd = 'plum2016'
 mysql_db = 'aplum_mis'
 
 
-def write_dict_to_excel(result_dict):
+def write_dict_to_excel(result_dict_va):
+    for key in result_dict_va.keys():
+        result_dict_va[key][2] = str(datetime.strptime(result_dict_va[key][2], '%Y-%m-%d').replace(day=1))
     fields = ['type', 'second_name', 'exe_date', 'costs', 'today_actived_num', 'new_actived_user', 'avg_actived_costs',
               'new_registered_user', 'avg_registered_costs', 'avg_registered_rate', 'new_ordered_user',
               'avg_ordered_user_costs', 'avg_ordered_rate', 'new_ordered_num', 'avg_ordered_costs', 'kdj_costs',
-              'order_costs', 'roi', 'ddyj_mjjc', 'mmjpjcb', 'create_time', 'new_seller', 'new_jcmjs']
-    df = pd.DataFrame(list(result_dict.values()), columns=fields)
+              'order_costs', 'roi', 'ddyj_mjjc', 'mmjpjcb', 'create_time', 'new_seller', 'new_jcmjs', 'position']
+    df = pd.DataFrame(list(result_dict_va.values()), columns=fields)
     print(df)
     # writer = pd.ExcelWriter('/home/aplum/work_lh/2019-08-15.xlsx')
     # df.to_excel(excel_writer=writer, index=False, sheet_name='月表', encoding='utf-8')
@@ -93,10 +95,11 @@ if __name__ == '__main__':
     # timestamp = int(time.time())
     # print(timestamp)
     today = date.today()
+    yesterday = today + timedelta(days=-1)
     db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
     cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
-    # file_path = '/home/aplum/work_lh/data_dict_to_csv/2019-08-15-dict.csv'
-    file_path = '/home/liuhang/2019-08-15-dict.csv'
+    file_path = '/home/aplum/work_lh/data_dict_to_csv/{0}-day-dict.csv'.format(yesterday)
+    file_path = '/home/liuhang/{0}-day-dict.csv'.format(yesterday)
     result_dict = dict()
     month_set = set()
     with open(file_path, 'r', encoding='utf-8') as file:
@@ -134,14 +137,12 @@ if __name__ == '__main__':
                     source_type = 8
                 elif source == 'nature_baidu':
                     source_type = 9
-                elif source.endswith('KOL') or source.endswith('kol'):
-                    source_type = 15
                 else:
-                    source_type = 14
+                    source_type = 5
                 # if source_type in (6, 7, 8, 9):
                 #     continue
                 result_dict[key].append(int(source_type))
-                if source_type in (14, 15):
+                if source_type == 5:
                     source_tmp = str(line_dict[key]['source'])
                 else:
                     source_tmp = ''
@@ -174,7 +175,7 @@ if __name__ == '__main__':
                 result_dict[key].append(timestamp)
                 result_dict[key].append(int(line_dict[key]['new_seller']))
                 result_dict[key].append(int(line_dict[key]['new_jcmjs']))
-                if source_type in (14, 15):
+                if source_type == 5:
                     result_dict[key].append(int(position_dict[source]))
                 else:
                     result_dict[key].append(200)
@@ -193,12 +194,6 @@ if __name__ == '__main__':
                 if source in ('头条信息流', '微博信息流'):
                     continue
                 if str(line_dict[key]['source']).endswith('KOL') or str(line_dict[key]['source']) in ('channel_kol', '抖音kol'):
-                    # key_tmp = 'nature&' + str(line_dict[key]['month'])
-                    # result_dict[key_tmp][4] = int(line_dict[key]['today_actived_num']) + int(result_dict[key_tmp][4])
-                    # result_dict[key_tmp][5] = int(line_dict[key]['new_actived_user']) + int(result_dict[key_tmp][5])
-                    # result_dict[key_tmp][7] = int(line_dict[key]['new_registered_user']) + int(result_dict[key_tmp][7])
-                    # # result_dict[key_tmp][8] = int(line_dict[key]['today_actived_num']) + int(result_dict[key_tmp][4])
-                    # result_dict[key_tmp][9] = int(int(result_dict[key_tmp][7]) / int(result_dict[key_tmp][5]) * 10000)
 
                     result_dict[key][4] = 0
                     result_dict[key][5] = 0
@@ -250,14 +245,16 @@ if __name__ == '__main__':
             for i in range(4, 20):
                 result_dict[key_kol][i] = 0.0
             result_dict[key_kol][20] = int(time.time())
-            for i in range(21, 24):
+            for i in range(21, 23):
                 result_dict[key_kol][i] = 0.0
+            result_dict[key_kol][23] = 200
 
         for i in range(3, 20):
             result_dict[key_all][i] = result_dict[key_flow][i] + result_dict[key_kol][i]
         result_dict[key_all][20] = int(time.time())
         for i in range(21, 23):
             result_dict[key_all][i] = result_dict[key_flow][i] + result_dict[key_kol][i]
+        result_dict[key_all][23] = 200
         result_dict[key_nature][0] = 1
         result_dict[key_nature][1] = ''
         result_dict[key_nature][2] = str(month)
@@ -267,6 +264,5 @@ if __name__ == '__main__':
         result_dict[key_nature][20] = int(time.time())
         for i in range(21, 23):
             result_dict[key_nature][i] = result_dict[key_all_all][i] - result_dict[key_all][i]
-    # for key in result_dict.keys():
-    #     result_dict[key][]
+        result_dict[key_nature][23] = 200
     write_dict_to_excel(result_dict)

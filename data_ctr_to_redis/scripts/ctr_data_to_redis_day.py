@@ -546,7 +546,7 @@ if __name__ == '__main__':
 
     click_file_path = '/data/aplum/ctr_data/product_click/'
     # 历史数据目录
-    history_agg_file_path = '/data/aplum/ctr_data/product_view_click_full/'
+    history_agg_file_path = '/data/aplum/ctr_data/product_view_click_full_seller_videoUrl/'
     today = date.today()
     lastdate = today + timedelta(days=-7)
     print(lastdate)
