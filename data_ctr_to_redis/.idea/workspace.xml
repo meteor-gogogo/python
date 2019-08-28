@@ -2,22 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="47043d1d-40f6-473f-9e50-7cf9575fe0bd" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../crawler/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../crawler/scripts/yiersan_crawler_tosql.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../monthly_statement/scripts/by_day/get_data_from_guangdiantong.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../monthly_statement/scripts/order_detail/new_old.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../crawler/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../crawler/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../crawler/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../crawler/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../crawler/scripts/crawler.py" beforeDir="false" afterPath="$PROJECT_DIR$/../crawler/scripts/crawler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/data_ctr_to_redis.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/data_ctr_to_redis.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/IpCity.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/IpCity.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/ctr_data_to_redis_day.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/ctr_data_to_redis_day.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../data_statistics/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../data_statistics/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../flink-training-exercises" beforeDir="false" afterPath="$PROJECT_DIR$/../flink-training-exercises" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../monthly_statement/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/by_day/source_info_day.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/by_day/source_info_day.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/costs_api/costs_by_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/costs_api/costs_by_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_buyer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_buyer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_seller.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/history/data_to_mysql_history_seller.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -39,8 +31,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/scripts/ctr_data_to_redis_day.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="12" selection-start-line="10" selection-end-line="12" />
+            <state relative-caret-position="455">
+              <caret line="693" column="32" lean-forward="true" selection-start-line="693" selection-start-column="32" selection-end-line="693" selection-end-column="32" />
               <folding>
                 <element signature="e#37#76#0" expanded="true" />
               </folding>
@@ -51,8 +43,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scripts/ctr_data_to_redis_hour.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="8550">
-              <caret line="354" column="63" selection-start-line="354" selection-start-column="63" selection-end-line="354" selection-end-column="63" />
+            <state relative-caret-position="355">
+              <caret line="877" column="19" selection-start-line="877" selection-start-column="19" selection-end-line="877" selection-end-column="19" />
               <folding>
                 <element signature="e#37#76#0" expanded="true" />
               </folding>
@@ -72,8 +64,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scripts/IpCity.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="575">
-              <caret line="23" column="74" selection-start-line="23" selection-start-column="74" selection-end-line="23" selection-end-column="74" />
+            <state relative-caret-position="-633">
+              <caret line="23" column="43" selection-start-line="23" selection-start-column="43" selection-end-line="23" selection-end-column="43" />
             </state>
           </provider>
         </entry>
@@ -113,14 +105,14 @@
         <option value="$PROJECT_DIR$/config/config.ini" />
         <option value="$PROJECT_DIR$/scripts/data_to_redis.py" />
         <option value="$PROJECT_DIR$/akdfkhkh/ctr_data_to_redis_hour.py" />
-        <option value="$PROJECT_DIR$/scripts/IpCity.py" />
         <option value="$PROJECT_DIR$/scripts/test.py" />
         <option value="$PROJECT_DIR$/scripts/ctr_data_to_redis_hour.py" />
+        <option value="$PROJECT_DIR$/scripts/IpCity.py" />
         <option value="$PROJECT_DIR$/scripts/ctr_data_to_redis_day.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="565" />
     <option name="y" value="15" />
     <option name="width" value="1225" />
@@ -132,7 +124,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -149,6 +140,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -247,9 +239,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="7" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17503302" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.108982824" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="Alibaba Cloud Explorer" order="3" />
@@ -282,27 +275,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/ctr_data_to_redis_hour.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8550">
-          <caret line="354" column="63" selection-start-line="354" selection-start-column="63" selection-end-line="354" selection-end-column="63" />
-          <folding>
-            <element signature="e#37#76#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/redis/client.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30975">
           <caret line="1263" column="8" selection-start-line="1263" selection-start-column="8" selection-end-line="1263" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/IpCity.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="575">
-          <caret line="23" column="74" selection-start-line="23" selection-start-column="74" selection-end-line="23" selection-end-column="74" />
         </state>
       </provider>
     </entry>
@@ -319,10 +295,27 @@
     <entry file="file://$PROJECT_DIR$/scripts/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/ctr_data_to_redis_hour.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="355">
+          <caret line="877" column="19" selection-start-line="877" selection-start-column="19" selection-end-line="877" selection-end-column="19" />
+          <folding>
+            <element signature="e#37#76#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/IpCity.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-633">
+          <caret line="23" column="43" selection-start-line="23" selection-start-column="43" selection-end-line="23" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/scripts/ctr_data_to_redis_day.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="12" selection-start-line="10" selection-end-line="12" />
+        <state relative-caret-position="455">
+          <caret line="693" column="32" lean-forward="true" selection-start-line="693" selection-start-column="32" selection-end-line="693" selection-end-column="32" />
           <folding>
             <element signature="e#37#76#0" expanded="true" />
           </folding>

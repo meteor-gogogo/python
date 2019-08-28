@@ -21,7 +21,7 @@ class IpCity():
     __dbBinStr = ''
 
     def __init__(self):
-        dbfile = '/home/aplum/work_lh/data_ctr_to_redis/scripts/IpCity.db'
+        dbfile = '/home/aplum/work_lh/code/data_ctr_to_redis/scripts/IpCity.db'
         self.initDatabase(dbfile)
 
     def binarySearch(self, ip):

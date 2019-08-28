@@ -690,7 +690,7 @@ if __name__ == '__main__':
                 ctr_dict[rate_key] = rate
         else:
             continue
-    save_dict_to_csv(ctr_dict)
+    # save_dict_to_csv(ctr_dict)
     # save_dict_to_csv(tmp_dict)
     execute_redis(ctr_dict)
 
