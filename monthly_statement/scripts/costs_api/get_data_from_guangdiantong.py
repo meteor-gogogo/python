@@ -31,7 +31,7 @@ def get_data(token, ad_id, start_date, end_date):
     return rsp_data
 
 
-def data_to_mysql(market_cursor, aid, start_date, data):
+def data_to_mysql(fandian_dict, market_cursor, aid, start_date, data):
     data_list = data['data']['list']
     show = 0
     click = 0
@@ -39,7 +39,7 @@ def data_to_mysql(market_cursor, aid, start_date, data):
     for i in data_list:
         show = int(i['impression'])
         click = int(i['click'])
-        cost = float(i['cost']) / 100
+        cost = round((float(i['cost']) / 100) / (1 + float(fandian_dict[int(aid)])), 2)
     if cost > 0.0:
         sql = "insert into t_ad_data (second_name, aid, show_num, click_num, cost, ad_date) values('广点通', '{0}', " \
           "{1}, {2}, {3}, '{4}')".format(aid, show, click, cost, start_date)
@@ -50,7 +50,7 @@ def data_to_mysql(market_cursor, aid, start_date, data):
         pass
 
 
-def main(market_cursor, ad_id, start_date, end_date):
+def main(fandian_dict, market_cursor, ad_id, start_date, end_date):
     # ad_id = 10896792
     token = str(get_token_from_redis(ad_id))
     # token = "ffd0d03b3f93ca8e61934872d143998b"
@@ -67,15 +67,25 @@ def main(market_cursor, ad_id, start_date, end_date):
             else:
                 flag = False
             time.sleep(1)
-        data_to_mysql(market_cursor, ad_id, start_date, data)
+        data_to_mysql(fandian_dict, market_cursor, ad_id, start_date, data)
         # print(data)
     else:
-        data_to_mysql(market_cursor, ad_id, start_date, data)
+        data_to_mysql(fandian_dict, market_cursor, ad_id, start_date, data)
         # print(data)
         # data_to_mysql(ad_id, data)
 
 
 if __name__ == '__main__':
+    fandian_dict = {
+        10799290: 0.08,
+        10799316: 0.08,
+        8865454: 0.08,
+        10753003: 0.08,
+        10896768: 0.07,
+        10896792: 0.07,
+        11318002: 0.08,
+        10829922: 0.08
+    }
     db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
     market_cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
     id_list = [10799316, 10799290, 10753003, 8865454, 10896768, 11318002, 10829922]
@@ -90,5 +100,5 @@ if __name__ == '__main__':
         end_date = start_date
         for ad_id in id_list:
             time.sleep(1)
-            main(market_cursor, ad_id, start_date, end_date)
+            main(fandian_dict, market_cursor, ad_id, start_date, end_date)
             db_market.commit()

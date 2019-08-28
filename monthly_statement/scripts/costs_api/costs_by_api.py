@@ -7,7 +7,6 @@ from datetime import date, datetime, timedelta
 import configparser
 import os
 
-
 mysql_host = 'rm-2zeixwnpc34127h5f191-vpc-rw.mysql.rds.aliyuncs.com'
 mysql_user = 'plumdb'
 mysql_passwd = 'plumdb@2018'
@@ -36,7 +35,7 @@ def get_refresh_token(aid, market_cursor):
 
 def update_token(db_market, market_cursor, token_data, aid):
     # print(token_data['code'])
-    update_sql = "update t_toutiao_ad_token set token = '{0}',refresh_token = '{1}', update_time = {2} where aid = {3}"\
+    update_sql = "update t_toutiao_ad_token set token = '{0}',refresh_token = '{1}', update_time = {2} where aid = {3}" \
         .format(token_data['data']['access_token'], token_data['data']['refresh_token'], int(time.time()), aid)
     market_cursor.execute(update_sql)
     db_market.commit()
@@ -70,6 +69,32 @@ def get_campaign_stat(start_date, aid, access_token):
     return rsp_data
 
 
+def get_agent_stat(start_date, aid, access_token):
+    open_api_url_prefix = "https://ad.toutiao.com/open_api/"
+    uri = "2/report/agent/get/"
+    url = open_api_url_prefix + uri
+    params = {"start_date": start_date, "end_date": start_date,
+              "advertiser_id": aid, }
+    headers = {"Access-Token": access_token}
+    rsp = requests.get(url, json=params, headers=headers)
+    rsp_data = rsp.json()
+    return rsp_data
+
+
+def get_advertiser_daily_stat(start_date, aid, access_token):
+    open_api_url_prefix = "https://ad.toutiao.com/open_api/"
+    uri = "2/advertiser/fund/daily_stat/"
+    url = open_api_url_prefix + uri
+    params = {"advertiser_id": aid,
+              "start_date": start_date,
+              "end_date": start_date
+              }
+    headers = {"Access-Token": access_token}
+    rsp = requests.get(url, json=params, headers=headers)
+    rsp_data = rsp.json()
+    return rsp_data
+
+
 def data_to_mysql(market_cursor, aid, start_date, data):
     data_list = data['data']['list']
     show = 0
@@ -81,7 +106,7 @@ def data_to_mysql(market_cursor, aid, start_date, data):
         cost = float(i['cost'])
     if cost > 0.0:
         sql = "insert into t_ad_data (second_name, aid, show_num, click_num, cost, ad_date) values('头条', '{0}', " \
-          "{1}, {2}, {3}, '{4}')".format(aid, show, click, cost, start_date)
+              "{1}, {2}, {3}, '{4}')".format(aid, show, click, cost, start_date)
         market_cursor.execute(sql)
         print('插入数据成功')
     else:
@@ -98,12 +123,16 @@ def main(market_cursor, start_date, ad_id):
     update_token(db_market, market_cursor, token_data, aid)
     token = token_data['data']['access_token']
     # aid, token, refresh_token = get_refresh_token(aid, market_cursor)
-    data = get_campaign_stat(start_date, aid, token)
+    # data = get_campaign_stat(start_date, aid, token)
+    # print(data)
+    # data = get_agent_stat(start_date, aid, token)
+    data = get_advertiser_daily_stat(start_date, aid, token)
+    print(data)
     # 获取数据超时,尝试重新获取
     if data['code'] != 0:
         flag = True
         while flag:
-            data = get_campaign_stat(start_date, aid, token)
+            data = get_advertiser_daily_stat(start_date, aid, token)
             if data['code'] != 0:
                 flag = True
             else:
@@ -111,18 +140,21 @@ def main(market_cursor, start_date, ad_id):
             # 休眠1秒,再次尝试获取数据
             time.sleep(1)
         # data = get_campaign_stat(start_date, aid, token)
-        data_to_mysql(market_cursor, aid, start_date, data)
+        # data_to_mysql(market_cursor, aid, start_date, data)
+        print(data)
     else:
-        data_to_mysql(market_cursor, aid, start_date, data)
+        # data_to_mysql(market_cursor, aid, start_date, data)
+        print(data)
 
 
 if __name__ == '__main__':
     db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
     market_cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
-    ad_id_list = [103891969936, 104241096798, 104749561785, 104750237072, 104757843442, 104757923769, 108260043679,
-                  108322887258, 108322962478, 108323023542, 110425205008, 110425160745, 110425077742, 1633753219366923]
-    # ad_id_list = [110425205008, 110425160745, 110425077742, 1633753219366923]
+    # ad_id_list = [103891969936, 104241096798, 104749561785, 104750237072, 104757843442, 104757923769, 108260043679,
+    #               108322887258, 108322962478, 108323023542, 110425205008, 110425160745, 110425077742, 1633753219366923]
+    ad_id_list = [110425205008, 110425160745, 110425077742, 1633753219366923]
     start_date = str(date.today() + timedelta(days=-1))
     for ad_id in ad_id_list:
+        print(ad_id)
         main(market_cursor, start_date, ad_id)
-        db_market.commit()
+        # db_market.commit()
