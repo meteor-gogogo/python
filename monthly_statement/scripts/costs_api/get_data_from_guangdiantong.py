@@ -44,9 +44,10 @@ def data_to_mysql(market_cursor, aid, start_date, data):
         sql = "insert into t_ad_data (second_name, aid, show_num, click_num, cost, ad_date) values('广点通', '{0}', " \
           "{1}, {2}, {3}, '{4}')".format(aid, show, click, cost, start_date)
         market_cursor.execute(sql)
+        print('插入数据成功')
     else:
+        print('cost : ' + str(cost))
         pass
-    print('插入数据成功')
 
 
 def main(market_cursor, ad_id, start_date, end_date):
@@ -65,6 +66,7 @@ def main(market_cursor, ad_id, start_date, end_date):
                 flag = True
             else:
                 flag = False
+            time.sleep(1)
         data_to_mysql(market_cursor, ad_id, start_date, data)
         # print(data)
     else:
@@ -76,8 +78,9 @@ def main(market_cursor, ad_id, start_date, end_date):
 if __name__ == '__main__':
     db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
     market_cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
-    id_list = [10896792]
-    start_date_tmp = '2018-09-01'
+    id_list = [10799316, 10799290, 10753003, 8865454, 10896768, 11318002, 10829922]
+    # id_list = [10896792]
+    start_date_tmp = '2019-02-28'
     for i in range(1000):
         start_date = (datetime.strptime(start_date_tmp, '%Y-%m-%d') + timedelta(days=i)).strftime('%Y-%m-%d')
         if str(start_date) == str(date.today()):
@@ -86,5 +89,6 @@ if __name__ == '__main__':
         print(start_date)
         end_date = start_date
         for ad_id in id_list:
+            time.sleep(1)
             main(market_cursor, ad_id, start_date, end_date)
             db_market.commit()

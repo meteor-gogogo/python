@@ -63,9 +63,6 @@ def get_campaign_stat(start_date, aid, access_token):
     params = {"advertiser_id": aid,
               "start_date": start_date,
               "end_date": start_date,
-              # "time_granularity": "STAT_TIME_GRANULARITY_DAILY",
-              # "group_by": ["STAT_GROUP_BY_FIELD_ID"],
-              # "filtering": {"campaign_id": 1}
               }
     headers = {"Access-Token": access_token}
     rsp = requests.get(url, json=params, headers=headers)
@@ -86,7 +83,9 @@ def data_to_mysql(market_cursor, aid, start_date, data):
         sql = "insert into t_ad_data (second_name, aid, show_num, click_num, cost, ad_date) values('头条', '{0}', " \
           "{1}, {2}, {3}, '{4}')".format(aid, show, click, cost, start_date)
         market_cursor.execute(sql)
+        print('插入数据成功')
     else:
+        print('cost : ' + str(cost))
         pass
 
 
@@ -100,6 +99,7 @@ def main(market_cursor, start_date, ad_id):
     token = token_data['data']['access_token']
     # aid, token, refresh_token = get_refresh_token(aid, market_cursor)
     data = get_campaign_stat(start_date, aid, token)
+    # 获取数据超时,尝试重新获取
     if data['code'] != 0:
         flag = True
         while flag:
@@ -108,6 +108,8 @@ def main(market_cursor, start_date, ad_id):
                 flag = True
             else:
                 flag = False
+            # 休眠1秒,再次尝试获取数据
+            time.sleep(1)
         # data = get_campaign_stat(start_date, aid, token)
         data_to_mysql(market_cursor, aid, start_date, data)
     else:
@@ -118,7 +120,8 @@ if __name__ == '__main__':
     db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
     market_cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
     ad_id_list = [103891969936, 104241096798, 104749561785, 104750237072, 104757843442, 104757923769, 108260043679,
-                  108322887258, 108322962478, 108323023542]
+                  108322887258, 108322962478, 108323023542, 110425205008, 110425160745, 110425077742, 1633753219366923]
+    # ad_id_list = [110425205008, 110425160745, 110425077742, 1633753219366923]
     start_date = str(date.today() + timedelta(days=-1))
     for ad_id in ad_id_list:
         main(market_cursor, start_date, ad_id)
