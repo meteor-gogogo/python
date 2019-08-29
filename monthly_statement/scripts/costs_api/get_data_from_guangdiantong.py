@@ -88,7 +88,7 @@ if __name__ == '__main__':
     }
     db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
     market_cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
-    id_list = [10799316, 10799290, 10753003, 8865454, 10896768, 11318002, 10829922]
+    id_list = [10799316, 10799290, 10753003, 8865454, 10896768, 11318002, 10829922, 10896792]
     # id_list = [10896792]
     # start_date_tmp = '2019-02-28'
     # for i in range(1000):
