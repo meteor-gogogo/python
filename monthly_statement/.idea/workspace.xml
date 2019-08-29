@@ -167,7 +167,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567059657618</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="循环修改历史日报">
+      <created>1567061731986</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1567061731986</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -187,6 +194,7 @@
     <MESSAGE value="月报" />
     <MESSAGE value="cost为0的过滤掉,不往数据库插入" />
     <MESSAGE value="后缀为KOL的渠道,订单用户数去重" />
-    <option name="LAST_COMMIT_MESSAGE" value="后缀为KOL的渠道,订单用户数去重" />
+    <MESSAGE value="循环修改历史日报" />
+    <option name="LAST_COMMIT_MESSAGE" value="循环修改历史日报" />
   </component>
 </project>

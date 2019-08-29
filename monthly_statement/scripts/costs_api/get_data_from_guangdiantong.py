@@ -90,15 +90,16 @@ if __name__ == '__main__':
     market_cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
     id_list = [10799316, 10799290, 10753003, 8865454, 10896768, 11318002, 10829922]
     # id_list = [10896792]
-    start_date_tmp = '2019-02-28'
-    for i in range(1000):
-        start_date = (datetime.strptime(start_date_tmp, '%Y-%m-%d') + timedelta(days=i)).strftime('%Y-%m-%d')
-        if str(start_date) == str(date.today()):
-            print(start_date)
-            exit(0)
+    # start_date_tmp = '2019-02-28'
+    # for i in range(1000):
+    # start_date = (datetime.strptime(start_date_tmp, '%Y-%m-%d') + timedelta(days=i)).strftime('%Y-%m-%d')
+    start_date = date.today() + timedelta(days=-1)
+    if str(start_date) == str(date.today()):
         print(start_date)
-        end_date = start_date
-        for ad_id in id_list:
-            time.sleep(1)
-            main(fandian_dict, market_cursor, ad_id, start_date, end_date)
-            db_market.commit()
+        exit(0)
+    print(start_date)
+    end_date = start_date
+    for ad_id in id_list:
+        time.sleep(1)
+        main(fandian_dict, market_cursor, ad_id, start_date, end_date)
+        db_market.commit()

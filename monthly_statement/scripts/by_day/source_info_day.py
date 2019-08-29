@@ -1292,7 +1292,7 @@ if __name__ == '__main__':
         end_date_tmp = today + timedelta(days=-delete_day)
         end_date_tmp_second = end_date_tmp + timedelta(days=1)
         start_date_tmp = str(end_date_tmp.replace(day=1))
-        print(start_date_tmp)
+        # print(start_date_tmp)
         start_timestamp = int(
             time.mktime(time.strptime('{0} 00:00:00'.format(start_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
         end_timestamp = int(
