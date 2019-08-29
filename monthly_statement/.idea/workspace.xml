@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="58f59d37-b1f4-4626-8dfe-2f38c2216b8b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/by_day/source_info_day.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/by_day/source_info_day.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/costs_api/get_data_from_guangdiantong.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/costs_api/get_data_from_guangdiantong.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -174,7 +174,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567061731986</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="广点通拉去数据去掉循环">
+      <created>1567062940476</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1567062940476</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -195,6 +202,7 @@
     <MESSAGE value="cost为0的过滤掉,不往数据库插入" />
     <MESSAGE value="后缀为KOL的渠道,订单用户数去重" />
     <MESSAGE value="循环修改历史日报" />
-    <option name="LAST_COMMIT_MESSAGE" value="循环修改历史日报" />
+    <MESSAGE value="广点通拉去数据去掉循环" />
+    <option name="LAST_COMMIT_MESSAGE" value="广点通拉去数据去掉循环" />
   </component>
 </project>
