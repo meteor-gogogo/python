@@ -2,125 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="58f59d37-b1f4-4626-8dfe-2f38c2216b8b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../flink-training-exercises" beforeDir="false" afterPath="$PROJECT_DIR$/../flink-training-exercises" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/monthly_statement.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/monthly_statement.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/by_day/source_info_day.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/by_day/source_info_day.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/costs_api/costs_by_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/costs_api/costs_by_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/costs_api/get_data_from_guangdiantong.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/costs_api/get_data_from_guangdiantong.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/scripts/history/source_info_history.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15825">
-              <caret line="647" column="99" selection-start-line="647" selection-start-column="82" selection-end-line="647" selection-end-column="99" />
-              <folding>
-                <element signature="e#37#83#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/scripts/costs_api/get_data_from_guangdiantong.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="278">
-              <caret line="82" column="32" selection-start-line="82" selection-start-column="32" selection-end-line="82" selection-end-column="32" />
-              <folding>
-                <element signature="e#0#12#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/.PyCharmCE2019.1/system/python_stubs/-868717179/time.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="213">
-              <caret line="138" column="4" selection-start-line="138" selection-start-column="4" selection-end-line="138" selection-end-column="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/scripts/by_day/source_info_day.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-6495">
-              <caret line="842" column="4" selection-start-line="842" selection-start-column="4" selection-end-line="842" selection-end-column="4" />
-              <folding>
-                <element signature="e#37#83#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/scripts/costs_api/costs_by_api.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="367">
-              <caret line="123" column="41" lean-forward="true" selection-start-line="123" selection-start-column="41" selection-end-line="123" selection-end-column="41" />
-              <folding>
-                <element signature="e#37#52#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/config/config.ini">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="175">
-              <caret line="7" column="25" selection-start-line="7" selection-start-column="25" selection-end-line="7" selection-end-column="25" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/scripts/month_cost/month_cost_to_mysql.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="8" column="12" selection-start-line="8" selection-start-column="12" selection-end-line="8" selection-end-column="12" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/scripts/month_roi_order_cost/month_roi_order_cost.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5875">
-              <caret line="250" column="31" selection-start-line="250" selection-start-column="31" selection-end-line="250" selection-end-column="31" />
-              <folding>
-                <element signature="e#37#83#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/scripts/history/data_to_mysql_history_buyer_special.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="100">
-              <caret line="8" column="16" selection-start-line="8" selection-start-column="16" selection-end-line="11" selection-end-column="22" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/scripts/history/data_to_mysql_history_seller_special.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="250">
-              <caret line="14" column="22" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="22" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -142,108 +34,14 @@
     <option name="ROOT_SYNC" value="DONT_SYNC" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/scripts/month_cost/month_cost.py" />
-        <option value="$PROJECT_DIR$/scripts/month_cost/month_cost_data_to_mysql_history.py" />
-        <option value="$PROJECT_DIR$/scripts/by_day/data_to_mysql_day_seller.py" />
-        <option value="$PROJECT_DIR$/scripts/order_detail/order_detail.py" />
-        <option value="$PROJECT_DIR$/scripts/order_detail/order_product_money.py" />
-        <option value="$PROJECT_DIR$/scripts/month_visit_remain/month_visit_remain_special.py" />
-        <option value="$PROJECT_DIR$/scripts/month_visit_remain/month_visit_remain.py" />
-        <option value="$PROJECT_DIR$/scripts/month_roi_order_cost/month_roi_order_cost.py" />
-        <option value="$PROJECT_DIR$/scripts/month_cost/month_cost_to_mysql.py" />
-        <option value="$PROJECT_DIR$/scripts/month_roi_order_cost/month_roi_order_cost_special.py" />
-        <option value="$PROJECT_DIR$/scripts/history/data_to_mysql_history_buyer_special.py" />
-        <option value="$PROJECT_DIR$/scripts/history/data_to_mysql_history_seller_special.py" />
-        <option value="$PROJECT_DIR$/scripts/history/source_info_history_special.py" />
-        <option value="$PROJECT_DIR$/scripts/history/source_info_history.py" />
-        <option value="$PROJECT_DIR$/config/app.conf" />
-        <option value="$PROJECT_DIR$/scripts/by_day/data_to_mysql_day_buyer.py" />
-        <option value="$PROJECT_DIR$/scripts/by_day/tmp.py" />
-        <option value="$PROJECT_DIR$/scripts/history/data_to_mysql_history_seller.py" />
-        <option value="$PROJECT_DIR$/scripts/history/data_to_mysql_history_buyer.py" />
-        <option value="$PROJECT_DIR$/scripts/by_day/source_info_day.py" />
-        <option value="$PROJECT_DIR$/scripts/order_detail/new_old.py" />
-        <option value="$PROJECT_DIR$/scripts/by_day/get_data_from_guangdiantong.py" />
-        <option value="$PROJECT_DIR$/scripts/costs_api/get_data_from_guangdiantong.py" />
-        <option value="$PROJECT_DIR$/scripts/costs_api/costs_by_api.py" />
-      </list>
-    </option>
-  </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="565" />
-    <option name="y" value="15" />
-    <option name="width" value="1225" />
-    <option name="height" value="1040" />
-  </component>
+  <component name="ProjectId" id="1Q5Ah0Tp149P8mp9DhUvIig8MVy" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
-  </component>
-  <component name="ProjectView">
-    <navigator proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="monthly_statement" type="b2602c69:ProjectViewProjectNode" />
-              <item name="monthly_statement" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="monthly_statement" type="b2602c69:ProjectViewProjectNode" />
-              <item name="monthly_statement" type="462c0819:PsiDirectoryNode" />
-              <item name="config" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="monthly_statement" type="b2602c69:ProjectViewProjectNode" />
-              <item name="monthly_statement" type="462c0819:PsiDirectoryNode" />
-              <item name="scripts" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="monthly_statement" type="b2602c69:ProjectViewProjectNode" />
-              <item name="monthly_statement" type="462c0819:PsiDirectoryNode" />
-              <item name="scripts" type="462c0819:PsiDirectoryNode" />
-              <item name="by_day" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="monthly_statement" type="b2602c69:ProjectViewProjectNode" />
-              <item name="monthly_statement" type="462c0819:PsiDirectoryNode" />
-              <item name="scripts" type="462c0819:PsiDirectoryNode" />
-              <item name="costs_api" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="monthly_statement" type="b2602c69:ProjectViewProjectNode" />
-              <item name="monthly_statement" type="462c0819:PsiDirectoryNode" />
-              <item name="scripts" type="462c0819:PsiDirectoryNode" />
-              <item name="history" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="monthly_statement" type="b2602c69:ProjectViewProjectNode" />
-              <item name="monthly_statement" type="462c0819:PsiDirectoryNode" />
-              <item name="scripts" type="462c0819:PsiDirectoryNode" />
-              <item name="month_visit_remain" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="monthly_statement" type="b2602c69:ProjectViewProjectNode" />
-              <item name="monthly_statement" type="462c0819:PsiDirectoryNode" />
-              <item name="scripts" type="462c0819:PsiDirectoryNode" />
-              <item name="order_detail" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="Scope" />
-    </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../.." />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -368,226 +166,22 @@
     <option name="localTasksCounter" value="6" />
     <servers />
   </component>
-  <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
-    <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15587847" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Alibaba Cloud Explorer" order="2" />
-      <window_info id="Favorites" order="3" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4993395" weight="0.3970588" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Alibaba Cloud View" order="7" />
-      <window_info anchor="bottom" id="Version Control" order="8" weight="0.18208517" />
-      <window_info anchor="bottom" id="Python Console" order="9" weight="0.32941177" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5006605" side_tool="true" weight="0.4117647" />
-      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.4993395" weight="0.4117647" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Alibaba Log Console" order="3" />
-    </layout>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="月报" />
     <MESSAGE value="cost为0的过滤掉,不往数据库插入" />
     <option name="LAST_COMMIT_MESSAGE" value="cost为0的过滤掉,不往数据库插入" />
-  </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/scripts/month_cost/month_cost_data_to_mysql_history.py" />
-    <entry file="file://$PROJECT_DIR$/scripts/by_day/source_info_day_special.py" />
-    <entry file="file://$PROJECT_DIR$/scripts/by_day/data_to_mysql_day_seller.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2727">
-          <caret line="161" column="33" selection-start-line="161" selection-start-column="33" selection-end-line="161" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/month_visit_remain/month_visit_remain_special.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="16632">
-          <caret line="630" column="30" selection-start-line="630" selection-start-column="30" selection-end-line="630" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/month_roi_order_cost/month_roi_order_cost_special.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="276" selection-start-line="276" selection-end-line="276" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/history/source_info_history.py.bak">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3440" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/history/source_info_history_special.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19460">
-          <caret line="987" column="4" selection-start-line="987" selection-start-column="4" selection-end-line="987" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/by_day/tmp.py" />
-    <entry file="file://$USER_HOME$/Desktop/product_click_batch.py" />
-    <entry file="file://$PROJECT_DIR$/scripts/by_day/data_to_mysql_day_buyer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2575">
-          <caret line="111" column="48" selection-start-line="111" selection-start-column="48" selection-end-line="111" selection-end-column="48" />
-          <folding>
-            <element signature="e#37#56#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/history/data_to_mysql_history_buyer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6300">
-          <caret line="256" column="31" selection-start-line="256" selection-start-column="31" selection-end-line="256" selection-end-column="31" />
-          <folding>
-            <element signature="e#37#56#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/history/data_to_mysql_history_seller.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4400">
-          <caret line="180" column="35" selection-start-line="180" selection-start-column="35" selection-end-line="180" selection-end-column="35" />
-          <folding>
-            <element signature="e#37#56#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/order_detail/order_product_money.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3325">
-          <caret line="137" selection-start-line="137" selection-end-line="137" />
-          <folding>
-            <element signature="e#37#83#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/month_visit_remain/month_visit_remain.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5825">
-          <caret line="248" column="31" selection-start-line="248" selection-start-column="31" selection-end-line="248" selection-end-column="31" />
-          <folding>
-            <element signature="e#37#83#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../venv/Lib/site-packages/requests/api.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1315">
-          <caret line="69" column="48" lean-forward="true" selection-start-line="69" selection-start-column="48" selection-end-line="69" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/order_detail/new_old.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5975">
-          <caret line="244" column="24" selection-start-line="244" selection-start-column="24" selection-end-line="244" selection-end-column="24" />
-          <folding>
-            <element signature="e#37#83#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/history/source_info_history.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15825">
-          <caret line="647" column="99" selection-start-line="647" selection-start-column="82" selection-end-line="647" selection-end-column="99" />
-          <folding>
-            <element signature="e#37#83#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/config.ini">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="7" column="25" selection-start-line="7" selection-start-column="25" selection-end-line="7" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/month_cost/month_cost_to_mysql.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="8" column="12" selection-start-line="8" selection-start-column="12" selection-end-line="8" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/month_roi_order_cost/month_roi_order_cost.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5875">
-          <caret line="250" column="31" selection-start-line="250" selection-start-column="31" selection-end-line="250" selection-end-column="31" />
-          <folding>
-            <element signature="e#37#83#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/history/data_to_mysql_history_buyer_special.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="8" column="16" selection-start-line="8" selection-start-column="16" selection-end-line="11" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/history/data_to_mysql_history_seller_special.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="14" column="22" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/by_day/source_info_day.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-6495">
-          <caret line="842" column="4" selection-start-line="842" selection-start-column="4" selection-end-line="842" selection-end-column="4" />
-          <folding>
-            <element signature="e#37#83#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.PyCharmCE2019.1/system/python_stubs/-868717179/time.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="213">
-          <caret line="138" column="4" selection-start-line="138" selection-start-column="4" selection-end-line="138" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/costs_api/get_data_from_guangdiantong.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="278">
-          <caret line="82" column="32" selection-start-line="82" selection-start-column="32" selection-end-line="82" selection-end-column="32" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/costs_api/costs_by_api.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="367">
-          <caret line="123" column="41" lean-forward="true" selection-start-line="123" selection-start-column="41" selection-end-line="123" selection-end-column="41" />
-          <folding>
-            <element signature="e#37#52#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
   </component>
 </project>

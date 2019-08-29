@@ -599,7 +599,7 @@ def get_order_user_num(nature_dict, aplum_cursor, source, source_by, url, start_
             .format(start_timestamp, end_timestamp, source_by, start_date_tmp, end_date_tmp, nature_dict[source],
                     start_date_tmp, end_date_tmp)
     elif str(source).endswith('KOL') or source in ('小红书', 'channel_kol'):
-        sql = "select count(b.distinct_id) as count_source from (select second_id from users where " \
+        sql = "select count(distinct b.distinct_id) as count_source from (select second_id from users where " \
               "firstordertime >= {0} and firstordertime < {1} and source in ({2}))a left join (select " \
               "distinct_id from events where event = 'PayOrderDetail' and date between '{3}' and '{4}')b " \
               "on a.second_id = b.distinct_id where b.distinct_id is not null"\
