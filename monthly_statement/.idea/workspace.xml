@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="58f59d37-b1f4-4626-8dfe-2f38c2216b8b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/monthly_statement.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/monthly_statement.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/by_day/source_info_day.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/by_day/source_info_day.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/costs_api/costs_by_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/costs_api/costs_by_api.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -163,7 +160,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566971740664</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="后缀为KOL的渠道,订单用户数去重">
+      <created>1567059657618</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1567059657618</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -182,6 +186,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="月报" />
     <MESSAGE value="cost为0的过滤掉,不往数据库插入" />
-    <option name="LAST_COMMIT_MESSAGE" value="cost为0的过滤掉,不往数据库插入" />
+    <MESSAGE value="后缀为KOL的渠道,订单用户数去重" />
+    <option name="LAST_COMMIT_MESSAGE" value="后缀为KOL的渠道,订单用户数去重" />
   </component>
 </project>
