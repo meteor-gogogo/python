@@ -75,6 +75,25 @@ def main(fandian_dict, market_cursor, ad_id, start_date, end_date):
         # data_to_mysql(ad_id, data)
 
 
+def insert_cost_to_day_cost(db_market, market_cursor, start_date):
+    source = 'tencent'
+    costs = 0.0
+    sql_cost = "select sum(cost) as sum_cost from t_ad_data where second_name = '广点通' and ad_date = '{0}'".format(start_date)
+    market_cursor.execute(sql_cost)
+    row_data = market_cursor.fetchall()
+    for row in row_data:
+        if row['sum_cost'] is None:
+            costs = 0.0
+        else:
+            costs = row['sum_cost']
+    print(costs)
+    sql_insert = "insert into t_market_day_cost (sid, costs, costs_date, source) values ({0}, {1}, '{2}', '{3}')"\
+        .format(7, costs, start_date, source)
+    market_cursor.execute(sql_insert)
+    db_market.commit()
+    print('日花费插入成功')
+
+
 if __name__ == '__main__':
     fandian_dict = {
         10799290: 0.08,
@@ -103,3 +122,4 @@ if __name__ == '__main__':
         time.sleep(1)
         main(fandian_dict, market_cursor, ad_id, start_date, end_date)
         db_market.commit()
+    insert_cost_to_day_cost(db_market, market_cursor, start_date)
