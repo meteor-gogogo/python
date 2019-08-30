@@ -129,17 +129,17 @@ def main(market_cursor, start_date, ad_id):
     update_token(db_market, market_cursor, token_data, aid)
     token = token_data['data']['access_token']
     # aid, token, refresh_token = get_refresh_token(aid, market_cursor)
-    # data = get_campaign_stat(start_date, aid, token)
+    data = get_campaign_stat(start_date, aid, token)
     # print(data)
     # data = get_agent_stat(start_date, aid, token)
-    data = get_advertiser_daily_stat(start_date, aid, token)
+    # data = get_advertiser_daily_stat(start_date, aid, token)
     # print(data)
     # 获取数据超时,尝试重新获取
     if data['code'] != 0:
         flag = True
         while flag:
-            data = get_advertiser_daily_stat(start_date, aid, token)
-            # data = get_campaign_stat(start_date, aid, token)
+            # data = get_advertiser_daily_stat(start_date, aid, token)
+            data = get_campaign_stat(start_date, aid, token)
             if data['code'] != 0:
                 flag = True
             else:
@@ -147,21 +147,47 @@ def main(market_cursor, start_date, ad_id):
             # 休眠1秒,再次尝试获取数据
             time.sleep(1)
         # data = get_campaign_stat(start_date, aid, token)
-        # data_to_mysql(market_cursor, aid, start_date, data)
-        print(data)
+        data_to_mysql(market_cursor, aid, start_date, data)
+        # print(data)
     else:
-        # data_to_mysql(market_cursor, aid, start_date, data)
-        print(data)
+        data_to_mysql(market_cursor, aid, start_date, data)
+        # print(data)
+
+
+def insert_cost_to_day_cost(db_market, market_cursor, start_date):
+    source1 = 'toutiao'
+    source2 = 'douyin'
+    costs = 0.0
+    sql_cost = "select sum(cost) as sum_cost from t_ad_data where second_name = '广点通' and ad_date = '{0}'".format(start_date)
+    market_cursor.execute(sql_cost)
+    row_data = market_cursor.fetchall()
+    for row in row_data:
+        if row['sum_cost'] is None:
+            costs = 0.0
+        else:
+            costs = row['sum_cost']
+    print(costs)
+    costs1 = costs - 1.0
+    costs2 = 1.0
+    sql_insert_toutiao = "insert into t_market_day_cost (sid, costs, costs_date, source) values ({0}, {1}, '{2}', '{3}')"\
+        .format(5, costs1, start_date, source1)
+    market_cursor.execute(sql_insert_toutiao)
+    sql_insert_douyin = "insert into t_market_day_cost (sid, costs, costs_date, source) values ({0}, {1}, '{2}', '{3}')" \
+        .format(4, costs2, start_date, source2)
+    market_cursor.execute(sql_insert_douyin)
+    db_market.commit()
+    print('日花费插入成功')
 
 
 if __name__ == '__main__':
     db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
     market_cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
-    # ad_id_list = [103891969936, 104241096798, 104749561785, 104750237072, 104757843442, 104757923769, 108260043679,
-    #                108322887258, 108322962478, 108323023542, 110425205008, 110425160745, 110425077742, 1633753219366923]
-    ad_id_list = [110425205008]
+    ad_id_list = [103891969936, 104241096798, 104749561785, 104750237072, 104757843442, 104757923769, 108260043679,
+                   108322887258, 108322962478, 108323023542, 110425205008, 110425160745, 110425077742, 1633753219366923]
+    # ad_id_list = [110425205008]
     start_date = str(date.today() + timedelta(days=-1))
     for ad_id in ad_id_list:
         print(ad_id)
         main(market_cursor, start_date, ad_id)
-        # db_market.commit()
+        db_market.commit()
+    insert_cost_to_day_cost(db_market, market_cursor, start_date)
