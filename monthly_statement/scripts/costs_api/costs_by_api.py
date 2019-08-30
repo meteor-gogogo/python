@@ -2,7 +2,8 @@
 # coding=utf-8
 import requests
 import MySQLdb
-# import
+import numpy
+import pandas as pd
 # import
 #
 # mysqlclient
@@ -100,6 +101,7 @@ def get_advertiser_daily_stat(start_date, aid, access_token):
 
 
 def data_to_mysql(market_cursor, aid, start_date, data):
+
     data_list = data['data']['list']
     show = 0
     click = 0
@@ -127,17 +129,17 @@ def main(market_cursor, start_date, ad_id):
     update_token(db_market, market_cursor, token_data, aid)
     token = token_data['data']['access_token']
     # aid, token, refresh_token = get_refresh_token(aid, market_cursor)
-    data = get_campaign_stat(start_date, aid, token)
+    # data = get_campaign_stat(start_date, aid, token)
     # print(data)
     # data = get_agent_stat(start_date, aid, token)
-    # data = get_advertiser_daily_stat(start_date, aid, token)
+    data = get_advertiser_daily_stat(start_date, aid, token)
     # print(data)
     # 获取数据超时,尝试重新获取
     if data['code'] != 0:
         flag = True
         while flag:
-            # data = get_advertiser_daily_stat(start_date, aid, token)
-            data = get_campaign_stat(start_date, aid, token)
+            data = get_advertiser_daily_stat(start_date, aid, token)
+            # data = get_campaign_stat(start_date, aid, token)
             if data['code'] != 0:
                 flag = True
             else:
@@ -145,19 +147,19 @@ def main(market_cursor, start_date, ad_id):
             # 休眠1秒,再次尝试获取数据
             time.sleep(1)
         # data = get_campaign_stat(start_date, aid, token)
-        data_to_mysql(market_cursor, aid, start_date, data)
-        # print(data)
+        # data_to_mysql(market_cursor, aid, start_date, data)
+        print(data)
     else:
-        data_to_mysql(market_cursor, aid, start_date, data)
-        # print(data)
+        # data_to_mysql(market_cursor, aid, start_date, data)
+        print(data)
 
 
 if __name__ == '__main__':
     db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
     market_cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
-    ad_id_list = [103891969936, 104241096798, 104749561785, 104750237072, 104757843442, 104757923769, 108260043679,
-                   108322887258, 108322962478, 108323023542, 110425205008, 110425160745, 110425077742, 1633753219366923]
-    # ad_id_list = [110425205008, 110425160745, 110425077742, 1633753219366923]
+    # ad_id_list = [103891969936, 104241096798, 104749561785, 104750237072, 104757843442, 104757923769, 108260043679,
+    #                108322887258, 108322962478, 108323023542, 110425205008, 110425160745, 110425077742, 1633753219366923]
+    ad_id_list = [110425205008]
     start_date = str(date.today() + timedelta(days=-1))
     for ad_id in ad_id_list:
         print(ad_id)
