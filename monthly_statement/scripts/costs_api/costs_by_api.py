@@ -158,14 +158,14 @@ def insert_cost_to_day_cost(db_market, market_cursor, start_date):
     source1 = 'toutiao'
     source2 = 'douyin'
     costs = 0.0
-    sql_cost = "select sum(cost) as sum_cost from t_ad_data where second_name = '广点通' and ad_date = '{0}'".format(start_date)
+    sql_cost = "select sum(cost) as sum_cost from t_ad_data where second_name = '头条' and ad_date = '{0}'".format(start_date)
     market_cursor.execute(sql_cost)
     row_data = market_cursor.fetchall()
     for row in row_data:
         if row['sum_cost'] is None:
             costs = 0.0
         else:
-            costs = row['sum_cost']
+            costs = float(row['sum_cost'])
     print(costs)
     costs1 = costs - 1.0
     costs2 = 1.0
