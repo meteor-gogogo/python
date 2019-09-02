@@ -19,7 +19,7 @@ mysql_db = 'aplum_mis'
 
 def write_dict_to_excel(result_dict_va):
     for key in result_dict_va.keys():
-        result_dict_va[key][2] = str(datetime.strptime(result_dict_va[key][2], '%Y-%m-%d').replace(day=1))
+        result_dict_va[key][2] = str(datetime.strptime(result_dict_va[key][2], '%Y-%m-%d').replace(day=1).strftime('%Y-%m-%d'))
     fields = ['type', 'second_name', 'exe_date', 'costs', 'today_actived_num', 'new_actived_user', 'avg_actived_costs',
               'new_registered_user', 'avg_registered_costs', 'avg_registered_rate', 'new_ordered_user',
               'avg_ordered_user_costs', 'avg_ordered_rate', 'new_ordered_num', 'avg_ordered_costs', 'kdj_costs',
