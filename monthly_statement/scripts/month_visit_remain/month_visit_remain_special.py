@@ -658,6 +658,7 @@ if __name__ == '__main__':
                                  "2019-05-01": "'weixin-ios-rdpyq'",
                                  "2019-06-01": "'weixin-ios-rdpyq'",
                                  "2019-07-01": "'weixin-ios-rdpyq'",
+                                 "2019-08-01": "'weixin-ios-rdpyq'",
                                  }
             for start_date_tmp in date_account_dict.keys():
                 end_date_tmp = get_end_date_tmp(start_date_tmp)
@@ -688,6 +689,7 @@ if __name__ == '__main__':
                                  "2019-05-01": "'weixin-rd'",
                                  "2019-06-01": "'weixin-rd'",
                                  "2019-07-01": "'weixin-rd'",
+                                 "2019-08-01": "'weixin-rd'",
                                  }
             for start_date_tmp in date_account_dict.keys():
                 end_date_tmp = get_end_date_tmp(start_date_tmp)
@@ -711,7 +713,7 @@ if __name__ == '__main__':
                                                                end_date_tmp)
                 write_dict_to_mysql(result_dict)
         else:
-            date_list = ['2019-05-01', '2019-06-01', '2019-07-01']
+            date_list = ['2019-05-01', '2019-06-01', '2019-07-01', '2019-08-01']
             for start_date_tmp in date_list:
                 end_date_tmp = get_end_date_tmp(start_date_tmp)
                 print(end_date_tmp)
