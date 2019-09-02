@@ -955,7 +955,8 @@ if __name__ == '__main__':
                 # rate_list.append(ctr_dict[k])
             else:
                 continue
-
+        genaral_rate_key = 'gbdt:general:rate'
+        ctr_dict[genaral_rate_key] = alpha / (alpha + beta)
         print('ctr_dict: ' + str(len(ctr_dict)))
         # save_dict_to_csv(ctr_dict, hour)
         # save_dict_to_csv(tmp_dict)

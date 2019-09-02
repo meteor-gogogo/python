@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="47043d1d-40f6-473f-9e50-7cf9575fe0bd" name="Default Changelist" comment="修改点击率计算逻辑">
-      <change beforePath="$PROJECT_DIR$/.idea/data_ctr_to_redis.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/data_ctr_to_redis.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="47043d1d-40f6-473f-9e50-7cf9575fe0bd" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/ctr_data_to_redis_day.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/ctr_data_to_redis_day.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/ctr_data_to_redis_hour.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/ctr_data_to_redis_hour.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../monthly_statement/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/month_roi_order_cost/month_roi_order_cost.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/month_roi_order_cost/month_roi_order_cost.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -31,7 +27,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="MTConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -112,6 +108,14 @@
       <option name="presentableId" value="Default" />
       <updated>1562929768243</updated>
     </task>
+    <task id="LOCAL-00001" summary="修改点击率计算逻辑,增加ctr值平滑性">
+      <created>1567415766877</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1567415766877</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TodoView">
@@ -135,5 +139,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="修改点击率计算逻辑,增加ctr值平滑性" />
+    <option name="LAST_COMMIT_MESSAGE" value="修改点击率计算逻辑,增加ctr值平滑性" />
   </component>
 </project>
