@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="58f59d37-b1f4-4626-8dfe-2f38c2216b8b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/scripts/month_roi_order_cost/month_roi_order_cost.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/month_roi_order_cost/month_roi_order_cost.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/month_visit_remain/month_visit_remain.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/month_visit_remain/month_visit_remain.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
