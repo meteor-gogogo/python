@@ -279,7 +279,7 @@ def get_activate_date_by_source_date(source_by, costs, start_timestamp, end_time
               "where firstordertime >= {0} and firstordertime < {1} and source in ({2})) GROUP BY the_month,distinct_id " \
               " HAVING the_month >= '{3}' ORDER BY the_month ASC".format(start_timestamp, end_timestamp, source_by,
                                                                          start_date_tmp)
-        print(sql)
+        # print(sql)
         get_count_date_by_sql(costs, source, url, sql, start_date_tmp)
     else:
         sql = "SELECT from_unixtime(unix_timestamp(date_sub( date, dayofmonth( date ) - 1 )),'yyyy-MM-dd') " \
@@ -288,7 +288,7 @@ def get_activate_date_by_source_date(source_by, costs, start_timestamp, end_time
               "where createtime >= {0}  and createtime < {1} and source in ({2})) GROUP BY the_month,distinct_id " \
               " HAVING the_month >= '{3}' ORDER BY the_month ASC".format(start_timestamp, end_timestamp, source_by,
                                                                          start_date_tmp)
-        print(sql)
+        # print(sql)
         get_count_date_by_sql(costs, source, url, sql, start_date_tmp)
 
 
@@ -402,11 +402,11 @@ def get_source_by_by_sql(db_market, sql):
 if __name__ == '__main__':
     result_dict = dict()
     # start_date, end_date = get_start_end_date()
-    # date_list = ['2017-12-01', '2018-01-01', '2018-02-01', '2018-03-01', '2018-04-01',
-    #              '2018-05-01', '2018-06-01', '2018-07-01', '2018-08-01', '2018-09-01', '2018-10-01', '2018-11-01',
-    #              '2018-12-01', '2019-01-01', '2019-02-01', '2019-03-01', '2019-04-01',
-    #              '2019-05-01', '2019-06-01', '2019-07-01']
-    date_list = ['2017-12-01']
+    date_list = ['2017-08-01', '2017-09-01', '2017-10-01', '2017-11-01', '2017-12-01', '2018-01-01', '2018-02-01', '2018-03-01', '2018-04-01',
+                 '2018-05-01', '2018-06-01', '2018-07-01', '2018-08-01', '2018-09-01', '2018-10-01', '2018-11-01',
+                 '2018-12-01', '2019-01-01', '2019-02-01', '2019-03-01', '2019-04-01',
+                 '2019-05-01', '2019-06-01', '2019-07-01']
+    # date_list = ['2017-12-01']
     # print(date_list)
     source_dict = dict()
     db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
