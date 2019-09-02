@@ -1244,163 +1244,163 @@ def check_source(market_cursor, source, yesterday):
 
 
 if __name__ == '__main__':
-    for i in range(1, 29):
-        delete_day = i
-        try:
-            shortargs = 'd:'
-            opts, args = getopt.getopt(sys.argv[1:], shortargs)
-        except getopt.GetoptError:
-            print('args error')
+    # for i in range(1, 29):
+    delete_day = 1
+    try:
+        shortargs = 'd:'
+        opts, args = getopt.getopt(sys.argv[1:], shortargs)
+    except getopt.GetoptError:
+        print('args error')
 
-        for opt, arg in opts:
-            if opt == '-d':
-                delete_day = int(arg)
+    for opt, arg in opts:
+        if opt == '-d':
+            delete_day = int(arg)
 
-        # 定义渠道来源字典
-        source_dict = dict()
-        # 获得市场报表相关渠道,成本连接
-        db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
-        market_cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
-        # 获得快递,订单相关信息连接
-        db_aplum = MySQLdb.connect(mysqlhost, mysqlusername, mysqlpasswd, db, charset='utf8')
-        aplum_cursor = db_aplum.cursor(cursorclass=MySQLdb.cursors.DictCursor)
-        source_dict = get_source(market_cursor, source_dict)
-        # 定义自然量字典
-        nature_dict = {"nature": "'百度小程序', '微信小程序','IOS','Android'",
-                       "nature_IOS": "'IOS'",
-                       "nature_Android": "'Android'",
-                       "nature_wechat": "'微信小程序'",
-                       "nature_baidu": "'百度小程序'"
-                       }
+    # 定义渠道来源字典
+    source_dict = dict()
+    # 获得市场报表相关渠道,成本连接
+    db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
+    market_cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+    # 获得快递,订单相关信息连接
+    db_aplum = MySQLdb.connect(mysqlhost, mysqlusername, mysqlpasswd, db, charset='utf8')
+    aplum_cursor = db_aplum.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+    source_dict = get_source(market_cursor, source_dict)
+    # 定义自然量字典
+    nature_dict = {"nature": "'百度小程序', '微信小程序','IOS','Android'",
+                   "nature_IOS": "'IOS'",
+                   "nature_Android": "'Android'",
+                   "nature_wechat": "'微信小程序'",
+                   "nature_baidu": "'百度小程序'"
+                   }
 
-        # 定义报表展示渠道列表,展示层面为second_name
-        source_list = ['channel_all', 'nature', 'nature_IOS', 'nature_Android', 'nature_wechat', 'nature_baidu', 'all',
-                       'channel_flow', 'channel_kol']
-        # source_list = ['channel_flow']
-        for k in source_dict.keys():
-            # 来源
-            source = str(source_dict[k]['second_name'])
-            if source in source_list:
-                continue
-            else:
-                source_list.append(source)
-        print("source_list:" + str(len(source_list)))
-        # 统计日期2019-08-14
-        # 起止日期: 2019-08-01 ~ 2019-08-13(前后包含)
-        # 起止时间戳: 2019-08-01 00:00:00 ~ 2019-08-14 00:00:00
-        today = date.today()
-        end_date_tmp = today + timedelta(days=-delete_day)
-        end_date_tmp_second = end_date_tmp + timedelta(days=1)
-        start_date_tmp = str(end_date_tmp.replace(day=1))
-        # print(start_date_tmp)
-        start_timestamp = int(
-            time.mktime(time.strptime('{0} 00:00:00'.format(start_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
-        end_timestamp = int(
-            time.mktime(time.strptime('{0} 00:00:00'.format(end_date_tmp_second), '%Y-%m-%d %H:%M:%S')) * 1000)
+    # 定义报表展示渠道列表,展示层面为second_name
+    source_list = ['channel_all', 'nature', 'nature_IOS', 'nature_Android', 'nature_wechat', 'nature_baidu', 'all',
+                   'channel_flow', 'channel_kol']
+    # source_list = ['channel_flow']
+    for k in source_dict.keys():
+        # 来源
+        source = str(source_dict[k]['second_name'])
+        if source in source_list:
+            continue
+        else:
+            source_list.append(source)
+    print("source_list:" + str(len(source_list)))
+    # 统计日期2019-08-14
+    # 起止日期: 2019-08-01 ~ 2019-08-13(前后包含)
+    # 起止时间戳: 2019-08-01 00:00:00 ~ 2019-08-14 00:00:00
+    today = date.today()
+    end_date_tmp = today + timedelta(days=-delete_day)
+    end_date_tmp_second = end_date_tmp + timedelta(days=1)
+    start_date_tmp = str(end_date_tmp.replace(day=1))
+    # print(start_date_tmp)
+    start_timestamp = int(
+        time.mktime(time.strptime('{0} 00:00:00'.format(start_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
+    end_timestamp = int(
+        time.mktime(time.strptime('{0} 00:00:00'.format(end_date_tmp_second), '%Y-%m-%d %H:%M:%S')) * 1000)
 
-        for source in source_list:
-            print(source)
-            costs = 0.00
-            if source in ('CPA', '小红书', '其他', '大众点评'):
-                # print(source)
-                continue
-            if source == 'all':
-                # all统计不需要过滤source字段, source_by给空是为了调用该方法
-                source_by = ''
+    for source in source_list:
+        print(source)
+        costs = 0.00
+        if source in ('CPA', '小红书', '其他', '大众点评'):
+            # print(source)
+            continue
+        if source == 'all':
+            # all统计不需要过滤source字段, source_by给空是为了调用该方法
+            source_by = ''
+            sql_costs = "select sum(costs) as sum_costs from t_market_day_cost where costs_date between '{0}' and" \
+                        " '{1}' and source not in ('wxpyq', 'wxgzh')".format(start_date_tmp, end_date_tmp)
+            costs = get_costs_by_sql(market_cursor, sql_costs)
+            get_all_data(nature_dict, aplum_cursor, source, costs, source_by, start_date_tmp, end_date_tmp,
+                         start_timestamp, end_timestamp)
+        elif source in ('channel_all', 'nature', 'nature_IOS', 'nature_Android',
+                        'nature_wechat', 'nature_baidu'):
+            # sql_source = "select source from t_market_source "
+            # source_by = get_source_by_by_sql(db_market, sql_source)
+            sql_source = "select source from t_market_day_cost where costs_date = '{0}' and source in (select " \
+                         "source from t_market_source)".format(end_date_tmp)
+            source_by = get_source_by_by_sql(market_cursor, sql_source)
+            if source_by == '':
+                print('{0} 无投放  统计结束'.format(end_date_tmp))
+                exit(0)
+            sql_source = "select distinct source from t_market_day_cost where costs_date between '{0}' and '{1}' and " \
+                         "source in (select source from t_market_source)".format(start_date_tmp, end_date_tmp)
+            source_by = get_source_by_by_sql(market_cursor, sql_source)
+            if source == 'channel_all':
                 sql_costs = "select sum(costs) as sum_costs from t_market_day_cost where costs_date between '{0}' and" \
-                            " '{1}' and source not in ('wxpyq', 'wxgzh')".format(start_date_tmp, end_date_tmp)
+                            " '{1}' and source in ({2})" \
+                    .format(start_date_tmp, end_date_tmp, source_by)
                 costs = get_costs_by_sql(market_cursor, sql_costs)
-                get_all_data(nature_dict, aplum_cursor, source, costs, source_by, start_date_tmp, end_date_tmp,
-                             start_timestamp, end_timestamp)
-            elif source in ('channel_all', 'nature', 'nature_IOS', 'nature_Android',
-                            'nature_wechat', 'nature_baidu'):
-                # sql_source = "select source from t_market_source "
-                # source_by = get_source_by_by_sql(db_market, sql_source)
-                sql_source = "select source from t_market_day_cost where costs_date = '{0}' and source in (select " \
-                             "source from t_market_source)".format(end_date_tmp)
-                source_by = get_source_by_by_sql(market_cursor, sql_source)
-                if source_by == '':
-                    print('{0} 无投放  统计结束'.format(end_date_tmp))
-                    exit(0)
-                sql_source = "select distinct source from t_market_day_cost where costs_date between '{0}' and '{1}' and " \
-                             "source in (select source from t_market_source)".format(start_date_tmp, end_date_tmp)
-                source_by = get_source_by_by_sql(market_cursor, sql_source)
-                if source == 'channel_all':
-                    sql_costs = "select sum(costs) as sum_costs from t_market_day_cost where costs_date between '{0}' and" \
-                                " '{1}' and source in ({2})" \
-                        .format(start_date_tmp, end_date_tmp, source_by)
-                    costs = get_costs_by_sql(market_cursor, sql_costs)
-                else:
-                    costs = 0.0
-                get_all_data(nature_dict, aplum_cursor, source, costs, source_by, start_date_tmp, end_date_tmp,
-                             start_timestamp, end_timestamp)
-            elif source == 'channel_kol':
-                sql_source = "select distinct source from t_market_day_cost where source in (select source from " \
-                             "t_market_source where name = '博主kol' and second_name like '%KOL') and costs_date between " \
-                             "'{0}' and '{1}'".format(start_date_tmp, end_date_tmp)
-                # print(sql_source)
-                source_by = get_source_by_by_sql(market_cursor, sql_source)
-                if source_by == '':
-                    continue
-                sql_costs = "select sum(costs) as sum_costs from t_market_day_cost where costs_date between '{0}' " \
-                            "and '{1}' and source in ({2})".format(start_date_tmp, end_date_tmp, source_by)
-                # print(sql_costs)
-                costs = get_costs_by_sql(market_cursor, sql_costs)
-                get_all_data(nature_dict, aplum_cursor, source, costs, source_by, start_date_tmp, end_date_tmp,
-                             start_timestamp, end_timestamp)
-            elif source == 'channel_flow':
-                sql_source = "select distinct source from t_market_day_cost where source in (select source from " \
-                             "t_market_source where name = '信息流' and source not in ('cpa', 'wxpyq', 'wxgzh'))" \
-                             " and costs_date between '{0}' and '{1}'".format(start_date_tmp, end_date_tmp)
-                source_by = get_source_by_by_sql(market_cursor, sql_source)
-                # print(source_by)
-                if source_by == '':
-                    continue
-                sql_costs = "select sum(costs) as sum_costs from t_market_day_cost where costs_date between '{0}' " \
-                            "and '{1}' and source in ({2})".format(start_date_tmp, end_date_tmp, source_by)
-                # print(sql_costs)
-                costs = get_costs_by_sql(market_cursor, sql_costs)
-                get_all_data(nature_dict, aplum_cursor, source, costs, source_by, start_date_tmp, end_date_tmp,
-                             start_timestamp, end_timestamp)
-            elif source == '抖音kol':
-                sql_costs = "select sum(costs) as sum_costs from t_market_day_cost where source in(select source from " \
-                            "t_market_source where second_name = '抖音kol') and costs_date between '{0}' and '{1}'" \
-                    .format(start_date_tmp, end_date_tmp)
-                costs = get_costs_by_sql(market_cursor, sql_costs)
-                # print(costs)
-                if costs == 0.0:
-                    continue
-                sql_partner = "select partner from t_toutiao_partner where start_time >= {0} and start_time < {1}"\
-                    .format(int(start_timestamp / 1000), int(end_timestamp / 1000))
-                partner_list = list()
-                market_cursor.execute(sql_partner)
-                source_data = market_cursor.fetchall()
-
-                for row in source_data:
-                    if row['partner'] is None:
-                        continue
-                    else:
-                        partner_list.append(str(row['partner']))
-
-                if len(partner_list) == 1:
-                    source_by = "'" + str(partner_list[0]) + "'"
-                else:
-                    source_by = "'" + "','".join(str(i) for i in partner_list) + "'"
-                # print(source_by)
-                get_all_data(nature_dict, aplum_cursor, source, costs, source_by, start_date_tmp, end_date_tmp, start_timestamp, end_timestamp)
             else:
-                sql_source = "select distinct source from t_market_day_cost where source in (select source from " \
-                             "t_market_source where second_name = '{0}') and costs_date between '{1}' and '{2}'"\
-                    .format(source, start_date_tmp, end_date_tmp)
-                source_by = get_source_by_by_sql(market_cursor, sql_source)
-                if source_by == '':
+                costs = 0.0
+            get_all_data(nature_dict, aplum_cursor, source, costs, source_by, start_date_tmp, end_date_tmp,
+                         start_timestamp, end_timestamp)
+        elif source == 'channel_kol':
+            sql_source = "select distinct source from t_market_day_cost where source in (select source from " \
+                         "t_market_source where name = '博主kol' and second_name like '%KOL') and costs_date between " \
+                         "'{0}' and '{1}'".format(start_date_tmp, end_date_tmp)
+            # print(sql_source)
+            source_by = get_source_by_by_sql(market_cursor, sql_source)
+            if source_by == '':
+                continue
+            sql_costs = "select sum(costs) as sum_costs from t_market_day_cost where costs_date between '{0}' " \
+                        "and '{1}' and source in ({2})".format(start_date_tmp, end_date_tmp, source_by)
+            # print(sql_costs)
+            costs = get_costs_by_sql(market_cursor, sql_costs)
+            get_all_data(nature_dict, aplum_cursor, source, costs, source_by, start_date_tmp, end_date_tmp,
+                         start_timestamp, end_timestamp)
+        elif source == 'channel_flow':
+            sql_source = "select distinct source from t_market_day_cost where source in (select source from " \
+                         "t_market_source where name = '信息流' and source not in ('cpa', 'wxpyq', 'wxgzh'))" \
+                         " and costs_date between '{0}' and '{1}'".format(start_date_tmp, end_date_tmp)
+            source_by = get_source_by_by_sql(market_cursor, sql_source)
+            # print(source_by)
+            if source_by == '':
+                continue
+            sql_costs = "select sum(costs) as sum_costs from t_market_day_cost where costs_date between '{0}' " \
+                        "and '{1}' and source in ({2})".format(start_date_tmp, end_date_tmp, source_by)
+            # print(sql_costs)
+            costs = get_costs_by_sql(market_cursor, sql_costs)
+            get_all_data(nature_dict, aplum_cursor, source, costs, source_by, start_date_tmp, end_date_tmp,
+                         start_timestamp, end_timestamp)
+        elif source == '抖音kol':
+            sql_costs = "select sum(costs) as sum_costs from t_market_day_cost where source in(select source from " \
+                        "t_market_source where second_name = '抖音kol') and costs_date between '{0}' and '{1}'" \
+                .format(start_date_tmp, end_date_tmp)
+            costs = get_costs_by_sql(market_cursor, sql_costs)
+            # print(costs)
+            if costs == 0.0:
+                continue
+            sql_partner = "select partner from t_toutiao_partner where start_time >= {0} and start_time < {1}"\
+                .format(int(start_timestamp / 1000), int(end_timestamp / 1000))
+            partner_list = list()
+            market_cursor.execute(sql_partner)
+            source_data = market_cursor.fetchall()
+
+            for row in source_data:
+                if row['partner'] is None:
                     continue
-                sql_costs = "select sum(costs) as sum_costs from t_market_day_cost where costs_date between '{0}' and" \
-                            " '{1}' and source in ({2})".format(start_date_tmp, end_date_tmp, source_by)
-                # print(sql_costs)
-                costs = get_costs_by_sql(market_cursor, sql_costs)
-                get_all_data(nature_dict, aplum_cursor, source, costs, source_by, start_date_tmp, end_date_tmp, start_timestamp,
-                             end_timestamp)
-        data_to_mysql(end_date_tmp)
-        market_cursor.close()
-        aplum_cursor.close()
+                else:
+                    partner_list.append(str(row['partner']))
+
+            if len(partner_list) == 1:
+                source_by = "'" + str(partner_list[0]) + "'"
+            else:
+                source_by = "'" + "','".join(str(i) for i in partner_list) + "'"
+            # print(source_by)
+            get_all_data(nature_dict, aplum_cursor, source, costs, source_by, start_date_tmp, end_date_tmp, start_timestamp, end_timestamp)
+        else:
+            sql_source = "select distinct source from t_market_day_cost where source in (select source from " \
+                         "t_market_source where second_name = '{0}') and costs_date between '{1}' and '{2}'"\
+                .format(source, start_date_tmp, end_date_tmp)
+            source_by = get_source_by_by_sql(market_cursor, sql_source)
+            if source_by == '':
+                continue
+            sql_costs = "select sum(costs) as sum_costs from t_market_day_cost where costs_date between '{0}' and" \
+                        " '{1}' and source in ({2})".format(start_date_tmp, end_date_tmp, source_by)
+            # print(sql_costs)
+            costs = get_costs_by_sql(market_cursor, sql_costs)
+            get_all_data(nature_dict, aplum_cursor, source, costs, source_by, start_date_tmp, end_date_tmp, start_timestamp,
+                         end_timestamp)
+    data_to_mysql(end_date_tmp)
+    market_cursor.close()
+    aplum_cursor.close()

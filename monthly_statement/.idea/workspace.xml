@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="58f59d37-b1f4-4626-8dfe-2f38c2216b8b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../data_ctr_to_redis/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../data_ctr_to_redis/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data_ctr_to_redis/scripts/ctr_data_to_redis_day.py" beforeDir="false" afterPath="$PROJECT_DIR$/../data_ctr_to_redis/scripts/ctr_data_to_redis_day.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/by_day/source_info_day.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/by_day/source_info_day.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/month_cost/month_cost_to_mysql.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/month_cost/month_cost_to_mysql.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/month_roi_order_cost/month_roi_order_cost.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/month_roi_order_cost/month_roi_order_cost.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/month_roi_order_cost/month_roi_order_cost_special.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/month_roi_order_cost/month_roi_order_cost_special.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -224,7 +226,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567390483597</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="月报修改">
+      <created>1567394135218</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1567394135218</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -252,6 +261,7 @@
     <MESSAGE value="修改costs类型为float" />
     <MESSAGE value="头条广告数据拉去脚本注释添加" />
     <MESSAGE value="月报数据导入修改" />
-    <option name="LAST_COMMIT_MESSAGE" value="月报数据导入修改" />
+    <MESSAGE value="月报修改" />
+    <option name="LAST_COMMIT_MESSAGE" value="月报修改" />
   </component>
 </project>
