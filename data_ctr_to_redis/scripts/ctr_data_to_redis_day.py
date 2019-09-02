@@ -503,6 +503,7 @@ def save_dict_to_csv(dict_sum):
         for x in dict_sum.items():
             file.write(str(x) + '\n')
 
+
 def process_price(row):
     row_arr = row.split(':')
     # original_price = row_arr[5]

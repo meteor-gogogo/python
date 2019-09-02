@@ -95,7 +95,7 @@ if __name__ == '__main__':
     # timestamp = int(time.time())
     # print(timestamp)
     today = date.today()
-    yesterday = today + timedelta(days=-1)
+    yesterday = today + timedelta(days=-2)
     db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
     cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
     file_path = '/home/aplum/work_lh/data_dict_to_csv/{0}-day-dict.csv'.format(yesterday)
@@ -221,7 +221,7 @@ if __name__ == '__main__':
                         result_dict[key_flow][i] = result_dict[key_flow][i] + result_dict[key][i]
                 if source == '抖音kol':
                     key_kol = 'channel_kol&' + str(line_dict[key]['month'])
-                    for i in range(3, 20):
+                    for i in range(4, 20):
                         result_dict[key_kol][i] = result_dict[key_kol][i] + result_dict[key][i]
                     for i in range(21, 23):
                         result_dict[key_kol][i] = result_dict[key_kol][i] + result_dict[key][i]
