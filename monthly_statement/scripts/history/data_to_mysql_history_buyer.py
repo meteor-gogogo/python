@@ -11,10 +11,10 @@ mysql_user = 'plumdb'
 mysql_passwd = 'plumdb@2018'
 mysql_db = 'aplum_mis'
 
-mysql_host = '127.0.0.1'
-mysql_user = 'aplum'
-mysql_passwd = 'plum2016'
-mysql_db = 'aplum_mis'
+# mysql_host = '127.0.0.1'
+# mysql_user = 'aplum'
+# mysql_passwd = 'plum2016'
+# mysql_db = 'aplum_mis'
 
 
 def write_dict_to_excel(result_dict_va):
@@ -99,7 +99,7 @@ if __name__ == '__main__':
     db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
     cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
     file_path = '/home/aplum/work_lh/data_dict_to_csv/{0}-day-dict.csv'.format(yesterday)
-    file_path = '/home/liuhang/{0}-day-dict.csv'.format(yesterday)
+    # file_path = '/home/liuhang/{0}-day-dict.csv'.format(yesterday)
     result_dict = dict()
     month_set = set()
     with open(file_path, 'r', encoding='utf-8') as file:

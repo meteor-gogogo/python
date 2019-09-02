@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="58f59d37-b1f4-4626-8dfe-2f38c2216b8b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/costs_api/costs_by_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/costs_api/costs_by_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/history/data_to_mysql_history_buyer.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/history/data_to_mysql_history_buyer.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -209,7 +209,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567150906860</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="头条广告数据拉去脚本注释添加">
+      <created>1567163221495</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1567163221495</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -235,6 +242,7 @@
     <MESSAGE value="广点通一个账号调试" />
     <MESSAGE value="修改头条花费逻辑" />
     <MESSAGE value="修改costs类型为float" />
-    <option name="LAST_COMMIT_MESSAGE" value="修改costs类型为float" />
+    <MESSAGE value="头条广告数据拉去脚本注释添加" />
+    <option name="LAST_COMMIT_MESSAGE" value="头条广告数据拉去脚本注释添加" />
   </component>
 </project>
