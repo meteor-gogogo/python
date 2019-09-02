@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="47043d1d-40f6-473f-9e50-7cf9575fe0bd" name="Default Changelist" comment="">
+    <list default="true" id="47043d1d-40f6-473f-9e50-7cf9575fe0bd" name="Default Changelist" comment="修改点击率计算逻辑">
+      <change beforePath="$PROJECT_DIR$/.idea/data_ctr_to_redis.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/data_ctr_to_redis.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/ctr_data_to_redis_day.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/ctr_data_to_redis_day.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/ctr_data_to_redis_hour.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/ctr_data_to_redis_hour.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../monthly_statement/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../monthly_statement/scripts/month_roi_order_cost/month_roi_order_cost.py" beforeDir="false" afterPath="$PROJECT_DIR$/../monthly_statement/scripts/month_roi_order_cost/month_roi_order_cost.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -124,7 +128,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>

@@ -6,6 +6,7 @@ import MySQLdb
 import os
 from elasticsearch import helpers
 import redis
+import numpy as np
 
 
 # redis测试库
@@ -683,12 +684,28 @@ if __name__ == '__main__':
             # 如果曝光数为0,点击数和点击率都设置为0
             # 此情况是有可能为卖家点击造成的,卖家不记录曝光量
             elif v > pv_value:
-                rate_key = k[: -5] + 'rate'
-                ctr_dict[rate_key] = 0.99
+                ctr_dict.pop(k)
+                ctr_dict.pop(pv_k)
             else:
                 rate = round((v / pv_value), 2)
                 rate_key = k[: -5] + 'rate'
                 ctr_dict[rate_key] = rate
+        else:
+            continue
+    rate_list = list()
+    for k in list(ctr_dict.keys()):
+        if k.endswith('rate'):
+            rate_list.append(ctr_dict[k])
+    arr_mean = np.mean(rate_list)
+    arr_variance = np.var(rate_list)
+    alpha = arr_mean * (arr_mean * (1 - arr_mean) / arr_variance - 1)
+    beta = (1 - arr_mean) * (arr_mean * (1 - arr_mean) / arr_variance - 1)
+    for k in list(ctr_dict.keys()):
+        if k.endswith('rate'):
+            pv_k = k[: -4] + 'pv'
+            click_k = k[: -4] + 'click'
+            ctr_dict[k] = (ctr_dict[click_k] + alpha) / (ctr_dict[pv_k] + alpha + beta)
+            # rate_list.append(ctr_dict[k])
         else:
             continue
     # save_dict_to_csv(ctr_dict)

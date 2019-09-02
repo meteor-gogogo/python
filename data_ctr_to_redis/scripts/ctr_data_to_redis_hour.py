@@ -9,7 +9,7 @@ import MySQLdb
 import os
 from elasticsearch import helpers
 import redis
-from IpCity import IpCity
+import numpy as np
 
 
 from collections import ChainMap
@@ -577,7 +577,7 @@ def get_pid_dict(es_data, sensors_data, ctr_dict):
     return ctr_dict
 
 
-def get_position_dict(es_data, sensors_data, search, ctr_dict):
+def get_position_dict(es_data, sensors_data, ctr_dict):
     position_dict = dict()
     for row in es_data:
         position = str(row.split(':')[6])
@@ -875,8 +875,8 @@ if __name__ == '__main__':
         ctr_dict = get_degree_dict(es_data, sensors_data, product_dict, ctr_dict)
         print('degree_dict: ' + str(len(ctr_dict)))
 
-        search = IpCity()
-        ctr_dict = get_position_dict(es_data, sensors_data, search, ctr_dict)
+        # search = IpCity()
+        ctr_dict = get_position_dict(es_data, sensors_data, ctr_dict)
         print('get_position_dict:' + str(len(ctr_dict)))
 
         ctr_dict = get_is_promotion_dict(es_data, sensors_data, product_dict, ctr_dict)
@@ -923,19 +923,36 @@ if __name__ == '__main__':
                 pv_value = ctr_dict[pv_k]
                 # 如果点击数大于曝光数,点击率设置为0.99
                 # 此情况是由于同一界面在未刷新的前提下,多次点击同一商品造成的
-                if pv_value == 0:
-                    ctr_dict[k] = 0
-                    rate_key = k[: -5] + 'rate'
-                    ctr_dict[rate_key] = 0.00
+                # if pv_value == 0:
+                #     ctr_dict[k] = 0
+                #     rate_key = k[: -5] + 'rate'
+                #     ctr_dict[rate_key] = 0.00
                 # 如果曝光数为0,点击数和点击率都设置为0
                 # 此情况是有可能为卖家点击造成的,卖家不记录曝光量
-                elif v > pv_value:
-                    rate_key = k[: -5] + 'rate'
-                    ctr_dict[rate_key] = 0.99
+                if v > pv_value:
+                    ctr_dict.pop(k)
+                    ctr_dict.pop(pv_k)
                 else:
                     rate = round((v / pv_value), 2)
                     rate_key = k[: -5] + 'rate'
                     ctr_dict[rate_key] = rate
+            else:
+                continue
+
+        rate_list = list()
+        for k in list(ctr_dict.keys()):
+            if k.endswith('rate'):
+                rate_list.append(ctr_dict[k])
+        arr_mean = np.mean(rate_list)
+        arr_variance = np.var(rate_list)
+        alpha = arr_mean * (arr_mean * (1 - arr_mean) / arr_variance - 1)
+        beta = (1 - arr_mean) * (arr_mean * (1 - arr_mean) / arr_variance - 1)
+        for k in list(ctr_dict.keys()):
+            if k.endswith('rate'):
+                pv_k = k[: -4] + 'pv'
+                click_k = k[: -4] + 'click'
+                ctr_dict[k] = (ctr_dict[click_k] + alpha) / (ctr_dict[pv_k] + alpha + beta)
+                # rate_list.append(ctr_dict[k])
             else:
                 continue
 

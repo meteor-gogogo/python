@@ -2,9 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="58f59d37-b1f4-4626-8dfe-2f38c2216b8b" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../data_ctr_to_redis/.idea/data_ctr_to_redis.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../data_ctr_to_redis/.idea/data_ctr_to_redis.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data_ctr_to_redis/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../data_ctr_to_redis/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data_ctr_to_redis/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../data_ctr_to_redis/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data_ctr_to_redis/scripts/ctr_data_to_redis_day.py" beforeDir="false" afterPath="$PROJECT_DIR$/../data_ctr_to_redis/scripts/ctr_data_to_redis_day.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data_ctr_to_redis/scripts/ctr_data_to_redis_hour.py" beforeDir="false" afterPath="$PROJECT_DIR$/../data_ctr_to_redis/scripts/ctr_data_to_redis_hour.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/month_visit_remain/month_visit_remain.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/month_visit_remain/month_visit_remain.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/month_visit_remain/month_visit_remain_special.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/month_visit_remain/month_visit_remain_special.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/month_roi_order_cost/month_roi_order_cost.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/month_roi_order_cost/month_roi_order_cost.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -245,7 +249,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567397850924</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="修改访问留存统计时间">
+      <created>1567403927781</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1567403927781</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -276,6 +287,7 @@
     <MESSAGE value="月报修改" />
     <MESSAGE value="日报修改" />
     <MESSAGE value="修改日报日期格式" />
-    <option name="LAST_COMMIT_MESSAGE" value="修改日报日期格式" />
+    <MESSAGE value="修改访问留存统计时间" />
+    <option name="LAST_COMMIT_MESSAGE" value="修改访问留存统计时间" />
   </component>
 </project>
