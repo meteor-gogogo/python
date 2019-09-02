@@ -692,24 +692,28 @@ if __name__ == '__main__':
                 ctr_dict[rate_key] = rate
         else:
             continue
-    rate_list = list()
-    for k in list(ctr_dict.keys()):
-        if k.endswith('rate'):
-            rate_list.append(ctr_dict[k])
-    arr_mean = np.mean(rate_list)
-    arr_variance = np.var(rate_list)
-    alpha = arr_mean * (arr_mean * (1 - arr_mean) / arr_variance - 1)
-    beta = (1 - arr_mean) * (arr_mean * (1 - arr_mean) / arr_variance - 1)
-    for k in list(ctr_dict.keys()):
-        if k.endswith('rate'):
-            pv_k = k[: -4] + 'pv'
-            click_k = k[: -4] + 'click'
-            ctr_dict[k] = (ctr_dict[click_k] + alpha) / (ctr_dict[pv_k] + alpha + beta)
-            # rate_list.append(ctr_dict[k])
-        else:
-            continue
-    genaral_rate_key = 'gbdt:general:rate'
-    ctr_dict[genaral_rate_key] = alpha / (alpha + beta)
+
+
+    # rate_list = list()
+    # for k in list(ctr_dict.keys()):
+    #     if k.endswith('rate'):
+    #         rate_list.append(ctr_dict[k])
+    # arr_mean = np.mean(rate_list)
+    # arr_variance = np.var(rate_list)
+    # alpha = arr_mean * (arr_mean * (1 - arr_mean) / arr_variance - 1)
+    # beta = (1 - arr_mean) * (arr_mean * (1 - arr_mean) / arr_variance - 1)
+    # for k in list(ctr_dict.keys()):
+    #     if k.endswith('rate'):
+    #         pv_k = k[: -4] + 'pv'
+    #         click_k = k[: -4] + 'click'
+    #         ctr_dict[k] = (ctr_dict[click_k] + alpha) / (ctr_dict[pv_k] + alpha + beta)
+    #         # rate_list.append(ctr_dict[k])
+    #     else:
+    #         continue
+    # genaral_rate_key = 'gbdt:general:rate'
+    # ctr_dict[genaral_rate_key] = alpha / (alpha + beta)
+
+
     # save_dict_to_csv(ctr_dict)
     # save_dict_to_csv(tmp_dict)
     execute_redis(ctr_dict)
