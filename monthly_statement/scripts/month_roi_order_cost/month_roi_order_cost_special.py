@@ -117,7 +117,7 @@ def get_count_date_by_sql(costs, source, url, sql, start_date_tmp):
             for i in range(5, 30):
                 result_dict[key][i] = 0
             print(result_dict)
-            write_dict_to_mysql(result_dict)
+            # write_dict_to_mysql(result_dict)
             result_dict.clear()
             # write_dict_to_csv(result_dict)
 
@@ -149,7 +149,7 @@ def get_count_date_by_sql(costs, source, url, sql, start_date_tmp):
             for i in range(5, 30):
                 result_dict[key][i] = 0
             print(result_dict)
-            write_dict_to_mysql(result_dict)
+            # write_dict_to_mysql(result_dict)
             result_dict.clear()
         else:
             dataarr = datastr.split('\n')
@@ -227,7 +227,7 @@ def get_count_date_by_sql(costs, source, url, sql, start_date_tmp):
             # write_dict_to_mysql(result_dict)
             result_dict[key][30] = int(time.time())
             print(result_dict)
-            write_dict_to_mysql(result_dict)
+            # write_dict_to_mysql(result_dict)
             result_dict.clear()
             key_source = str(source)
             key_date = str(start_date_tmp)
@@ -269,7 +269,7 @@ def get_count_date_by_sql(costs, source, url, sql, start_date_tmp):
                 result_dict[key][i] = len(user_set)
             result_dict[key][30] = int(time.time())
             print(result_dict)
-            write_dict_to_mysql(result_dict)
+            # write_dict_to_mysql(result_dict)
             result_dict.clear()
     else:
         print("sa hive sql accur error, sql为%s" % sql)
@@ -298,7 +298,7 @@ def get_activate_date_by_source_date(source_by, costs, start_timestamp, end_time
         register_seller_list = list()
         sql = "select distinct distinct_id from events where event = 'registerSuccessAct' " \
               "and PartnerOldUser is null and regexp_like(distinct_id, '^[0-9]+$') and date between '{0}' " \
-              "and '{1}'".format(start_date_tmp, end_date_tmp)
+              "and '{1}' and partner in ({2})".format(start_date_tmp, end_date_tmp, source_by)
         payload = {'q': sql, 'format': 'json'}
         r = requests.post(url, data=payload)
         if r.status_code == 200:
@@ -346,7 +346,7 @@ def get_activate_date_by_source_date(source_by, costs, start_timestamp, end_time
             for i in range(5, 30):
                 result_dict[key][i] = 0
             print(result_dict)
-            write_dict_to_mysql(result_dict)
+            # write_dict_to_mysql(result_dict)
             result_dict.clear()
             # write_dict_to_csv(result_dict)
 
@@ -378,7 +378,7 @@ def get_activate_date_by_source_date(source_by, costs, start_timestamp, end_time
             for i in range(5, 30):
                 result_dict[key][i] = 0
             print(result_dict)
-            write_dict_to_mysql(result_dict)
+            # write_dict_to_mysql(result_dict)
             result_dict.clear()
         else:
             cursor = db_aplum.cursor(cursorclass=MySQLdb.cursors.DictCursor)
@@ -477,7 +477,7 @@ def get_activate_date_by_source_date(source_by, costs, start_timestamp, end_time
             # write_dict_to_mysql(result_dict)
             result_dict[key][30] = int(time.time())
             print(result_dict)
-            write_dict_to_mysql(result_dict)
+            # write_dict_to_mysql(result_dict)
             result_dict.clear()
             key_source = str(source)
             key_date = str(start_date_tmp)
@@ -521,7 +521,7 @@ def get_activate_date_by_source_date(source_by, costs, start_timestamp, end_time
                 result_dict[key][i] = len(user_set)
             result_dict[key][30] = int(time.time())
             print(result_dict)
-            write_dict_to_mysql(result_dict)
+            # write_dict_to_mysql(result_dict)
             result_dict.clear()
 
 
@@ -634,6 +634,7 @@ if __name__ == '__main__':
     # print(date_list)
     source_dict = dict()
     db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
+    market_cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
     db_aplum = MySQLdb.connect(mysqlhost, mysqlusername, mysqlpasswd, db, charset='utf8')
     source_dict = get_source(db_market, source_dict)
     source_list = ['CPA', '微信公众号', '微信朋友圈', '抖音kol']
@@ -737,7 +738,22 @@ if __name__ == '__main__':
                 if costs == 0.0:
                     print('source为' + str(source) + ',costs为' + str(costs) + ',统计跳过')
                     continue
-                source_by = ''
+                sql_partner = "select partner from t_toutiao_partner where start_time >= {0} and start_time < {1}" \
+                    .format(int(start_timestamp / 1000), int(end_timestamp / 1000))
+                partner_list = list()
+                market_cursor.execute(sql_partner)
+                source_data = market_cursor.fetchall()
+
+                for row in source_data:
+                    if row['partner'] is None:
+                        continue
+                    else:
+                        partner_list.append(str(row['partner']))
+
+                if len(partner_list) == 1:
+                    source_by = "'" + str(partner_list[0]) + "'"
+                else:
+                    source_by = "'" + "','".join(str(i) for i in partner_list) + "'"
                 get_activate_date_by_source_date(source_by, costs, start_timestamp, end_timestamp,
                                                  url, source, start_date_tmp, end_date_tmp)
         else:

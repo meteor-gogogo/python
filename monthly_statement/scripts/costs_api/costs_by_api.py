@@ -100,7 +100,7 @@ def get_advertiser_daily_stat(start_date, aid, access_token):
 
 
 # 广告相关数据存入数据库
-def data_to_mysql(market_cursor, aid, start_date, data):
+def data_to_mysql(fandian_dict, market_cursor, aid, start_date, data):
     data_list = data['data']['list']
     show = 0
     click = 0
@@ -111,7 +111,7 @@ def data_to_mysql(market_cursor, aid, start_date, data):
         # 点击
         click = int(i['click'])
         # 总花费(单位:元)
-        cost = float(i['cost'])
+        cost = round((float(i['cost'])) / (1 + float(fandian_dict[int(aid)])), 2)
     if cost > 0.0:
         sql = "insert into t_ad_data (second_name, aid, show_num, click_num, cost, ad_date) values('头条', '{0}', " \
               "{1}, {2}, {3}, '{4}')".format(aid, show, click, cost, start_date)
@@ -122,7 +122,7 @@ def data_to_mysql(market_cursor, aid, start_date, data):
         pass
 
 
-def main(market_cursor, start_date, ad_id):
+def main(fandian_dict, market_cursor, start_date, ad_id):
     # 从数据库拿到aid, token, refresh_token
     aid, token, refresh_token = get_refresh_token(ad_id, market_cursor)
     # 从头条api拿到最新的token, refresh_token
@@ -149,9 +149,9 @@ def main(market_cursor, start_date, ad_id):
             time.sleep(1)
         # data = get_campaign_stat(start_date, aid, token)
         # 将拿到的广告相关数据存入数据库
-        data_to_mysql(market_cursor, aid, start_date, data)
+        data_to_mysql(fandian_dict, market_cursor, aid, start_date, data)
     else:
-        data_to_mysql(market_cursor, aid, start_date, data)
+        data_to_mysql(fandian_dict, market_cursor, aid, start_date, data)
 
 
 def insert_cost_to_day_cost(db_market, market_cursor, start_date):
@@ -185,6 +185,22 @@ def insert_cost_to_day_cost(db_market, market_cursor, start_date):
 
 
 if __name__ == '__main__':
+    fandian_dict = {
+        110425205008: 0.02,
+        110425160745: 0.02,
+        110425077742: 0.02,
+        1633753219366923: 0.02,
+        103891969936: 0.035,
+        104241096798: 0.035,
+        104749561785: 0.035,
+        104750237072: 0.035,
+        104757843442: 0.035,
+        104757923769: 0.035,
+        108260043679: 0.035,
+        108322887258: 0.035,
+        108322962478: 0.035,
+        108323023542: 0.035
+    }
     # 获得aplum_mis数据库的连接
     db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
     market_cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
@@ -192,12 +208,15 @@ if __name__ == '__main__':
     ad_id_list = [103891969936, 104241096798, 104749561785, 104750237072, 104757843442, 104757923769, 108260043679,
                    108322887258, 108322962478, 108323023542, 110425205008, 110425160745, 110425077742, 1633753219366923]
     # 查询日期为昨天
-    start_date = str(date.today() + timedelta(days=-1))
-    for ad_id in ad_id_list:
-        print(ad_id)
-        # 主要处理函数
-        main(market_cursor, start_date, ad_id)
-        # 有写数据库的操作,提交一下
-        db_market.commit()
-    # 汇总各推广账号的数据插入到日成本表一条数据
-    insert_cost_to_day_cost(db_market, market_cursor, start_date)
+    start_date_tmp = '2019-08-01'
+    for i in range(31):
+        start_date = (datetime.strptime(start_date_tmp, '%Y-%m-%d') + timedelta(days=i)).strftime('%Y-%m-%d')
+        # start_date = str(date.today() + timedelta(days=-1))
+        for ad_id in ad_id_list:
+            print(ad_id)
+            # 主要处理函数
+            main(fandian_dict, market_cursor, start_date, ad_id)
+            # 有写数据库的操作,提交一下
+            db_market.commit()
+        # 汇总各推广账号的数据插入到日成本表一条数据
+        insert_cost_to_day_cost(db_market, market_cursor, start_date)

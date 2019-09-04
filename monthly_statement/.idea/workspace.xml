@@ -2,8 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="58f59d37-b1f4-4626-8dfe-2f38c2216b8b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/scripts/order_detail/new_user_order.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../data_ctr_to_redis/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../data_ctr_to_redis/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/by_day/source_info_day.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/by_day/source_info_day.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/costs_api/costs_by_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/costs_api/costs_by_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/month_roi_order_cost/month_roi_order_cost.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/month_roi_order_cost/month_roi_order_cost.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/month_roi_order_cost/month_roi_order_cost_special.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/month_roi_order_cost/month_roi_order_cost_special.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -17,15 +22,6 @@
         <option value="Python Script" />
       </list>
     </option>
-  </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>'</find>
-    </findStrings>
-    <replaceStrings>
-      <replace>'</replace>
-      <replace>&quot;</replace>
-    </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="ROOT_SYNC" value="DONT_SYNC" />
