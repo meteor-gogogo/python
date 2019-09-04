@@ -2,13 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="58f59d37-b1f4-4626-8dfe-2f38c2216b8b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/scripts/order_detail/new_user_order.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data_ctr_to_redis/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../data_ctr_to_redis/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/by_day/source_info_day.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/by_day/source_info_day.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/costs_api/costs_by_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/costs_api/costs_by_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/history/2019-08-19-day-dict.csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/month_roi_order_cost/month_roi_order_cost.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/month_roi_order_cost/month_roi_order_cost.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/month_roi_order_cost/month_roi_order_cost_special.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/month_roi_order_cost/month_roi_order_cost_special.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/order_detail/product_2019-08-23.xlsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/order_detail/seller_2019-08-23.xlsx" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -61,7 +59,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.get_data_from_guangdiantong">
+  <component name="RunManager" selected="Python.month_roi_order_cost">
     <configuration name="costs_by_api" type="PythonConfigurationType" factoryName="Python">
       <module name="monthly_statement" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -104,8 +102,30 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="month_roi_order_cost" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="monthly_statement" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/scripts/month_roi_order_cost" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/scripts/month_roi_order_cost/month_roi_order_cost.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.month_roi_order_cost" />
         <item itemvalue="Python.get_data_from_guangdiantong" />
       </list>
     </recent_temporary>

@@ -36,8 +36,8 @@ mysql_db = "aplum_mis"
 # mysql_passwd = "plum2016"
 # mysql_db = "aplum_mis"
 
-start = time.time()
-tic = lambda: 'at %1.1f seconds' % (time.time() - start)
+db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
+market_cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
 
 
 def write_dict_to_csv(date_now, result_dict):
@@ -264,7 +264,6 @@ def get_activate_date_by_source_date(source_by, costs, start_timestamp, end_time
               " HAVING the_month >= '{2}' ORDER BY the_month ASC".format(start_timestamp, end_timestamp, start_date_tmp)
         # print(sql)
         get_count_date_by_sql(costs, source, url, sql, start_date_tmp)
-    # source_list = ['all', 'nature', 'channel_all', 'channel_flow', 'channel_kol']
     elif source == 'nature':
         sql = "SELECT from_unixtime(unix_timestamp(date_sub( date, dayofmonth( date ) - 1 )),'yyyy-MM-dd') " \
               "the_month, distinct_id, sum(orderitem_realpayprice) as sum_realpay FROM EVENTS WHERE " \
@@ -274,12 +273,6 @@ def get_activate_date_by_source_date(source_by, costs, start_timestamp, end_time
 
         get_count_date_by_sql(costs, source, url, sql, start_date_tmp)
     elif str(source).endswith('KOL') or source in ('小红书', 'channel_kol'):
-        # sql = "select count(distinct b.distinct_id) as count_source from (select second_id from users where " \
-        #       "firstordertime >= {0} and firstordertime < {1} and source in ({2}))a left join (select " \
-        #       "distinct_id from events where event = 'PayOrderDetail' and date between '{3}' and '{4}')b " \
-        #       "on a.second_id = b.distinct_id where b.distinct_id is not null" \
-        #     .format(start_timestamp, end_timestamp, source_by, start_date_tmp, end_date_tmp)
-        # get_id_list(sql, )
         sql = "SELECT from_unixtime(unix_timestamp(date_sub( date, dayofmonth( date ) - 1 )),'yyyy-MM-dd') " \
               "the_month, distinct_id, sum(orderitem_realpayprice) as sum_realpay FROM EVENTS WHERE " \
               "EVENT = 'PayOrderDetail' 	AND distinct_id IN (select second_id from users " \
@@ -296,7 +289,6 @@ def get_activate_date_by_source_date(source_by, costs, start_timestamp, end_time
               " HAVING the_month >= '{3}' ORDER BY the_month ASC".format(start_timestamp, end_timestamp, source_by, start_date_tmp)
         # print(sql)
         get_count_date_by_sql(costs, source, url, sql, start_date_tmp)
-    # source_list = ['all', 'nature', 'channel_all', 'channel_flow', 'channel_kol']
     elif source in ('微信公众号', '微信朋友圈'):
         sql = "SELECT from_unixtime(unix_timestamp(date_sub( date, dayofmonth( date ) - 1 )),'yyyy-MM-dd') " \
               "the_month, distinct_id, sum(orderitem_realpayprice) as sum_realpay FROM EVENTS WHERE " \
@@ -649,7 +641,142 @@ def get_source_by_by_sql(db_market, sql):
     return source_by
 
 
+def check_data(datestr):
+    t_name = "t_market_month_roi"
+    datanum = get_data_num(datestr, t_name)
+    print('当前重复数据: {}'.format(datanum))
+    if datanum > 0:
+        delete_data(datestr, t_name)
+    else:
+        return
+
+
+def get_data_num(datestr, t_name):
+    cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+    sql = "SELECT count(1) as num FROM `{0}` WHERE exe_date = '{1}'".format(t_name, datestr)
+    cursor.execute(sql)
+    source_data = cursor.fetchall()
+    cursor.close()
+    for k in source_data:
+        num = int(k['num'])
+    return num
+
+
+def delete_data(datestr, t_name):
+    cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+    sql = "DELETE  FROM `{0}` WHERE exe_date = '{1}'".format(t_name, datestr)
+    print(sql)
+    cursor.execute(sql)
+    db_market.commit()
+
+
+def file_data_to_mysql(date_list):
+    # 将落盘文件写入到数据库中
+    for current_date in date_list:
+        # 检查数据库中该日期的数据是否存在,如果存在,先删除后插入
+        check_data(current_date)
+        file_path = '/home/aplum/work_lh/data_dict_to_csv/{0}-monthroi-dict.csv'.format(current_date)
+        with open(file_path, 'r', encoding='utf-8')as file:
+            # 初始化channel_all, channel_flow, channel_kol渠道数据列表
+            # 这么做的原因是为了保持与月报报表的数据对齐,因为月报报表的这几个渠道的计算都是应推广要求后期进行计算出来的,而不是统计出来的
+            current_timestamp = int(time.time())
+            key_channel_all_roi_list = [2, 0, '', str(current_date), 0.0]
+            for i in range(26):
+                key_channel_all_roi_list.append(0)
+            key_channel_all_roi_list.append(current_timestamp)
+            key_channel_all_cac_list = [2, 1, '', str(current_date), 0.0]
+            for i in range(26):
+                key_channel_all_cac_list.append(0)
+            key_channel_all_cac_list.append(current_timestamp)
+
+            # key_channel_flow = 'channel_flow&' + str(current_date)
+            key_channel_flow_roi_list = [3, 0, '', str(current_date), 0.0]
+            for i in range(26):
+                key_channel_flow_roi_list.append(0)
+            key_channel_flow_roi_list.append(current_timestamp)
+            key_channel_flow_cac_list = [3, 1, '', str(current_date), 0.0]
+            for i in range(26):
+                key_channel_flow_cac_list.append(0)
+            key_channel_flow_cac_list.append(current_timestamp)
+
+            # key_channel_kol = 'channel_kol&' + str(current_date)
+            key_channel_kol_roi_list = [4, 0, '', str(current_date), 0.0]
+            for i in range(26):
+                key_channel_kol_roi_list.append(0)
+            key_channel_kol_roi_list.append(current_timestamp)
+            key_channel_kol_cac_list = [4, 1, '', str(current_date), 0.0]
+            for i in range(26):
+                key_channel_kol_cac_list.append(0)
+            key_channel_kol_cac_list.append(current_timestamp)
+
+            lines = file.readlines()
+            for line in lines:
+                line_dict = eval(line)
+                # 读取每一行,直接写入MySQL,再把数据统计到相应的渠道
+                write_dict_to_mysql(fields, con, line_dict)
+                for key in line_dict.keys():
+                    source = str(line_dict[key][2])
+                    type = int(line_dict[key][0])
+                    # 如果是all渠道,统计跳过
+                    if type == 0:
+                        continue
+                    # 统计微信MP,因为微信MP是这两个的汇总渠道,所以跳过这两个渠道
+                    if source in ('微信朋友圈', '微信公众号'):
+                        continue
+                    else:
+                        sub_type = int(line_dict[key][1])
+                        for index in range(4, 30):
+                            # 子类型为0,是ROI
+                            if sub_type == 0:
+                                # 无论属于channel_kol,还是属于channel_flow,都隶属于channel_all,所以不用判断直接统计
+                                key_channel_all_roi_list[index] = key_channel_all_roi_list[index] + line_dict[key][
+                                    index]
+                                # 后缀为KOL,或者kol的统计到channel_kol,否则统计到channel_flow
+                                if source.endswith('KOL') or source.endswith('kol'):
+                                    key_channel_kol_roi_list[index] = key_channel_kol_roi_list[index] + line_dict[key][
+                                        index]
+                                else:
+                                    key_channel_flow_roi_list[index] = key_channel_flow_roi_list[index] + \
+                                                                       line_dict[key][index]
+                            else:
+                                key_channel_all_cac_list[index] = key_channel_all_cac_list[index] + line_dict[key][
+                                    index]
+                                if source.endswith('KOL') or source.endswith('kol'):
+                                    key_channel_kol_cac_list[index] = key_channel_kol_cac_list[index] + line_dict[key][
+                                        index]
+                                else:
+                                    key_channel_flow_cac_list[index] = key_channel_flow_cac_list[index] + \
+                                                                       line_dict[key][index]
+            # 组装字典,写入MySQL,清空列表字典,准备读取下一个文件
+            channel_all_roi_dict = {'channel_all_roi': key_channel_all_roi_list}
+            write_dict_to_mysql(fields, con, channel_all_roi_dict)
+            key_channel_all_roi_list.clear()
+            channel_all_roi_dict.clear()
+            channel_all_cac_dict = {'channel_all_cac': key_channel_all_cac_list}
+            write_dict_to_mysql(fields, con, channel_all_cac_dict)
+            key_channel_all_cac_list.clear()
+            channel_all_cac_dict.clear()
+            channel_flow_roi_dict = {'channel_flow_roi': key_channel_flow_roi_list}
+            write_dict_to_mysql(fields, con, channel_flow_roi_dict)
+            key_channel_flow_roi_list.clear()
+            channel_flow_roi_dict.clear()
+            channel_flow_cac_dict = {'channel_flow_cac': key_channel_flow_cac_list}
+            write_dict_to_mysql(fields, con, channel_flow_cac_dict)
+            key_channel_flow_cac_list.clear()
+            channel_flow_cac_dict.clear()
+            channel_kol_roi_dict = {'channel_kol_roi': key_channel_kol_roi_list}
+            write_dict_to_mysql(fields, con, channel_kol_roi_dict)
+            key_channel_kol_roi_list.clear()
+            channel_kol_roi_dict.clear()
+            channel_kol_cac_dict = {'channel_kol_cac': key_channel_kol_cac_list}
+            write_dict_to_mysql(fields, con, channel_kol_cac_dict)
+            key_channel_kol_cac_list.clear()
+            channel_kol_cac_dict.clear()
+
+
 if __name__ == '__main__':
+    start = int(time.time())
+    # df的fields
     fields = ['type', 'sub_type', 'second_name', 'exe_date', 'costs', 'm0', 'm1', 'm2', 'm3', 'm4', 'm5', 'm6', 'm7',
               'm8',
               'm9', 'm10', 'm11', 'm12', 'm13', 'm14', 'm15', 'm16', 'm17', 'm18',
@@ -661,23 +788,26 @@ if __name__ == '__main__':
     # 创建连接
     con = engine.connect()
     result_dict = dict()
-    # start_date, end_date = get_start_end_date()
-    date_list = ['2017-08-01', '2017-09-01', '2017-10-01', '2017-11-01', '2017-12-01', '2018-01-01', '2018-02-01',
-                 '2018-03-01', '2018-04-01',
-                 '2018-05-01', '2018-06-01', '2018-07-01', '2018-08-01', '2018-09-01', '2018-10-01', '2018-11-01',
-                 '2018-12-01', '2019-01-01', '2019-02-01', '2019-03-01', '2019-04-01',
-                 '2019-05-01', '2019-06-01', '2019-07-01', '2019-08-01']
+    # 定义查询的月份列表
+    today = date.today()
+    current_month_date = today.replace(day=1)
+    date_list = list()
+    for i in range(25, 0, -1):
+        date_list.append(str(current_month_date + relativedelta(months=-i)))
     # date_list = ['2019-08-01']
-    # print(date_list)
+
+    # 检查将要写入的文件是否已经存在,如果存在,删除
+    for current_date in date_list:
+        file_path = '/home/aplum/work_lh/data_dict_to_csv/{0}-monthroi-dict.csv'.format(current_date)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+
     source_dict = dict()
     db_market = MySQLdb.connect(mysql_host, mysql_user, mysql_passwd, mysql_db, charset='utf8')
     market_cursor = db_market.cursor(cursorclass=MySQLdb.cursors.DictCursor)
     db_aplum = MySQLdb.connect(mysqlhost, mysqlusername, mysqlpasswd, db, charset='utf8')
     source_dict = get_source(db_market, source_dict)
-    # # source_list = ['CPA', '微信朋友圈', '微信公众号', '抖音kol']
-    # # source_list = ['channel_kol', 'channel_all']
     source_list = ['all', 'CPA', '微信朋友圈', '微信公众号', '抖音kol']
-    # # source_list = list()
     for k in source_dict.keys():
         # 来源
         source = str(source_dict[k]['second_name'])
@@ -778,8 +908,7 @@ if __name__ == '__main__':
                 end_timestamp = int(
                     time.mktime(time.strptime('{0} 00:00:00'.format(end_date_tmp_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
                 sql_costs = "select sum(costs) as sum_costs from t_market_cost where source in(select source from " \
-                            "t_market_source where second_name = '抖音kol') and " \
-                            "costs_date = '{0}'" \
+                            "t_market_source where second_name = '抖音kol') and costs_date = '{0}'" \
                     .format(start_date_tmp)
                 costs = get_costs_by_sql(db_market, sql_costs)
                 if costs == 0.0:
@@ -810,9 +939,6 @@ if __name__ == '__main__':
                 start_timestamp = int(
                     time.mktime(time.strptime('{0} 00:00:00'.format(start_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
 
-                # end_date_timestamp = (datetime.strptime(end_date_tmp, '%Y-%m-%d') + timedelta(days=1)).strftime(
-                #     '%Y-%m-%d')
-                # print(end_date_tmp)
                 end_timestamp = int(
                     time.mktime(time.strptime('{0} 00:00:00'.format(end_date_tmp), '%Y-%m-%d %H:%M:%S')) * 1000)
                 print(source)
@@ -870,97 +996,10 @@ if __name__ == '__main__':
                         source_by = get_source_by_by_sql(db_market, sql_source)
                         if source_by == '':
                             continue
-                    # sql_source = "select source from t_market_source where second_name = '{0}'".format(source)
-                    # source_by = get_source_by_by_sql(db_market, sql_source)
                     sql_costs = "select sum(costs) as sum_costs from t_market_cost where costs_date = '{0}' " \
                                 "and source in ({1})" \
                         .format(start_date_tmp, source_by)
                     costs = get_costs_by_sql(db_market, sql_costs)
                     get_activate_date_by_source_date(source_by, costs, start_timestamp, end_timestamp, url, db_market, source, start_date_tmp, end_date_tmp)
-    for current_date in date_list:
-        file_path = '/home/aplum/work_lh/data_dict_to_csv/{0}-monthroi-dict.csv'.format(current_date)
-        with open(file_path, 'r', encoding='utf-8')as file:
-            # key_all = 'all&' + str(current_date)
-
-            # key_all_roi_list = [0, 0, '', str(current_date), 0.0]
-            # for i in range(26):
-            #     key_all_roi_list.append(0)
-            # key_all_cac_list = [0, 1, '', str(current_date), 0.0]
-            # for i in range(26):
-            #     key_all_cac_list.append(0)
-
-            # key_channel_all = 'channel_all&' + str(current_date)
-            key_channel_all_roi_list = [2, 0, '', str(current_date), 0.0]
-            for i in range(26):
-                key_channel_all_roi_list.append(0)
-            key_channel_all_cac_list = [2, 1, '', str(current_date), 0.0]
-            for i in range(26):
-                key_channel_all_cac_list.append(0)
-
-            # key_channel_flow = 'channel_flow&' + str(current_date)
-            key_channel_flow_roi_list = [3, 0, '', str(current_date), 0.0]
-            for i in range(26):
-                key_channel_flow_roi_list.append(0)
-            key_channel_flow_cac_list = [3, 1, '', str(current_date), 0.0]
-            for i in range(26):
-                key_channel_flow_cac_list.append(0)
-
-            # key_channel_kol = 'channel_kol&' + str(current_date)
-            key_channel_kol_roi_list = [4, 0, '', str(current_date), 0.0]
-            for i in range(26):
-                key_channel_kol_roi_list.append(0)
-            key_channel_kol_cac_list = [4, 1, '', str(current_date), 0.0]
-            for i in range(26):
-                key_channel_kol_cac_list.append(0)
-
-            lines = file.readlines()
-            for line in lines:
-                line_dict = eval(line)
-                write_dict_to_mysql(fields, con, line_dict)
-                for key in line_dict.keys():
-                    source = str(line_dict[key][2])
-                    type = int(line_dict[key][0])
-                    if type == 0:
-                        continue
-                    if source in ('微信朋友圈', '微信公众号'):
-                        continue
-                    else:
-                        sub_type = int(line_dict[key][1])
-                        for index in range(4, 30):
-                            if sub_type == 0:
-                                key_channel_all_roi_list[index] = key_channel_all_roi_list[index] + line_dict[key][index]
-                                if source.endswith('KOL') or source.endswith('kol'):
-                                    key_channel_kol_roi_list[index] = key_channel_kol_roi_list[index] + line_dict[key][index]
-                                else:
-                                    key_channel_flow_roi_list[index] = key_channel_flow_roi_list[index] + line_dict[key][index]
-                            else:
-                                key_channel_all_cac_list[index] = key_channel_all_cac_list[index] + line_dict[key][index]
-                                if source.endswith('KOL') or source.endswith('kol'):
-                                    key_channel_kol_cac_list[index] = key_channel_kol_cac_list[index] + line_dict[key][index]
-                                else:
-                                    key_channel_flow_cac_list[index] = key_channel_flow_cac_list[index] + line_dict[key][index]
-            # print(key_channel_all_roi_list)
-            channel_all_roi_dict = {'channel_all_roi': key_channel_all_roi_list}
-            write_dict_to_mysql(fields, con, channel_all_roi_dict)
-            key_channel_all_roi_list.clear()
-            channel_all_roi_dict.clear()
-            channel_all_cac_dict = {'channel_all_cac': key_channel_all_cac_list}
-            write_dict_to_mysql(fields, con, channel_all_cac_dict)
-            key_channel_all_cac_list.clear()
-            channel_all_cac_dict.clear()
-            channel_flow_roi_dict = {'channel_flow_roi': key_channel_flow_roi_list}
-            write_dict_to_mysql(fields, con, channel_flow_roi_dict)
-            key_channel_flow_roi_list.clear()
-            channel_flow_roi_dict.clear()
-            channel_flow_cac_dict = {'channel_flow_cac': key_channel_flow_cac_list}
-            write_dict_to_mysql(fields, con, channel_flow_cac_dict)
-            key_channel_flow_cac_list.clear()
-            channel_flow_cac_dict.clear()
-            channel_kol_roi_dict = {'channel_kol_roi': key_channel_kol_roi_list}
-            write_dict_to_mysql(fields, con, channel_kol_roi_dict)
-            key_channel_kol_roi_list.clear()
-            channel_kol_roi_dict.clear()
-            channel_kol_cac_dict = {'channel_kol_cac': key_channel_kol_cac_list}
-            write_dict_to_mysql(fields, con, channel_kol_cac_dict)
-            key_channel_kol_cac_list.clear()
-            channel_kol_cac_dict.clear()
+    file_data_to_mysql(date_list)
+    print('共耗时: {0}秒'.format(int(time.time() - start)))
