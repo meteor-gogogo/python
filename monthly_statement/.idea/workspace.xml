@@ -3,10 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="58f59d37-b1f4-4626-8dfe-2f38c2216b8b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/history/2019-08-19-day-dict.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/month_roi_order_cost/month_roi_order_cost.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/month_roi_order_cost/month_roi_order_cost.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/order_detail/product_2019-08-23.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/order_detail/seller_2019-08-23.xlsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/by_day/source_info_day.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/by_day/source_info_day.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

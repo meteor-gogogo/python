@@ -208,15 +208,15 @@ if __name__ == '__main__':
     ad_id_list = [103891969936, 104241096798, 104749561785, 104750237072, 104757843442, 104757923769, 108260043679,
                    108322887258, 108322962478, 108323023542, 110425205008, 110425160745, 110425077742, 1633753219366923]
     # 查询日期为昨天
-    start_date_tmp = '2019-08-01'
-    for i in range(31):
-        start_date = (datetime.strptime(start_date_tmp, '%Y-%m-%d') + timedelta(days=i)).strftime('%Y-%m-%d')
-        # start_date = str(date.today() + timedelta(days=-1))
-        for ad_id in ad_id_list:
-            print(ad_id)
-            # 主要处理函数
-            main(fandian_dict, market_cursor, start_date, ad_id)
-            # 有写数据库的操作,提交一下
-            db_market.commit()
-        # 汇总各推广账号的数据插入到日成本表一条数据
-        insert_cost_to_day_cost(db_market, market_cursor, start_date)
+    # start_date_tmp = '2019-08-01'
+    # for i in range(31):
+    #     start_date = (datetime.strptime(start_date_tmp, '%Y-%m-%d') + timedelta(days=i)).strftime('%Y-%m-%d')
+    start_date = str(date.today() + timedelta(days=-1))
+    for ad_id in ad_id_list:
+        print(ad_id)
+        # 主要处理函数
+        main(fandian_dict, market_cursor, start_date, ad_id)
+        # 有写数据库的操作,提交一下
+        db_market.commit()
+    # 汇总各推广账号的数据插入到日成本表一条数据
+    insert_cost_to_day_cost(db_market, market_cursor, start_date)
